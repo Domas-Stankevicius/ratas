@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#E23E63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ratas">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Mudviejų ratas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one phone-width column; the wheel sits in a fixed compass bezel, everything else is quiet cards on a contour-line map ground. */
+:root{
+  --bg:#EEF3F1; --surface:#FFFFFF; --ink:#14232B; --muted:#5B6B73; --line:#D3DEDB; --contour:rgba(20,125,133,.09);
+  --love:#E23E63; --on-love:#FFFFFF; --sea:#147D85; --sun:#E9A91F; --plum:#5A4BC4;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1A1F; --surface:#18262D; --ink:#EAF2F1; --muted:#94A6AD; --line:#2A3B43; --contour:rgba(60,184,191,.08);
+  --love:#FF6B8A; --on-love:#22060D; --sea:#3CB8BF; --sun:#F4C04E; --plum:#8E82F0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1A1F; --surface:#18262D; --ink:#EAF2F1; --muted:#94A6AD; --line:#2A3B43; --contour:rgba(60,184,191,.08);
+  --love:#FF6B8A; --on-love:#22060D; --sea:#3CB8BF; --sun:#F4C04E; --plum:#8E82F0; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body);
+  background-image:repeating-radial-gradient(circle at 85% -120px,transparent 0 46px,var(--contour) 46px 47.5px);
+  padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.app{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1,h2,.task,.num{font-family:var(--display)}
+h1{font-size:1.9rem;font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
+h2{font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.sub{color:var(--muted);font-size:.9rem;margin:2px 0 0}
+.streak{display:flex;align-items:baseline;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;white-space:nowrap}
+.streak .num{font-size:1.4rem;font-weight:800;color:var(--love);font-variant-numeric:tabular-nums}
+.streak small{color:var(--muted);font-size:.8rem}
+.note{font-size:.85rem;color:var(--muted);border-left:3px solid var(--sun);padding:2px 0 2px 10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{font:600 .95rem var(--body);border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:12px;padding:10px 14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn.primary{background:var(--love);border-color:var(--love);color:var(--on-love)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:focus-visible,.pad:focus-visible,input:focus-visible,select:focus-visible,.hub:focus-visible,summary:focus-visible{outline:3px solid var(--sea);outline-offset:2px}
+input,select{font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+input{flex:1 1 160px}
+/* week strip */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 0;border-radius:12px;border:1px solid transparent;font-size:.75rem;color:var(--muted);font-weight:600}
+.day.today{border-color:var(--line);color:var(--ink)}
+.day.full{background:color-mix(in srgb,var(--love) 13%,transparent);color:var(--ink)}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--line)}
+.dot.spun{border-color:var(--sea)}
+.dot.done{border-color:var(--love);background:var(--love)}
+.legend{font-size:.78rem;color:var(--muted);margin:0}
+.frz{font-size:1.1rem;line-height:29px}
+.pad{font:700 1.05rem var(--display);width:100%;min-height:96px;border-radius:14px;border:2px dashed var(--line);background:var(--bg);color:var(--ink);cursor:pointer;padding:12px}
+.pad.wait{border-style:solid;border-color:var(--sun);background:color-mix(in srgb,var(--sun) 25%,var(--bg))}
+.pad.go{border-style:solid;border-color:var(--sea);background:var(--sea);color:var(--bg)}
+.pad:disabled{cursor:default;opacity:.8}
+/* wheel */
+.stage{position:relative;width:min(100%,360px);aspect-ratio:1;margin:4px auto}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#wheel{transform-origin:50% 50%;transition:transform 5.2s cubic-bezier(.12,.72,.1,1)}
+.seg{stroke:var(--surface);stroke-width:1.5}
+.bezel{fill:var(--surface);stroke:var(--line)}
+.tick{stroke:var(--muted);stroke-width:.6}
+.tick.major{stroke:var(--ink);stroke-width:1.1}
+.pointer{fill:var(--ink);stroke:var(--surface);stroke-width:1.5}
+.hub{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:4px solid var(--surface);
+  background:var(--ink);color:var(--bg);font:800 1.05rem var(--display);letter-spacing:.04em;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.hub:disabled{cursor:default;font-size:.78rem;letter-spacing:0}
+.hub:not(:disabled):active{transform:translate(-50%,-50%) scale(.95)}
+#confetti{position:absolute;inset:-20%;width:140%;height:140%;pointer-events:none}
+/* task cards */
+.cat{font-size:.8rem;font-weight:700;color:var(--sea)}
+.task{font-size:1.3rem;font-weight:700;line-height:1.25;margin:0;text-wrap:balance;overflow-wrap:anywhere}
+.state{font-size:.85rem;color:var(--muted)}
+.state.ok{color:var(--love);font-weight:600}
+.pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.92);opacity:.3}to{transform:none;opacity:1}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stats .num{font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums;display:block}
+.stats span{font-size:.78rem;color:var(--muted)}
+.miles{display:flex;gap:6px;flex-wrap:wrap}
+.mile{font-size:.8rem;font-weight:700;padding:5px 11px;border-radius:999px;border:1px dashed var(--line);color:var(--muted)}
+.mile.got{border-style:solid;border-color:var(--sun);background:color-mix(in srgb,var(--sun) 22%,transparent);color:var(--ink)}
+details summary{cursor:pointer;font-weight:600}
+.own{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;font-size:.9rem;border-top:1px solid var(--line);padding-top:8px}
+.own span{min-width:0;overflow-wrap:anywhere}
+.x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0 4px}
+.foot{text-align:center;font-size:.8rem;color:var(--muted)}
+.foot button{font:inherit;color:inherit;background:none;border:0;text-decoration:underline;cursor:pointer}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:.9rem;max-width:calc(100% - 32px);z-index:5}
+@media (prefers-reduced-motion: reduce){#wheel{transition:none}.pop{animation:none}}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div><h1>Mudviejų ratas</h1><p class="sub" id="sub">Vienas sukimas per dieną. Užduotį atliekat Instagrame.</p></div>
+    <div class="streak" title="Dienos iš eilės"><span>🔥</span><span class="num" id="streakNum">0</span><small>d. iš eilės</small></div>
+  </div>
+  <div class="note" id="note" hidden></div>
+  <div class="card" id="setup" hidden></div>
+
+  <div class="card">
+    <h2>Ši savaitė</h2>
+    <div class="week" id="week"></div>
+    <p class="legend" id="legend"></p>
+  </div>
+
+  <div class="stage">
+    <svg viewBox="-110 -110 220 220" aria-hidden="true">
+      <circle class="bezel" r="108"/><g id="ticks"></g>
+      <g id="wheel"></g>
+      <path class="pointer" d="M-9 -110 L9 -110 L0 -90 Z"/>
+    </svg>
+    <canvas id="confetti"></canvas>
+    <button class="hub" id="hub" type="button">SUK</button>
+  </div>
+
+  <div class="card" id="mine"></div>
+  <div class="card" id="theirs"></div>
+
+  <div class="card">
+    <h2>Progresas</h2>
+    <div class="stats">
+      <div><b class="num" id="sCur">0</b><span>dabartinė serija</span></div>
+      <div><b class="num" id="sBest">0</b><span>ilgiausia serija</span></div>
+      <div><b class="num" id="sDone">0</b><span>atlikta užduočių</span></div>
+    </div>
+    <div class="miles" id="miles"></div>
+  </div>
+
+  <details class="card" id="customBox">
+    <summary id="customSum">Savos užduotys</summary>
+    <form class="row" id="customForm">
+      <select id="customCat" aria-label="Kategorija"></select>
+      <input id="customText" maxlength="140" placeholder="Pvz.: atsiųsk savo rytinės kavos nuotrauką" aria-label="Užduoties tekstas">
+      <button class="btn" type="submit">Pridėti</button>
+    </form>
+    <div id="customList"></div>
+  </details>
+
+  <p class="foot" id="foot"></p>
+</div>
+<div id="toast" hidden role="status"></div>
+
+<script>
+const CATS=[
+ {k:'foto',e:'📸',n:'Nuotrauka'},{k:'kl',e:'💬',n:'Klausimas'},{k:'zem',e:'🗺️',n:'Žemėlapis'},{k:'muz',e:'🎹',n:'Muzika'},
+ {k:'spo',e:'🏐',n:'Sportas'},{k:'zaid',e:'🎲',n:'Mini žaidimas'},{k:'pris',e:'💌',n:'Šiltas žodis'},{k:'drasa',e:'⚡',n:'Iššūkis'},{k:'gyvai',e:'🤝',n:'Gyvai'},{k:'akt',e:'🌍',n:'Aktualijos'}];
+const SEG=360/CATS.length, LIVE_PER_WEEK=2, ROOM_RE=/^[A-Za-z0-9-]{12,40}$/, GAMES={zaid8:'reakcija'};
+// Firebase projekto „mudvieju-ratas“ web konfigūracija (vieša, apsaugą daro Firestore taisyklės ir kambario kodas).
+const FIREBASE={apiKey:"AIzaSyB-6u2upI9AeED4Xqa0oGJxYvm0QVPPr34",authDomain:"mudvieju-ratas.firebaseapp.com",projectId:"mudvieju-ratas",storageBucket:"mudvieju-ratas.firebasestorage.app",messagingSenderId:"402604471259",appId:"1:402604471259:web:56c33de0a305a55e462dfe"};
+// Užduočių bankas. Naujas užduotis rašyk TIK į sąrašo galą: id = kategorija + eilės numeris.
+const BANK={
+ foto:['Atsiųsk nuotrauką, ką veiki būtent šią minutę. Be pozavimo.','Nufotografuok vaizdą pro artimiausią langą.','Atsiųsk asmenukę su juokingiausia mina, kokią moki.','Nufotografuok daiktą šalia savęs, kuris primena antrą pusę, ir parašyk kodėl.','Atsiųsk šiandienos pietų ar vakarienės nuotrauką ir įvertink ją nuo 1 iki 10.','Surask telefone seniausią judviejų nuotrauką ir atsiųsk.','Nufotografuok savo darbo ar mokymosi vietą tokią, kokia yra dabar.'],
+ kl:['Paklausk: kas šiandien buvo geriausia dienos akimirka?','Paklausk: kokio mažo dalyko iš manęs pasiilgsti labiausiai, kai nesimatom?','Paklausk: kur norėtum su manimi atsibusti po metų?','Paklausk: ką apie tave žinau tik aš?','Paklausk: koks mano įprotis tave juokina?','Paklausk: ko norėtum išmokti kartu per šiuos metus?','Paklausk: koks buvo pirmas įspūdis apie mane? Tik sąžiningai.','Paklausk: ką prisimeni iš pirmo pasimatymo sporto bare, ko aš tikrai nepamenu?','Paklausk: kokia mano savybė tave labiausiai traukia?'],
+ zem:['Nupiešk ranka žemėlapį nuo savo namų iki judviejų pirmo pasimatymo vietos ir nufotografuok.','Atsiųsk žemėlapio ekrano nuotrauką su vieta, į kurią norėtum nuvežti antrą pusę.','Pažymėk žemėlapyje tašką tarp Šiaulių ir Telšių, kur verta sustoti kartu, ir pagrįsk.','Atsiųsk trijų Lietuvos vietų sąrašą, kuriose dar nebuvot kartu. Antra pusė išrenka vieną.','Suplanuok dviejų valandų pasivaikščiojimo maršrutą Vilniuje ir atsiųsk jį žemėlapyje.','Atsiųsk koordinates vietos, kuri tau svarbi. Antra pusė turi atspėti, kas ten.','Išmatuok žemėlapyje atstumą tarp judviejų šiuo metu ir parašyk, per kiek jį nubėgtum.'],
+ muz:['Atsiųsk dainą, kuri šiandien sukasi galvoje.','Įrašyk balso žinutę: paniūniuok melodiją, o antra pusė turi atspėti dainą.','Sugrok ar pabarbenk 20 sekundžių bet kuo, kas po ranka: pianinu, gitara ar stalu.','Atsiųsk dainą, kuri primena judviejų pradžią.','Sudarykit trijų dainų grojaraštį rytojaus rytui: tu renkiesi dvi, antra pusė vieną.','Atsiųsk dainą, kurios gėdiniesi, bet vis tiek klausai.','Parašyk, kokią dainą norėtum išgirsti grojamą gyvai ir kas ją turėtų groti.'],
+ spo:['Spėk artimiausių „Ryto“ arba „Žalgirio“ rungtynių rezultatą. Kas arčiau, tam priklauso kava.','Padaryk 15 pritūpimų ir atsiųsk įrodymą.','Išlaikyk lentą kiek gali ir parašyk laiką. Antra pusė bando pagerinti.','Atsiųsk šios savaitės judėjimo planą: bent vienas dalykas, kurį tikrai padarysi.','Papasakok geriausią savo sportinį prisiminimą: aikštelėje, baseine ar tribūnoje.','Išmokyk antrą pusę vienos savo sporto šakos taisyklės, kurios ji tikrai nežino.','Sutarkit dieną, kada kartu pažaisit tinklinį, pamėtysit į krepšį ar nueisit į baseiną.'],
+ zaid:['Du teiginiai tiesa, vienas melas: parašyk tris faktus apie savo dieną, antra pusė spėja melą.','Aprašyk filmą trimis jaustukais. Antra pusė turi atspėti.','20 klausimų: sugalvok daiktą, antra pusė spėja klausdama tik „taip“ arba „ne“.','Kas greičiau: abu vienu metu siunčiat trečią nuotrauką iš savo galerijos.','Užbaik sakinį: „Jei rytoj abu turėtume laisvą dieną, mes…“ Rašot abu, tada palyginat.','Papasakok savo dieną penkiais jaustukais, antra pusė ją atpasakoja žodžiais.','Arba–arba: užduok penkis greitus pasirinkimus (jūra ar kalnai, rytas ar vakaras…).','Reakcijos dvikova: sužaisk čia pat, o antra pusė bandys tave pralenkti.'],
+ pris:['Parašyk tris dalykus, už kuriuos šiandien dėkoji antrai pusei.','Prisimink vieną judviejų akimirką ir aprašyk ją trimis sakiniais.','Parašyk komplimentą, kurio dar niekada nesakei.','Įrašyk balso žinutę su palinkėjimu rytojaus dienai.','Parašyk, ko iš antros pusės išmokai.','Parašyk, ką norėtum veikti kartu, kai kitą kartą susitiksit.','Padėkok už vieną konkretų dalyką, kurį antra pusė padarė šią savaitę.','Sugalvok antrai pusei naują meilų vardą. „Persikutė“ jau užimta.','Suskaičiuok, kiek dienų praėjo nuo rugsėjo 1-osios, ir parašyk, kuri iš jų buvo geriausia.'],
+ drasa:['Iki vakaro nusiųsk antrai pusei tris žinutes be jokios priežasties.','Suplanuok kitą pasimatymą: vieta, laikas ir viena staigmena.','Šiandien paskambink, o ne parašyk. Bent penkios minutės.','Nupiešk antros pusės portretą per 60 sekundžių ir atsiųsk.','Išmok pasakyti „pasiilgau tavęs“ nauja kalba ir įrašyk balso žinute.','Pagamink ar nupirk ką nors skanaus ir atsiųsk nuotrauką su pažadu pavaišinti.','Parašyk keturių eilučių eilėraštį apie šią dieną.','Parašyk tris dalykus, kurie tave antroje pusėje labiausiai traukia.','Atsiųsk nuotrauką, kurios paprastai nesiųstum, nes joje atrodai per juokingai.'],
+ gyvai:['Kitą kartą susitikę sudėliokit Lego rinkinį, kaip per pirmą pasimatymą. Šiandien sutarkit, kurį.','Susitikę pasigaminkit vakarienę kartu. Šiandien nuspręskit, ką gaminsit.','Nueikit pasivaikščioti be telefonų bent 30 minučių. Šiandien sutarkit dieną.','Kitas „Formulės 1“ lenktynes žiūrėkit kartu. Šiandien abu parašykit, kas laimės.','Susitikę sužaiskit stalo ar kortų žaidimą. Pralaimėjęs plauna indus.','Susitikę paprašyk antros pusės sugroti vieną dainą arba išmokyti tave trijų akordų.','Nueikit į vietą Vilniuje, kur nė vienas dar nebuvot. Šiandien išrinkit ją žemėlapyje.','Susitikę 10 minučių pamėtykit kamuolį: tinklinio arba krepšinio.'],
+ akt:[] // pildoma tik iš news.json arba „news“ kolekcijos
+};
+const MILES=[3,7,14,30,60,100], WD=['Sk','Pr','An','Tr','Kt','Pn','Št'], NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const S={mode:'load',players:{},spins:{},custom:{},newsFile:[],newsDb:[],me:null,note:'',placed:false};
+let store=null,busy=false,rot=0,fresh=false;
+
+function el(tag,props,...kids){const n=document.createElement(tag);for(const k in props||{}){const v=props[k];if(k==='class')n.className=v;else if(k.startsWith('on'))n.addEventListener(k.slice(2),v);else if(v===true)n.setAttribute(k,'');else if(v!==false&&v!=null)n.setAttribute(k,v)}
+  for(const c of kids)if(c!=null&&c!==false)n.append(c);return n}
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}};
+function today(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Vilnius'}).format(new Date())}
+function shift(key,n){const d=new Date(key+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
+let toastT;function toast(t){const b=$('toast');b.textContent=t;b.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>b.hidden=true,3200)}
+
+/* ---------- wheel drawing ---------- */
+(function draw(){
+  const fills=['var(--love)','var(--sea)','var(--sun)','var(--plum)'],w=$('wheel'),pt=(a,r)=>[r*Math.sin(a*Math.PI/180),-r*Math.cos(a*Math.PI/180)];
+  CATS.forEach((c,i)=>{const [x1,y1]=pt(i*SEG,90),[x2,y2]=pt((i+1)*SEG,90);
+    const p=document.createElementNS(NS,'path');p.setAttribute('d',`M0 0L${x1.toFixed(2)} ${y1.toFixed(2)}A90 90 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)}Z`);p.setAttribute('class','seg');p.setAttribute('fill',fills[i%4]);w.append(p);
+    const t=document.createElementNS(NS,'text');t.textContent=c.e;t.setAttribute('transform',`rotate(${(i+.5)*SEG}) translate(0,-63)`);t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','central');t.setAttribute('font-size','19');w.append(t)});
+  const g=$('ticks');for(let a=0;a<360;a+=5){const major=a%45===0,[x1,y1]=pt(a,major?94:99),[x2,y2]=pt(a,105);const l=document.createElementNS(NS,'line');
+    l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('class','tick'+(major?' major':''));g.append(l)}
+  CATS.filter(c=>c.k!=='akt').forEach(c=>$('customCat').append(el('option',{value:c.k},c.e+' '+c.n)));
+})();
+function setRot(deg,animate){const w=$('wheel');if(!animate){w.style.transition='none';w.style.transform=`rotate(${deg}deg)`;void w.getBoundingClientRect();w.style.transition=''}else w.style.transform=`rotate(${deg}deg)`}
+function animateTo(i){return new Promise(res=>{
+  rot=Math.ceil(rot/360)*360+360*5+(360-(i+.5)*SEG)+(Math.random()-.5)*(SEG-10);
+  if(reduced){setRot(rot,false);setTimeout(res,60);return}
+  let done=false;const fin=()=>{if(!done){done=true;res()}};
+  $('wheel').addEventListener('transitionend',fin,{once:true});setTimeout(fin,5700);setRot(rot,true)})}
+function burst(){if(reduced)return;const c=$('confetti'),r=c.getBoundingClientRect(),x=c.getContext('2d');c.width=r.width;c.height=r.height;
+  const cs=getComputedStyle(document.documentElement),cols=['--love','--sea','--sun','--plum'].map(v=>cs.getPropertyValue(v).trim());
+  const ps=Array.from({length:90},()=>{const a=Math.random()*Math.PI*2,v=3+Math.random()*7;return{x:r.width/2,y:r.height/2,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3,s:4+Math.random()*5,c:cols[Math.random()*4|0],r:Math.random()*6}});
+  let f=0;(function step(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.22;p.r+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.globalAlpha=Math.max(0,1-f/80);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});
+    if(++f<80)requestAnimationFrame(step);else x.clearRect(0,0,c.width,c.height)})()}
+
+/* ---------- game logic ---------- */
+function allNews(){return[...S.newsFile,...S.newsDb].filter(n=>n&&typeof n.id==='string'&&typeof n.task==='string'&&/^\d{4}-\d\d-\d\d$/.test(n.date||'')&&/^https:\/\//.test(n.url||''))}
+function allTasks(){const out=[];for(const c of CATS)(BANK[c.k]||[]).forEach((t,i)=>out.push({id:c.k+(i+1),cat:c.k,text:t}));
+  for(const id in S.custom){const t=S.custom[id];if(t&&BANK[t.cat]&&typeof t.text==='string')out.push({id:'c_'+id,cat:t.cat,text:t.text.slice(0,140)})}return out}
+function pick(extra){const t=today(),from=shift(t,-6),used=new Set(extra);let live=0;
+  for(const id in S.spins){const s=S.spins[id];if(String(s.taskId).startsWith('n_'))used.add(s.taskId);
+    if(s.day>=from){used.add(s.taskId);(s.skipped||[]).forEach(k=>used.add(k));if(s.cat==='gyvai')live++}}
+  const news=allNews().filter(n=>n.date>=shift(t,-2)&&n.date<=t&&!used.has('n_'+n.id));
+  if(news.length&&Math.random()<.5){const n=news[0];return{id:'n_'+n.id,cat:'akt',text:n.task.slice(0,220),url:n.url,title:String(n.title||'').slice(0,120)}}
+  const all=allTasks().filter(x=>x.cat!=='gyvai'||live<LIVE_PER_WEEK),ok=all.filter(x=>!used.has(x.id)),pool=ok.length?ok:all;return pool[Math.random()*pool.length|0]}
+function slots(){const p=['a','b'].filter(s=>S.players[s]&&S.players[s].name);return p.length?p:(S.me?[S.me]:[])}
+function full(day){const p=slots();return p.length>0&&p.every(s=>(S.spins[day+'_'+s]||{}).status==='done')}
+// Serija: praleista diena atleidžiama, jei per paskutines 7 dienas atleidimas dar nenaudotas.
+function streaks(){const t=today(),frozen=new Set(),days=Object.values(S.spins).map(s=>s.day).filter(d=>/^\d{4}-\d\d-\d\d$/.test(d)&&d<=t).sort();
+  let cur=0,best=0,last=-99,i=0;if(!days.length)return{cur,best,frozen};
+  for(let d=days[0];d<=t&&i<1500;d=shift(d,1),i++){
+    if(full(d))cur++;else if(d===t){}else if(cur>0&&i-last>=7){last=i;frozen.add(d)}else cur=0;
+    best=Math.max(best,cur)}
+  return{cur,best,frozen}}
+const other=()=>S.me==='a'?'b':'a';
+const nameOf=s=>(S.players[s]&&String(S.players[s].name||'').slice(0,20))||'';
+
+async function spin(reroll){
+  if(busy||!S.me||!store)return;const id=today()+'_'+S.me,cur=S.spins[id];
+  if(cur&&(!reroll||cur.rerolled||cur.status==='done'))return;
+  busy=true;render();const t=pick(cur?[cur.taskId]:[]);
+  await animateTo(CATS.findIndex(c=>c.k===t.cat));
+  const doc={day:today(),slot:S.me,taskId:t.id,cat:t.cat,text:t.text,status:'open',ts:Date.now(),rerolled:!!reroll,skipped:cur?[cur.taskId]:[],...(t.url?{url:t.url,title:t.title}:{})};
+  try{await store.putSpin(id,doc);S.spins={...S.spins,[id]:doc};fresh=true;burst()}catch(e){toast('Nepavyko išsaugoti. Pabandyk dar kartą.')}
+  busy=false;render();fresh=false}
+async function patch(id,p,msg){try{await store.patchSpin(id,p);S.spins={...S.spins,[id]:{...S.spins[id],...p}};if(msg)toast(msg);render()}catch(e){toast('Nepavyko išsaugoti.')}}
+async function claim(slot,name){name=name.trim().slice(0,20);if(!name)return toast('Įrašyk savo vardą.');
+  const next={...S.players,[slot]:{name}};try{await store.putPlayers(next);S.players=next;S.me=slot;ls.set('mr_me',slot);render()}catch(e){toast('Nepavyko išsaugoti vardo.')}}
+function copyTask(s,node){const c=CATS.find(c=>c.k===s.cat),txt=`🎡 Mudviejų ratas · ${c.n}\n${s.text}`+(s.url?'\n'+s.url:'');
+  const fb=()=>{const r=document.createRange();r.selectNodeContents(node);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);toast('Tekstas pažymėtas. Nukopijuok jį pats.')};
+  try{navigator.clipboard.writeText(txt).then(()=>toast('Nukopijuota. Įklijuok Instagrame.'),fb)}catch(e){fb()}}
+const srcLink=s=>/^https:\/\//.test(s.url||'')&&el('a',{class:'btn',href:s.url,target:'_blank',rel:'noopener'},'Skaityti: '+(String(s.title||'')||'šaltinis'));
+
+/* ---------- mini game: reaction duel (3 tries, average) ---------- */
+const pads={};
+function pad(key,onDone){if(pads[key])return pads[key];
+  const b=el('button',{class:'pad',type:'button'},'Pradėti: 3 bandymai');let ph='idle',t0=0,tm,tries=[];
+  b.addEventListener('click',()=>{
+    if(ph==='idle'){ph='wait';b.className='pad wait';b.textContent='Lauk…';tm=setTimeout(()=>{ph='go';t0=performance.now();b.className='pad go';b.textContent='SPAUSK!'},1200+Math.random()*2500)}
+    else if(ph==='wait'){clearTimeout(tm);ph='idle';b.className='pad';b.textContent='Per anksti. Spausk ir bandyk vėl'}
+    else if(ph==='go'){tries.push(Math.round(performance.now()-t0));b.className='pad';
+      if(tries.length<3){ph='idle';b.textContent=tries[tries.length-1]+' ms. Spausk kitam bandymui'}
+      else{ph='end';const avg=Math.round(tries.reduce((a,c)=>a+c)/3);b.disabled=true;b.textContent='Vidurkis '+avg+' ms';onDone(avg)}}});
+  return pads[key]=b}
+
+/* ---------- render ---------- */
+function render(){
+  const t=today(),me=S.me,ready=S.mode!=='load'&&S.mode!=='room'&&S.pl,mine=me&&S.spins[t+'_'+me];
+  if(me&&ready&&!nameOf(me)){S.me=null;ls.set('mr_me',null);return render()}
+  if(ready&&!S.placed){S.placed=true;if(mine){rot=360-(Math.max(0,CATS.findIndex(c=>c.k===mine.cat))+.5)*SEG;setRot(rot,false)}}
+  const note=$('note'),msgs={local:'Bendra saugykla šiame lange nepasiekiama, todėl progresas saugomas tik šiame įrenginyje.',slow:'Bendri duomenys dar nepasiekiami. Tai, ką matai, gali būti pasenę.',err:'Nepavyko prisijungti prie bendrų duomenų.'};
+  const key=S.note||(S.mode==='local'?'local':'');note.hidden=!key;note.textContent=msgs[key]||'';
+  // setup: room code (Firebase version) or player pick
+  const su=$('setup');su.hidden=!(S.mode==='room'||(ready&&!me));su.replaceChildren();
+  if(S.mode==='room'){const inp=el('input',{id:'roomInput',maxlength:'40',placeholder:'Bent 12 simbolių, pvz., persikute-f1-lego-0109','aria-label':'Kambario kodas'});
+    su.append(el('h2',null,'Judviejų kambario kodas'),el('p',{class:'state'},'Abu įveskit tą patį kodą. Jis veikia kaip slaptažodis, todėl nerašykit jo viešai.'),
+      el('form',{class:'row',onsubmit:e=>{e.preventDefault();const c=inp.value.trim();if(!ROOM_RE.test(c))return toast('Kodas: 12–40 raidžių, skaičių ar brūkšnelių.');ls.set('mr_room',c);startFirebase(c)}},inp,el('button',{class:'btn primary',type:'submit'},'Įeiti')))}
+  else if(ready&&!me){su.append(el('h2',null,'Kas tu?'));const row=el('div',{class:'row'});
+    ['a','b'].forEach(s=>{if(nameOf(s))row.append(el('button',{class:'btn',type:'button',onclick:()=>{S.me=s;ls.set('mr_me',s);S.placed=false;render()}},'Aš – '+nameOf(s)))});
+    if(row.children.length)su.append(row);
+    const free=['a','b'].find(s=>!nameOf(s));
+    if(free){const inp=el('input',{id:'nameInput',maxlength:'20',placeholder:'Tavo vardas','aria-label':'Tavo vardas'});
+      su.append(el('form',{class:'row',onsubmit:e=>{e.preventDefault();claim(free,inp.value)}},inp,el('button',{class:'btn primary',type:'submit'},'Prisijungti')))}}
+  const hub=$('hub');hub.disabled=busy||!me||!!mine||!ready;
+  hub.textContent=busy?'…':S.mode==='room'?'Kodas?':!ready?'Kraunama':!me?'Kas tu?':mine?(mine.status==='done'?'Iki rytojaus':'Užduotis žemiau'):'SUK';
+  hub.setAttribute('aria-label',mine?'Šiandien jau sukta':'Sukti ratą');
+  // week
+  const st=streaks(),wk=$('week');wk.replaceChildren();const order=me?[me,other()]:['a','b'];
+  for(let i=-6;i<=0;i++){const d=shift(t,i),wd=WD[new Date(d+'T12:00:00Z').getUTCDay()],fr=st.frozen.has(d);
+    wk.append(el('div',{class:'day'+(i===0?' today':'')+(full(d)?' full':''),title:d},wd,...(fr?[el('span',{class:'frz',title:'Atleista diena'},'❄')]:order.map(s=>{const sp=S.spins[d+'_'+s];return el('span',{class:'dot'+(sp?(sp.status==='done'?' done':' spun'):'')})}))))}
+  $('legend').textContent=`Viršuje ${me?'tu':(nameOf('a')||'pirmas žaidėjas')}, apačioje ${me?(nameOf(other())||'antra pusė'):(nameOf('b')||'antras žaidėjas')}. Pilnas taškas – atlikta, žiedas – išsukta, ❄ – atleista diena (viena per savaitę).`;
+  // mine
+  const m=$('mine');m.replaceChildren(el('h2',null,'Tavo užduotis šiandien'));
+  if(!mine)m.append(el('p',{class:'state'},me?'Dar nesukai. Spausk rato vidurį.':'Pirma pasirink, kas tu, tada suk ratą.'));
+  else{const c=CATS.find(c=>c.k===mine.cat)||CATS[0],txt=el('p',{class:'task'+(fresh?' pop':'')},mine.text),id=t+'_'+me,game=GAMES[mine.taskId];
+    m.append(el('span',{class:'cat'},c.e+' '+c.n),txt);
+    if(mine.status==='done'){
+      if(mine.score)m.append(el('p',{class:'state'},`Tavo vidurkis: ${mine.score} ms.`+(mine.rival?` ${nameOf(other())||'Antra pusė'}: ${mine.rival} ms. ${mine.rival<mine.score?'Šįkart tave pralenkė.':'Likai greitesnis rezultatas.'}`:'')));
+      m.append(el('p',{class:'state ok'},mine.heart?`Atlikta. ${nameOf(other())||'Antra pusė'} patvirtino ❤️`:'Atlikta. Lauk patvirtinimo iš antros pusės.'));
+      const l=srcLink(mine);if(l)m.append(el('div',{class:'row'},l))}
+    else{if(game)m.append(pad('m'+id,ms=>patch(id,{status:'done',doneAt:Date.now(),score:ms},'Užskaityta!')));
+      m.append(el('div',{class:'row'},
+      !game&&el('button',{class:'btn primary',type:'button',onclick:()=>patch(id,{status:'done',doneAt:Date.now()},'Užskaityta!')},'Atlikau'),
+      srcLink(mine),
+      el('button',{class:'btn',type:'button',onclick:()=>copyTask(mine,txt)},'Kopijuoti'),
+      el('a',{class:'btn',href:'https://www.instagram.com/direct/inbox/',target:'_blank',rel:'noopener'},'Atverti Instagram'),
+      !mine.rerolled&&el('button',{class:'btn',type:'button',disabled:busy,onclick:()=>spin(true)},'Keisti (1 kartą)')))}}
+  // theirs
+  const th=$('theirs'),o=other(),pn=nameOf(o),ps=me&&S.spins[t+'_'+o];th.hidden=!me;
+  th.replaceChildren(el('h2',null,(pn||'Antra pusė')+' šiandien'));
+  if(!pn)th.append(el('p',{class:'state'},'Antra pusė dar neprisijungė. Nusiųsk jai šio puslapio nuorodą.'));
+  else if(!ps)th.append(el('p',{class:'state'},'Dar nesuko. Pastūmėk žinute.'));
+  else{const c=CATS.find(c=>c.k===ps.cat)||CATS[0],pid=t+'_'+o;th.append(el('span',{class:'cat'},c.e+' '+c.n),el('p',{class:'task'},String(ps.text||'')));
+    const l=srcLink(ps);if(l)th.append(el('div',{class:'row'},l));
+    if(ps.status!=='done')th.append(el('p',{class:'state'},'Dar vykdo.'));
+    else{if(ps.score){th.append(el('p',{class:'state'},`${pn} vidurkis: ${Number(ps.score)} ms.`+(ps.rival?` Tavo: ${Number(ps.rival)} ms. ${ps.rival<ps.score?'Pralenkei!':'Šįkart nepavyko.'}`:' Pabandyk pralenkti.')));
+        if(!ps.rival)th.append(pad('r'+pid,ms=>patch(pid,{rival:ms})))}
+      if(ps.heart)th.append(el('p',{class:'state ok'},'Atlikta ir tavo patvirtinta ❤️'));
+      else th.append(el('div',{class:'row'},el('span',{class:'state ok'},'Sako, kad atliko.'),el('button',{class:'btn primary',type:'button',onclick:()=>patch(pid,{heart:true})},'❤️ Patvirtinu')))}}
+  // stats
+  const done=Object.values(S.spins).filter(s=>s.status==='done').length;
+  $('streakNum').textContent=st.cur;$('sCur').textContent=st.cur;$('sBest').textContent=st.best;$('sDone').textContent=done;
+  $('miles').replaceChildren(...MILES.map(n=>el('span',{class:'mile'+(st.best>=n?' got':'')},(st.best>=n?'★ ':'')+n+' d.')));
+  // custom tasks
+  const ids=Object.keys(S.custom);$('customSum').textContent=`Savos užduotys (${ids.length})`;
+  $('customList').replaceChildren(...ids.map(id=>{const c=CATS.find(c=>c.k===S.custom[id].cat)||CATS[0];
+    return el('div',{class:'own'},el('span',null,c.e+' '+String(S.custom[id].text||'')),el('button',{class:'x',type:'button','aria-label':'Ištrinti užduotį',onclick:()=>store.delTask(id).then(()=>{const n={...S.custom};delete n[id];S.custom=n;render()},()=>toast('Nepavyko ištrinti.'))},'✕'))}));
+  const ft=$('foot');ft.replaceChildren();if(me&&ready)ft.append('Žaidi kaip '+nameOf(me)+'. ',el('button',{type:'button',onclick:()=>{S.me=null;ls.set('mr_me',null);render()}},'Tai ne aš'));
+}
+$('hub').addEventListener('click',()=>spin(false));
+$('customForm').addEventListener('submit',e=>{e.preventDefault();const inp=$('customText'),text=inp.value.trim();if(!text||!store)return;
+  const doc={cat:$('customCat').value,text:text.slice(0,140),by:S.me||'',ts:Date.now()};
+  store.addTask(doc).then(id=>{S.custom={...S.custom,[id]:doc};inp.value='';render();toast('Užduotis pridėta į ratą.')},()=>toast('Nepavyko pridėti.'))});
+
+/* ---------- storage: Claude db in the artifact, Firebase on the hosted site, this device otherwise ---------- */
+function localStore(){
+  try{const d=JSON.parse(ls.get('mr_local')||'{}');S.players=d.players||{};S.spins=d.spins||{};S.custom=d.custom||{}}catch(e){}
+  const save=()=>ls.set('mr_local',JSON.stringify({players:S.players,spins:S.spins,custom:S.custom}));
+  return{async putPlayers(p){S.players=p;save()},async putSpin(id,d){S.spins={...S.spins,[id]:d};save()},async patchSpin(id,p){S.spins={...S.spins,[id]:{...S.spins[id],...p}};save()},
+    async addTask(d){const id='l'+Date.now();S.custom={...S.custom,[id]:d};save();return id},async delTask(id){const n={...S.custom};delete n[id];S.custom=n;save()}}}
+// `db` is either the artifact's store or a Firestore wrapper: both give doc(path) / collection(path) with the same calls.
+function dbStore(db){
+  const timer=setTimeout(()=>{S.note='slow';S.mode='db';render()},10000);
+  const ok=snap=>{if(!snap.metadata.fromCache){clearTimeout(timer);if(S.note==='slow')S.note=''}S.mode='db'};
+  const fail=()=>{clearTimeout(timer);S.note='err';S.mode='db';render()};
+  const map=snap=>{const o={};snap.docs.forEach(d=>{o[d.id]=d.data()});return o};
+  db.doc('game/players').onSnapshot(s=>{ok(s);S.pl=true;S.players=s.exists?s.data():{};render()},fail);
+  db.collection('spins').orderBy('day','desc').limit(400).onSnapshot(s=>{ok(s);if(!busy)S.spins=map(s);render()},fail);
+  db.collection('tasks').onSnapshot(s=>{ok(s);S.custom=map(s);render()},fail);
+  db.collection('news').onSnapshot(s=>{const o=map(s);S.newsDb=Object.keys(o).map(id=>({...o[id],id}))},()=>{});
+  return{putPlayers:p=>db.doc('game/players').set(p),putSpin:(id,d)=>db.doc('spins/'+id).set(d),patchSpin:(id,p)=>db.doc('spins/'+id).update(p),
+    addTask:async d=>(await db.collection('tasks').add(d)).id,delTask:id=>db.doc('tasks/'+id).delete()}}
+const addScript=src=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.append(s)});
+async function startFirebase(code){
+  try{S.mode='load';render();
+    if(!window.firebase){const v='https://www.gstatic.com/firebasejs/10.12.2/';await addScript(v+'firebase-app-compat.js');await addScript(v+'firebase-firestore-compat.js');firebase.initializeApp(FIREBASE)}
+    const fs=firebase.firestore(),R='rooms/'+code+'/';store=dbStore({doc:p=>fs.doc(R+p),collection:p=>fs.collection(R+p)})}
+  catch(e){store=localStore();S.pl=true;S.mode='local';render()}}
+(async function boot(){
+  S.me=ls.get('mr_me');if(S.me!=='a'&&S.me!=='b')S.me=null;render();
+  fetch('news.json').then(r=>r.ok?r.json():[]).then(a=>{if(Array.isArray(a))S.newsFile=a}).catch(()=>{});
+  let db=null;try{db=window.claude&&window.claude.use?await window.claude.use('db'):null}catch(e){}
+  if(db)store=dbStore(db);
+  else if(FIREBASE){const code=decodeURIComponent(location.hash.slice(1))||ls.get('mr_room')||'';
+    if(ROOM_RE.test(code)){ls.set('mr_room',code);startFirebase(code)}else{S.mode='room';render()}}
+  else{store=localStore();S.pl=true;S.mode='local';render()}
+})();
+</script>
+
+</body>
+</html>
