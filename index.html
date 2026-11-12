@@ -52,7 +52,13 @@ h2{font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercas
 input,select{font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
 input{flex:1 1 160px}
 /* week strip */
-.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.week{display:grid;grid-template-columns:minmax(0,auto) repeat(7,minmax(0,1fr));gap:6px 4px;align-items:center}
+.wh{text-align:center;font-size:.75rem;font-weight:700;color:var(--muted);padding:4px 0;border-radius:8px}
+.wh.today{background:var(--ink);color:var(--bg)}
+.wn{font-size:.85rem;font-weight:700;max-width:7.5em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:4px}
+.wc{display:grid;place-items:center;height:30px;border-radius:8px}
+.wc.full{background:color-mix(in srgb,var(--love) 13%,transparent)}
+.wc.future{opacity:.35}
 .day{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 0;border-radius:12px;border:1px solid transparent;font-size:.75rem;color:var(--muted);font-weight:600}
 .day.today{border-color:var(--line);color:var(--ink)}
 .day.full{background:color-mix(in srgb,var(--love) 13%,transparent);color:var(--ink)}
@@ -60,7 +66,7 @@ input{flex:1 1 160px}
 .dot.spun{border-color:var(--sea)}
 .dot.done{border-color:var(--love);background:var(--love)}
 .legend{font-size:.78rem;color:var(--muted);margin:0}
-.frz{font-size:1.1rem;line-height:29px}
+.frz{font-size:1rem;line-height:1}
 .pad{font:700 1.05rem var(--display);width:100%;min-height:96px;border-radius:14px;border:2px dashed var(--line);background:var(--bg);color:var(--ink);cursor:pointer;padding:12px}
 .pad.wait{border-style:solid;border-color:var(--sun);background:color-mix(in srgb,var(--sun) 25%,var(--bg))}
 .pad.go{border-style:solid;border-color:var(--sea);background:var(--sea);color:var(--bg)}
@@ -198,16 +204,6 @@ textarea{font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:
     <div class="miles" id="miles"></div>
   </div>
 
-  <details class="card" id="customBox">
-    <summary id="customSum">Savos užduotys</summary>
-    <form class="row" id="customForm">
-      <select id="customFor" aria-label="Kam"><option value="other">Antrai pusei (slapta)</option><option value="both">Abiem</option></select>
-      <select id="customCat" aria-label="Kategorija"></select>
-      <input id="customText" maxlength="140" placeholder="Pvz.: atsiųsk savo rytinės kavos nuotrauką" aria-label="Užduoties tekstas">
-      <button class="btn" type="submit">Pridėti</button>
-    </form>
-    <div id="customList"></div>
-  </details>
 
   <p class="foot" id="foot"></p>
 </div>
@@ -280,8 +276,7 @@ const FILLS=['--love','--sea','--sun','--plum'];
     const t=mk('text',{transform:`rotate(${(i+.5)*SEG}) translate(0,-64)`,'text-anchor':'middle','dominant-baseline':'central','font-size':'19'});t.textContent=c.e;w.append(t)});
   w.append(mk('circle',{r:3,fill:'#fff',opacity:.6}));
   const g=$('bulbs');for(let i=0;i<24;i++){const [x,y]=pt(i*15+7.5,102);g.append(mk('circle',{cx:x.toFixed(2),cy:y.toFixed(2),r:2.8,class:'bulb'}))}
-  CATS.filter(c=>c.k!=='akt').forEach(c=>$('customCat').append(el('option',{value:c.k},c.e+' '+c.n)));
-})();
+  })();
 function setRot(deg){$('wheel').setAttribute('transform',`rotate(${deg})`)}
 const underPointer=a=>((-a%360)+360)%360;
 let audio=null;const soundOn=()=>ls.get('mr_sound')!=='0';
@@ -378,7 +373,7 @@ function gameTheirs(kind,pid,ps,o){
 /* ---------- game logic ---------- */
 function allNews(){return[...S.newsFile,...S.newsDb].filter(n=>n&&typeof n.id==='string'&&typeof n.task==='string'&&/^\d{4}-\d\d-\d\d$/.test(n.date||'')&&/^https:\/\//.test(n.url||''))}
 function allTasks(){const out=[];for(const c of CATS)(BANK[c.k]||[]).forEach((t,i)=>{if(t)out.push({id:c.k+(i+1),cat:c.k,text:t})});
-  for(const id in S.custom){const t=S.custom[id];if(t&&t.for&&t.for!=='both'&&t.for!==S.me)continue;if(t&&BANK[t.cat]&&typeof t.text==='string')out.push({id:'c_'+id,cat:t.cat,text:t.text.slice(0,140)})}return out}
+  return out}
 function pick(extra){const t=today(),from=shift(t,-6),used=new Set(extra);let live=0;
   for(const id in S.spins){const s=S.spins[id];if(String(s.taskId).startsWith('n_'))used.add(s.taskId);
     if(s.day>=from){used.add(s.taskId);(s.skipped||[]).forEach(k=>used.add(k));if(s.cat==='gyvai')live++}}
@@ -475,9 +470,12 @@ function render(){
   hub.setAttribute('aria-label',mine?'Šiandien jau sukta':'Sukti ratą');
   // week
   const st=streaks(),wk=$('week');wk.replaceChildren();const order=me?[me,other()]:['a','b'];
-  for(let i=-6;i<=0;i++){const d=shift(t,i),wd=WD[new Date(d+'T12:00:00Z').getUTCDay()],fr=st.frozen.has(d);
-    wk.append(el('div',{class:'day'+(i===0?' today':'')+(full(d)?' full':''),title:d},wd,...(fr?[el('span',{class:'frz',title:'Atleista diena'},'❄')]:order.map(s=>{const sp=S.spins[d+'_'+s];return el('span',{class:'dot'+(sp?(sp.status==='done'?' done':' spun'):'')})}))))}
-  $('legend').textContent=`Viršuje ${me?'tu':(nameOf('a')||'pirmas žaidėjas')}, apačioje ${me?(nameOf(other())||'antra pusė'):(nameOf('b')||'antras žaidėjas')}. Pilnas taškas – atlikta, žiedas – išsukta, ❄ – atleista diena (viena per savaitę).`;
+  const mon=shift(t,-((new Date(t+'T12:00:00Z').getUTCDay()+6)%7)),days=[0,1,2,3,4,5,6].map(i=>shift(mon,i)),WK=['Pr','An','Tr','Kt','Pn','Št','Sk'];
+  wk.append(el('span',null),...days.map((d,i)=>el('span',{class:'wh'+(d===t?' today':''),title:d},WK[i])));
+  order.forEach(sl=>{wk.append(el('span',{class:'wn'},nameOf(sl)||(sl===me?'Tu':'Antra pusė')));
+    days.forEach(d=>{const fut=d>t,sp=S.spins[d+'_'+sl],fr=st.frozen.has(d);
+      wk.append(el('span',{class:'wc'+(full(d)?' full':'')+(fut?' future':''),title:d},fr?el('span',{class:'frz',title:'Atleista diena'},'❄'):el('span',{class:'dot'+(sp?(sp.status==='done'?' done':' spun'):'')})))})});
+  $('legend').textContent='● atlikta · ○ išsukta · ❄ atleista diena (viena per savaitę)';
   // mine
   const m=$('mine');m.replaceChildren(el('h2',null,'Tavo užduotis šiandien'));
   if(!mine)m.append(el('p',{class:'state'},me?'Dar nesukai. Spausk rato vidurį.':'Pirma pasirink, kas tu, tada suk ratą.'));
@@ -513,16 +511,9 @@ function render(){
   const done=Object.values(S.spins).filter(s=>s.status==='done').length;
   $('streakNum').textContent=st.cur;$('sCur').textContent=st.cur;$('sBest').textContent=st.best;$('sDone').textContent=done;
   $('miles').replaceChildren(...MILES.map(n=>el('span',{class:'mile'+(st.best>=n?' got':'')},(st.best>=n?'★ ':'')+n+' d.')));
-  // custom tasks
-  const all=Object.keys(S.custom),hidden=all.filter(id=>S.custom[id].for===S.me&&S.custom[id].by!==S.me),ids=all.filter(id=>!hidden.includes(id));$('customSum').textContent=`Savos užduotys (${ids.length})`+(hidden.length?` · ${hidden.length} 🤫 tau`:'');
-  $('customList').replaceChildren(...ids.map(id=>{const c=CATS.find(c=>c.k===S.custom[id].cat)||CATS[0];
-    const tt=S.custom[id],tag=tt.for&&tt.for!=='both'?' 🤫 '+(nameOf(tt.for)||'antrai pusei'):'';return el('div',{class:'own'},el('span',null,c.e+' '+String(tt.text||''),tag&&el('span',{class:'secret'},tag)),el('button',{class:'x',type:'button','aria-label':'Ištrinti užduotį',onclick:()=>store.delTask(id).then(()=>{const n={...S.custom};delete n[id];S.custom=n;render()},()=>toast('Nepavyko ištrinti.'))},'✕'))}));
   const ft=$('foot');ft.replaceChildren();if(me&&ready)ft.append('Žaidi kaip '+nameOf(me)+'. ',el('button',{type:'button',onclick:()=>{S.me=null;ls.set('mr_me',null);render()}},'Tai ne aš'));
 }
 $('hub').addEventListener('click',()=>spin(false));
-$('customForm').addEventListener('submit',e=>{e.preventDefault();const inp=$('customText'),text=inp.value.trim();if(!text||!store)return;
-  const fo=$('customFor').value,doc={cat:$('customCat').value,text:text.slice(0,140),by:S.me||'',for:fo==='other'&&S.me?other():'both',ts:Date.now()};
-  store.addTask(doc).then(id=>{S.custom={...S.custom,[id]:doc};inp.value='';render();if(doc.for!=='both'){notify(doc.for,`${nameOf(S.me)} įrašė tau slaptą užduotį 🤫`,'Ji kada nors iškris rate.');toast('Slapta užduotis įrašyta 🤫')}else toast('Užduotis pridėta į ratą.')},()=>toast('Nepavyko pridėti.'))});
 
 /* ---------- storage: Claude db in the artifact, Firebase on the hosted site, this device otherwise ---------- */
 function localStore(){
