@@ -503,8 +503,8 @@ const POL=[{l:-2,t:6,r:-9},{l:22,t:30,r:5},{l:48,t:2,r:-4},{l:71,t:24,r:8},{l:10
 let photoKey='';
 function renderPhotos(){const list=Object.entries(S.photos||{}).filter(([,v])=>v&&typeof v.data==='string'&&/^data:image\/(jpeg|png|webp);base64,/.test(v.data)).sort((a,b)=>(a[1].order||0)-(b[1].order||0)).slice(0,6),key=list.map(([k])=>k).join();
   if(key===photoKey)return;photoKey=key;const h=$('hero');h.replaceChildren();
-  list.forEach(([k,v],i)=>{const p=POL[i%POL.length],img=el('img',{alt:'',src:v.data,loading:'lazy',decoding:'async'}),d=el('div',{class:'pol',style:`left:${p.l}%;top:${p.t}px;transform:rotate(${p.r}deg)`},img);
-    img.onload=()=>d.classList.add('on');h.append(d)})}
+  list.forEach(([k,v],i)=>{const p=POL[i%POL.length],img=el('img',{alt:'',src:v.data}),d=el('div',{class:'pol',style:`left:${p.l}%;top:${p.t}px;transform:rotate(${p.r}deg)`},img);
+    const show=()=>d.classList.add('on');img.onload=show;img.onerror=()=>d.remove();h.append(d);if(img.complete&&img.naturalWidth)show();setTimeout(show,1500)})}
 
 /* ---------- render ---------- */
 function render(){
