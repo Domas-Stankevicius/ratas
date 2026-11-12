@@ -167,6 +167,93 @@ textarea{font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:
 #map .leaflet-container{background:#cfe2e8}
 .top-r{display:flex;gap:8px;align-items:center;justify-content:center}
 @media (prefers-reduced-motion: reduce){.pop,.sticker{animation:none}.letter,.flap{transition:none}}
+
+/* ---------- Žaidimų skirtukas ---------- */
+body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;justify-content:center;gap:8px;padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--bg) 92%,transparent);border-top:1px solid var(--line);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+#tabs .tab{flex:1;max-width:240px;min-height:48px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:14px;font:700 .95rem var(--body);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+#tabs .tab[aria-selected="true"]{background:var(--love);border-color:var(--love);color:var(--on-love)}
+#tabs .tab:focus-visible,.ghint:focus-visible{outline:3px solid var(--sea);outline-offset:2px}
+#gamesOv{position:fixed;left:0;right:0;top:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:5;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);touch-action:none;overscroll-behavior:contain;-webkit-user-select:none;user-select:none}
+.ghead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 16px 0}
+.ghead h2{font-size:1.1rem;color:var(--ink)}
+.gstage{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:0 28px;text-align:center}
+.gstage.gup{animation:gin .32s ease-out}
+.gstage.gdown{animation:gin2 .32s ease-out}
+@keyframes gin{from{opacity:0;transform:translateY(48px)}to{opacity:1;transform:none}}
+@keyframes gin2{from{opacity:0;transform:translateY(-48px)}to{opacity:1;transform:none}}
+.gtile{width:min(268px,68vw);aspect-ratio:1;border-radius:36px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.gtile svg{width:88%;height:88%}
+.gname{font:800 1.9rem/1.1 var(--display);margin:0;color:var(--ink)}
+.gline{color:var(--muted);margin:6px 0 0}
+.gplay{min-height:56px;padding:0 40px;border-radius:999px;font-size:1.1rem}
+.gdots{position:absolute;right:12px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px}
+.gdots i{width:6px;height:6px;border-radius:3px;background:var(--line)}
+.gdots i.on{background:var(--love)}
+.ghint{min-height:52px;border:0;background:none;color:var(--muted);font:600 .85rem var(--body);cursor:pointer;margin-bottom:6px}
+.g-bob,.g-hop,.g-pulse,.g-pulse2,.g-pulse3{transform-box:fill-box;transform-origin:center}
+.g-bob{animation:gbob 1.6s ease-in-out infinite}
+.g-hop{animation:ghop 1.8s ease-in-out infinite}
+.g-slide{animation:gslide 1.2s linear infinite}
+.g-pulse{animation:gpulse 1.4s ease-in-out infinite}
+.g-pulse2{animation:gpulse 1.4s ease-in-out .5s infinite}
+.g-pulse3{animation:gpulse 1.4s ease-in-out .9s infinite}
+@keyframes gbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes ghop{0%,55%,100%{transform:translateY(0)}25%{transform:translateY(-46px)}}
+@keyframes gslide{0%{transform:translateX(0)}100%{transform:translateX(-60px)}}
+@keyframes gpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+@media (prefers-reduced-motion:reduce){.g-bob,.g-hop,.g-slide,.g-pulse,.g-pulse2,.g-pulse3,.gstage.gup,.gstage.gdown{animation:none}}
+#playOv{position:fixed;inset:0;z-index:9;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.pbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px}
+.pname{font:800 1rem var(--display);color:var(--muted)}
+.pscore{font:800 2.2rem/1 var(--display);color:var(--love);font-variant-numeric:tabular-nums;min-width:56px;text-align:right}
+.pwrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:0 12px 12px}
+.pstage{position:relative;line-height:0}
+#pcv{display:block;border-radius:20px;background:var(--surface);border:1px solid var(--line);touch-action:none}
+.pmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px;line-height:1.4;pointer-events:none;border-radius:20px}
+.pmsg.over{pointer-events:auto;background:rgba(20,16,25,.82)}
+.pbig{font:800 1.7rem/1.1 var(--display);margin:0;color:var(--ink)}
+.psub{margin:0;color:var(--muted);font-size:1rem}
+.psub.ok{color:var(--sea);font-weight:700}
+.pnum{font:800 4.2rem/1 var(--display);margin:0;color:var(--love);font-variant-numeric:tabular-nums}
+#scoreOv{position:fixed;inset:0;z-index:9;background:var(--bg);overflow-y:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(32px + env(safe-area-inset-bottom,0px))}
+.sbwrap{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.sbbar{display:flex;align-items:center;gap:12px}
+.sbbar h2{font-size:1.1rem;color:var(--ink)}
+.sbrow{display:grid;grid-template-columns:minmax(0,1fr) 84px 84px;align-items:center;gap:8px;padding:12px 16px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+.sbrow.sbhead{background:none;border:0;padding:0 16px;color:var(--muted);font-size:.85rem}
+.sbrow.sbhead b{text-align:right;color:var(--ink)}
+.sbrow small{display:block;color:var(--muted)}
+.sbrow .num{font-size:1.4rem;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.sbnote{color:var(--muted);font-size:.9rem;margin:4px 4px 0}
+.pmsg.slim{background:none;justify-content:flex-end;padding-bottom:14%}
+.psub.pill{background:rgba(20,16,25,.85);padding:6px 14px;border-radius:999px}
+.g-draw{stroke-dasharray:420;animation:gdraw 2.8s ease-in-out infinite}
+@keyframes gdraw{0%{stroke-dashoffset:420}60%,100%{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.g-draw{animation:none;stroke-dasharray:none}}
+#drawOv{position:fixed;inset:0;z-index:9;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overflow-y:auto}
+.dbody{display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 16px 24px;max-width:520px;width:100%;margin:0 auto;box-sizing:border-box}
+.dcv{display:block;width:100%;max-width:400px;aspect-ratio:9/10;border-radius:18px;background:#FFFDF8;touch-action:none;border:1px solid var(--line)}
+.dtools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;max-width:400px}
+.dsw{width:44px;height:44px;border-radius:50%;border:3px solid var(--line);cursor:pointer;padding:0}
+.dsw[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 3px var(--love)}
+.dword{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:14px 18px;border-radius:18px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-align:left;font-family:var(--body)}
+.dword small{color:var(--muted);font:700 .8rem var(--body);letter-spacing:.06em;text-transform:uppercase}
+.dword b{font:800 1.5rem var(--display)}
+.dslots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:400px}
+.dslot{width:36px;height:46px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font:800 1.3rem var(--display);cursor:pointer;padding:0}
+.dslot.f{border-color:var(--love)}
+.dslots.bad{animation:dshake .35s}
+@keyframes dshake{0%,100%{transform:none}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.dtiles{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;width:100%;max-width:400px}
+.dtile{height:46px;border-radius:10px;border:0;background:var(--sun);color:#2A1A00;font:800 1.2rem var(--display);cursor:pointer;padding:0}
+.dtile:disabled{opacity:.15;cursor:default}
+.dnote{color:var(--muted);text-align:center;margin:0}
+.dbig{font:800 1.6rem/1.2 var(--display);text-align:center;margin:0}
+.pmsg.slim .btn:not(.primary){background:var(--surface);border-color:var(--line);color:var(--ink)}
+.g-spin{transform-box:fill-box;transform-origin:center;animation:gspin 1.6s linear infinite}
+@keyframes gspin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.g-spin{animation:none}}
 </style>
 
 </head>
@@ -223,6 +310,31 @@ textarea{font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:
 
 
   <p class="foot" id="foot"></p>
+</div>
+<nav id="tabs" role="tablist" aria-label="Skyriai">
+  <button class="tab" role="tab" id="tabWheel" aria-selected="true" type="button">🎡 Ratas</button>
+  <button class="tab" role="tab" id="tabGames" aria-selected="false" type="button">🎮 Žaidimai</button>
+</nav>
+<section id="gamesOv" hidden aria-label="Žaidimai">
+  <div class="ghead"><h2>Žaidimai</h2><button class="btn" id="scoreBtn" type="button">🏆 Rezultatai</button></div>
+  <div class="gstage" id="gstage">
+    <div class="gtile" id="gart" role="img"></div>
+    <div><h3 class="gname" id="gname"></h3><p class="gline" id="gline"></p></div>
+    <button class="btn primary gplay" id="gplay" type="button">Žaisti</button>
+    <div class="gdots" id="gdots" aria-hidden="true"></div>
+  </div>
+  <button class="ghint" id="gnext" type="button">⌃ Braukite aukštyn – kitas žaidimas</button>
+</section>
+<div id="playOv" hidden role="dialog" aria-modal="true" aria-label="Žaidimas">
+  <div class="pbar"><button class="btn" id="pclose" type="button" aria-label="Uždaryti žaidimą">✕</button><span class="pname" id="pname"></span><div class="row" style="flex-wrap:nowrap;gap:10px"><span class="pscore" id="pscore">0</span><button class="btn" id="phap" type="button" aria-label="Vibracija">📳</button><button class="btn" id="psnd" type="button" aria-label="Garsas">🔊</button></div></div>
+  <div class="pwrap" id="pwrap"><div class="pstage" id="pstage"><canvas id="pcv" width="360" height="600" aria-label="Žaidimo laukas"></canvas><div class="pmsg" id="pmsg"></div></div></div>
+</div>
+<section id="scoreOv" hidden role="dialog" aria-modal="true" aria-label="Rezultatai">
+  <div class="sbwrap"><div class="sbbar"><button class="btn" id="scoreBack" type="button" aria-label="Atgal">←</button><h2>Rezultatai</h2></div><div id="scoreList" class="sbwrap"></div></div>
+</section>
+<div id="drawOv" hidden role="dialog" aria-modal="true" aria-label="Piešk ir spėk">
+  <div class="pbar"><button class="btn" id="dclose" type="button" aria-label="Uždaryti">✕</button><span class="pname" id="dtitle">Piešk ir spėk</span><span style="width:44px"></span></div>
+  <div class="dbody" id="dbody"></div>
 </div>
 <div id="toast" hidden role="status"></div>
 <div id="reveal" hidden><div class="env" id="env"><div class="env-back"></div><div class="letter"><span class="cat" id="rvCat"></span><p class="task" id="rvText"></p><button class="btn primary" id="rvOk" type="button">Priimu 💌</button></div><div class="env-front"></div><div class="flap"></div><div class="seal">♥</div></div></div>
@@ -596,6 +708,8 @@ function dbStore(db){
   db.collection('spins').orderBy('day','desc').limit(400).onSnapshot(s=>{ok(s);if(!busy)S.spins=map(s);render()},fail);
   db.collection('tasks').onSnapshot(s=>{ok(s);S.custom=map(s);render()},fail);
   db.collection('photos').onSnapshot(s=>{S.photos=map(s);render()},()=>{});
+  db.collection('scores').onSnapshot(s=>{S.scores=map(s);renderGames()},()=>{});
+  db.collection('drawings').onSnapshot(s=>{S.drawings=map(s);renderGames()},()=>{});
   db.collection('news').onSnapshot(s=>{const o=map(s);S.newsDb=Object.keys(o).map(id=>({...o[id],id}))},()=>{});
   return{setDoc:(p,d)=>db.doc(p).set(d),putPlayers:p=>db.doc('game/players').set(p),putSpin:(id,d)=>db.doc('spins/'+id).set(d),patchSpin:(id,p)=>db.doc('spins/'+id).update(p),
     addTask:async d=>(await db.collection('tasks').add(d)).id,delTask:id=>db.doc('tasks/'+id).delete()}}
@@ -605,6 +719,487 @@ async function startFirebase(code){
     if(!window.firebase){const v='https://www.gstatic.com/firebasejs/10.12.2/';await addScript(v+'firebase-app-compat.js');await addScript(v+'firebase-firestore-compat.js');firebase.initializeApp(FIREBASE)}
     const fs=firebase.firestore(),R='rooms/'+code+'/';store=dbStore({doc:p=>fs.doc(R+p),collection:p=>fs.collection(R+p)});ROOM=code;prepPush()}
   catch(e){store=localStore();S.pl=true;S.mode='local';render()}}
+/* ---------- Žaidimų skirtukas: braukiamas srautas, rezultatai, klasikiniai žaidimai ---------- */
+const GW=360,GH=600,GC={love:'#FF5C8A',sea:'#3CC2BE',seaD:'#2E9C98',sun:'#F6BE4F',plum:'#9C8CFF',ink:'#F4EBEF',surface:'#1E1925',line:'#352C3E'};
+const GDEFS=[
+ {id:'flappy',name:'Skrendanti širdis',line:'Tikras Flappy, tik vietoj paukščio – širdis.',unit:'praskrista vamzdžių'},
+ {id:'dash',name:'Šiauliai → Telšiai',line:'Geometry Dash kelionė per 70 km spyglių.',unit:'% kelio'},
+ {id:'draw',name:'Piešk ir spėk',line:'Nupiešk žodį – antra pusė spės.',unit:'❤️ taškai'},
+ {id:'rush',name:'Širdelių lietus',line:'Pagauk širdeles, kol jos neišblėso.',unit:'pagauta'}];
+const GART={
+flappy:'<svg viewBox="0 0 240 240" aria-hidden="true"><rect width="240" height="240" rx="28" fill="#4EC0CA"/><path d="M40 60c-6-4-10-8-10-12 0-4 3-7 7-7 3 0 5 1 6 3 1-2 3-3 6-3 4 0 7 3 7 7 0 4-4 8-10 12l-3 2z" fill="#fff" opacity=".85"/><path d="M170 40c-4-3-7-5-7-8 0-3 2-5 5-5 2 0 3 1 4 2 1-1 2-2 4-2 3 0 5 2 5 5 0 3-3 5-7 8l-2 1z" fill="#fff" opacity=".85"/><rect x="146" y="0" width="46" height="80" fill="#73BF2E" stroke="#543847" stroke-width="3"/><rect x="140" y="70" width="58" height="22" fill="#73BF2E" stroke="#543847" stroke-width="3"/><rect x="146" y="160" width="46" height="50" fill="#73BF2E" stroke="#543847" stroke-width="3"/><rect x="140" y="150" width="58" height="22" fill="#73BF2E" stroke="#543847" stroke-width="3"/><rect x="0" y="208" width="240" height="32" fill="#DED895"/><rect x="0" y="204" width="240" height="8" fill="#73BF2E" stroke="#543847" stroke-width="2"/><g class="g-bob"><path d="M86 136c-18-12-30-24-30-38 0-12 9-20 20-20 8 0 14 4 18 11 4-7 10-11 18-11 11 0 20 8 20 20 0 14-12 26-30 38l-8 5z" fill="#FF5C8A" stroke="#543847" stroke-width="3"/><circle cx="104" cy="96" r="6" fill="#fff" stroke="#543847" stroke-width="2"/><circle cx="106" cy="96" r="2.5" fill="#24070F"/><ellipse cx="72" cy="106" rx="11" ry="7" fill="#FFF4F7" stroke="#543847" stroke-width="2"/></g></svg>',
+dash:'<svg viewBox="0 0 240 240" aria-hidden="true"><rect width="240" height="240" rx="28" fill="#2E5BFF"/><rect x="30" y="40" width="60" height="60" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><rect x="150" y="70" width="70" height="70" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><rect x="0" y="190" width="240" height="50" fill="#1A3399"/><line x1="0" y1="190" x2="240" y2="190" stroke="#fff" stroke-width="3"/><g class="g-slide"><path d="M150 190l14-30 14 30z" fill="#111" stroke="#fff" stroke-width="2"/><path d="M178 190l14-30 14 30z" fill="#111" stroke="#fff" stroke-width="2"/><path d="M270 190l14-30 14 30z" fill="#111" stroke="#fff" stroke-width="2"/></g><g class="g-hop"><rect x="60" y="152" width="38" height="38" fill="#FF5C8A" stroke="#24070F" stroke-width="3"/><rect x="66" y="158" width="26" height="26" fill="none" stroke="#FFB3C8" stroke-width="2"/><rect x="70" y="164" width="5" height="5" fill="#24070F"/><rect x="83" y="164" width="5" height="5" fill="#24070F"/></g></svg>',
+draw:'<svg viewBox="0 0 240 240" aria-hidden="true"><rect x="30" y="30" width="180" height="160" rx="14" fill="#FFFDF8"/><path class="g-draw" d="M62 160V112l58-44 58 44v48zM104 160v-30h32v30" fill="none" stroke="#FF5C8A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(60 204)"><rect width="22" height="22" rx="5" fill="#F6BE4F"/><rect x="26" width="22" height="22" rx="5" fill="#F6BE4F"/><rect x="52" width="22" height="22" rx="5" fill="#F6BE4F"/><rect x="78" width="22" height="22" rx="5" fill="#F6BE4F"/><rect x="104" width="22" height="22" rx="5" fill="#F6BE4F"/></g></svg>',
+rush:'<svg viewBox="0 0 240 240" aria-hidden="true"><path class="g-pulse" d="M80 100c-14-9-22-18-22-28 0-9 7-15 15-15 6 0 10 3 13 8 3-5 7-8 13-8 8 0 15 6 15 15 0 10-8 19-22 28l-6 4z" fill="#FF5C8A"/><path class="g-pulse2" d="M170 150c-10-6-16-13-16-20 0-7 5-11 11-11 4 0 7 2 9 6 2-4 5-6 9-6 6 0 11 4 11 11 0 7-6 14-16 20l-4 3z" fill="#F6BE4F"/><path class="g-pulse3" d="M70 190c-8-5-12-10-12-16 0-5 4-9 9-9 3 0 6 2 7 5 1-3 4-5 7-5 5 0 9 4 9 9 0 6-4 11-12 16l-4 2z" fill="#9C8CFF"/></svg>'};
+S.scores={};try{S.scores=JSON.parse(ls.get('mr_scores')||'{}')||{}}catch(e){S.scores={}}
+S.drawings={};try{S.drawings=JSON.parse(ls.get('mr_draw')||'{}')||{}}catch(e){S.drawings={}}
+let gOrder=[],gIdx=0,gWheelT=0,PL=null;
+const cap=w=>{w=String(w||'');return w.charAt(0).toLocaleUpperCase('lt')+w.slice(1)};
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+/* garsai: maži sintezuoti „pyptelėjimai“, kaip senuose žaidimuose */
+let AC=null;const sfxOn=()=>ls.get('mr_sfx')!=='0';
+function sfx(kind){if(!sfxOn())return;const P={flap:['triangle',420,720,.09,.10],point:['square',880,1320,.13,.06],hit:['sawtooth',240,70,.28,.12],coin:['sine',990,1760,.18,.10],jump:['square',300,480,.06,.04],die:['sawtooth',320,50,.4,.10],win:['triangle',660,1320,.45,.12],tap:['sine',700,940,.06,.07],pad:['triangle',300,900,.15,.08],tick:['square',1900,1300,.018,.035],pop:['sine',640,170,.08,.16],click:['square',2400,1800,.015,.06],click2:['square',1600,1200,.012,.045],thunk:['triangle',180,90,.07,.14]}[kind];if(!P)return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=P[0];o.frequency.setValueAtTime(P[1],t);o.frequency.exponentialRampToValueAtTime(P[2],t+P[3]);g.gain.setValueAtTime(P[4],t);g.gain.exponentialRampToValueAtTime(.0001,t+P[3]+.03);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+P[3]+.06)}catch(e){}}
+function sndLabel(){const b=$('psnd');b.textContent=sfxOn()?'🔊':'🔇';b.setAttribute('aria-label',sfxOn()?'Išjungti garsą':'Įjungti garsą');const h=$('phap');h.textContent=hapOn()?'📳':'📴';h.setAttribute('aria-label',hapOn()?'Išjungti vibraciją':'Įjungti vibraciją')}
+
+/* srautas */
+function gShuffle(prevLast){const a=shuffle(GDEFS.map((_,i)=>i));if(a.length>1&&a[0]===prevLast)a.push(a.shift());return a}
+const gCur=()=>GDEFS[gOrder[gIdx]];
+function gGo(dir){
+  if(!gOrder.length)return;gIdx+=dir;
+  if(gIdx>=gOrder.length){const last=gOrder[gOrder.length-1];gOrder=gShuffle(last);gIdx=0}
+  if(gIdx<0)gIdx=gOrder.length-1;
+  const st=$('gstage');st.classList.remove('gup','gdown');void st.offsetWidth;st.classList.add(dir>0?'gup':'gdown');
+  renderGames()}
+function renderGames(){
+  if(!$('scoreOv').hidden)renderScore();
+  if($('gamesOv').hidden)return;
+  const d=gCur();if(!d)return;
+  const art=$('gart');if(art.dataset.id!==d.id){art.innerHTML=GART[d.id];art.dataset.id=d.id}
+  let line=d.line,label='Žaisti';
+  if(d.id==='draw'){const p=dPending();if(p){line=`${nameOf(p[1].from)||'Antra pusė'} tau nupiešė! Atspėk.`;label='Spėti'}else label='Piešti'}
+  if(d.fidget)label='Atidaryti';
+  art.setAttribute('aria-label',d.name);$('gname').textContent=d.name;$('gline').textContent=line;
+  $('gdots').replaceChildren(...gOrder.map((_,i)=>el('i',{class:i===gIdx?'on':''})));
+  const b=$('gplay');b.textContent=label;b.onclick=()=>d.id==='draw'?dOpen():pOpen(d.id)}
+function showTab(which){
+  const g=which==='games';$('gamesOv').hidden=!g;
+  $('tabWheel').setAttribute('aria-selected',String(!g));$('tabGames').setAttribute('aria-selected',String(g));
+  if(g){if(!gOrder.length)gOrder=gShuffle(-1);renderGames()}else{$('scoreOv').hidden=true}}
+$('tabWheel').onclick=()=>showTab('wheel');$('tabGames').onclick=()=>showTab('games');$('gnext').onclick=()=>gGo(1);
+$('scoreBtn').onclick=()=>{$('scoreOv').hidden=false;renderScore()};$('scoreBack').onclick=()=>{$('scoreOv').hidden=true};
+$('psnd').onclick=()=>{ls.set('mr_sfx',sfxOn()?'0':'1');sndLabel()};$('phap').onclick=()=>{ls.set('mr_hap',hapOn()?'0':'1');sndLabel();hap(20)};
+(function(){const st=$('gamesOv');let y0=null;
+  st.addEventListener('pointerdown',e=>{y0=e.clientY});
+  st.addEventListener('pointerup',e=>{if(y0==null)return;const dy=e.clientY-y0;y0=null;if(dy<-48)gGo(1);else if(dy>48)gGo(-1)});
+  st.addEventListener('pointercancel',()=>{y0=null});
+  st.addEventListener('wheel',e=>{const t=Date.now();if(t-gWheelT<500||Math.abs(e.deltaY)<20)return;gWheelT=t;gGo(e.deltaY>0?1:-1)},{passive:true})})();
+document.addEventListener('keydown',e=>{
+  if(PL&&!$('playOv').hidden){if((e.code==='Space'||e.code==='ArrowUp')&&!e.repeat&&!(e.target.closest&&e.target.closest('button'))){e.preventDefault();pTap(GW/2,GH/2)}return}
+  if(!$('gamesOv').hidden&&$('scoreOv').hidden&&$('drawOv').hidden){if(e.key==='ArrowDown')gGo(1);if(e.key==='ArrowUp')gGo(-1)}});
+document.addEventListener('keyup',e=>{if(PL&&(e.code==='Space'||e.code==='ArrowUp')&&PL.g.release)PL.g.release()});
+
+/* rezultatai */
+function saveScore(id,score){
+  const def=GDEFS.find(d=>d.id===id),who=S.me,o=other(),prev=S.scores[id+'_'+who]||{},theirs=(S.scores[id+'_'+o]||{}).best||0;
+  const best=Math.max(prev.best||0,score),doc={game:id,who,best,plays:(prev.plays||0)+1,at:Date.now()};
+  S.scores={...S.scores,[id+'_'+who]:doc};ls.set('mr_scores',JSON.stringify(S.scores));
+  if(S.mode==='db'&&store&&store.setDoc){try{Promise.resolve(store.setDoc('scores/'+id+'_'+who,doc)).catch(()=>toast('Rezultato nepavyko išsaugoti.'))}catch(e){toast('Rezultato nepavyko išsaugoti.')}}
+  const beat=theirs>0&&score>theirs&&(prev.best||0)<=theirs;
+  if(beat)notify(o,`${nameOf(who)} aplenkė tavo rezultatą 💌`,`„${def.name}“: ${score} prieš tavo ${theirs}. Ateik susigrąžinti.`);
+  return{best,theirs,beat,newBest:score>(prev.best||0)&&score>0}}
+function renderScore(){
+  const box=$('scoreList');box.replaceChildren();
+  const na=nameOf('a')||'Žaidėjas 1',nb=nameOf('b')||'Žaidėjas 2';
+  box.append(el('div',{class:'sbrow sbhead'},el('span'),el('b',null,na),el('b',null,nb)));
+  const val=(d,w)=>d.id==='draw'?dPoints(w):(S.scores[d.id+'_'+w]||{}).best;
+  GDEFS.filter(d=>!d.fidget).forEach(d=>{box.append(el('div',{class:'sbrow'},el('div',null,el('b',null,d.name),el('small',null,d.unit)),el('span',{class:'num'},String(val(d,'a')||'–')),el('span',{class:'num'},String(val(d,'b')||'–'))))});
+  const sum=w=>GDEFS.filter(d=>!d.fidget).reduce((n,d)=>n+((S.scores[d.id+'_'+w]||{}).plays||0),0)+Object.values(S.drawings).filter(x=>x.from===w).length;
+  box.append(el('div',{class:'sbrow'},el('div',null,el('b',null,'Sužaista raundų')),el('span',{class:'num'},String(sum('a'))),el('span',{class:'num'},String(sum('b')))));
+  box.append(el('p',{class:'sbnote'},'Čia nėra nugalėtojų – tik rezultatai, kuriuos galima aplenkti.'))}
+
+/* žaidimo apvalkalas */
+const GFACT={};
+function heart(c,x,y,s,fill){c.beginPath();c.moveTo(x,y+s*.9);c.bezierCurveTo(x-s*1.6,y-s*.1,x-s*.9,y-s*1.25,x,y-s*.45);c.bezierCurveTo(x+s*.9,y-s*1.25,x+s*1.6,y-s*.1,x,y+s*.9);c.closePath();c.fillStyle=fill;c.fill()}
+function otext(c,t,x,y,size,fill,line,lw){c.font=`900 ${size}px Nunito,system-ui,sans-serif`;c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';c.lineWidth=lw||Math.max(4,size/7);c.strokeStyle=line||'#24070F';c.strokeText(t,x,y);c.fillStyle=fill||'#fff';c.fillText(t,x,y)}
+function rrect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+function pFit(){const cv=$('pcv'),w=$('pwrap');const s=Math.min((w.clientWidth-24)/GW,(w.clientHeight-12)/GH);cv.style.width=Math.max(120,Math.floor(GW*s))+'px';cv.style.height=Math.max(200,Math.floor(GH*s))+'px'}
+function pMsg(kind,r){
+  const m=$('pmsg');m.replaceChildren();m.className='pmsg';m.hidden=kind==='none';
+  if(kind==='ready')m.append(el('p',{class:'pbig'},PL.def.name),el('p',{class:'psub'},'Palieski, kad pradėtum'));
+  else if(kind==='over'){const slim=!!PL.g.drawOver;m.classList.add('over');if(slim)m.classList.add('slim');
+    const btns=el('div',{class:'row',style:'justify-content:center;margin-top:8px'},el('button',{class:'btn primary',type:'button',onclick:pRetry},'Dar kartą'),el('button',{class:'btn',type:'button',onclick:pClose},'Uždaryti'));
+    if(slim)m.append(...[r.beat&&ROOM?el('p',{class:'psub ok pill'},'Aplenkei! Žinutė išsiųsta 💌'):null,btns].filter(Boolean));
+    else m.append(...[el('p',{class:'psub'},'Rezultatas'),el('p',{class:'pnum'},String(r.score)),
+      el('p',{class:'psub'},r.newBest?'Naujas rekordas! 🎉':`Tavo rekordas: ${r.best}`),
+      r.theirs>0?el('p',{class:'psub'},`${nameOf(other())||'Antra pusė'}: ${r.theirs}`):null,
+      r.beat&&ROOM?el('p',{class:'psub ok'},'Aplenkei! Žinutė išsiųsta 💌'):null,btns].filter(Boolean))}}
+function pOpen(id){
+  if(!S.me||!nameOf(S.me)){toast('Pirmiausia skirtuke „Ratas“ pasirink, kas tu esi.');return}
+  const def=GDEFS.find(d=>d.id===id);if(!def)return;pClose();
+  const cv=$('pcv'),dpr=Math.min(window.devicePixelRatio||1,3);cv.width=GW*dpr;cv.height=GH*dpr;
+  const cx=cv.getContext('2d');cx.setTransform(dpr,0,0,dpr,0,0);
+  PL={id,def,cx,g:GFACT[id](),state:'ready',raf:0,last:performance.now()};
+  $('playOv').hidden=false;pFit();sndLabel();$('pname').textContent=def.name;$('pscore').textContent='0';$('pscore').hidden=!!PL.g.ownScore;
+  PL.g.reset();pMsg(PL.g.ownReady||PL.g.fidget?'none':'ready');if(PL.g.fidget)PL.state='run';PL.raf=requestAnimationFrame(pLoop)}
+function pRetry(){if(!PL)return;PL.state='ready';PL.g.reset();$('pscore').textContent='0';pMsg(PL.g.ownReady?'none':'ready')}
+function pClose(){if(PL){cancelAnimationFrame(PL.raf);PL=null}$('playOv').hidden=true}
+function pTap(x,y){
+  if(!PL)return;const g=PL.g;
+  if(PL.state==='ready'){PL.state='run';$('pmsg').hidden=true;g.start();g.tap(x,y)}
+  else if(PL.state==='run')g.tap(x,y)}
+function pLoop(t){
+  if(!PL)return;const p=PL,g=p.g,dt=Math.min(48,t-p.last)/16.667;p.last=t;
+  if(p.state==='run'){g.update(dt);if(g.over)pEnd()}else if(g.idle)g.idle(dt,p.state);
+  g.draw(p.cx,p.state);if(!g.ownScore)$('pscore').textContent=String(g.score);
+  if(PL===p)p.raf=requestAnimationFrame(pLoop)}
+function pEnd(){
+  const p=PL,g=p.g;p.state='over';const r=saveScore(p.id,g.score);g.result={...r,score:g.score};
+  if(g.auto&&!g.done){setTimeout(()=>{if(PL===p&&p.state==='over'){g.reset();p.state='run';g.start()}},700);return}
+  setTimeout(()=>{if(PL===p&&p.state==='over')pMsg('over',g.result)},g.overDelay||450)}
+let pDown=false;const pXY=e=>{const r=$('pcv').getBoundingClientRect();return[(e.clientX-r.left)/r.width*GW,(e.clientY-r.top)/r.height*GH]};
+$('pstage').addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;e.preventDefault();pDown=true;try{$('pstage').setPointerCapture(e.pointerId)}catch(_){}const[x,y]=pXY(e);pTap(x,y)});
+$('pstage').addEventListener('pointermove',e=>{if(!pDown||!PL||!PL.g.move||PL.state!=='run')return;const[x,y]=pXY(e);PL.g.move(x,y)});
+const pUp=()=>{pDown=false;if(PL&&PL.g.release)PL.g.release()};
+$('pstage').addEventListener('pointerup',pUp);$('pstage').addEventListener('pointercancel',pUp);
+$('pclose').onclick=pClose;window.addEventListener('resize',()=>{if(PL)pFit()});
+
+/* 1. Skrendanti širdis – kuo artimiau originaliam Flappy Bird */
+GFACT.flappy=()=>{
+  const HX=104,R=17,PW=58,GAP=150,SP=2.45,GR=.42,JMP=-7.4,FL=GH-96;
+  let y,vy,rot,pipes,gx,t,flash,deadT,wing;const g={score:0,over:false,ownScore:true,ownReady:true,drawOver:true,overDelay:900};
+  const add=x=>pipes.push({x,top:64+Math.random()*(FL-GAP-128),passed:false});
+  g.reset=()=>{y=GH*.42;vy=0;rot=0;pipes=[];gx=0;t=0;flash=0;deadT=0;wing=0;g.score=0;g.over=false;g.result=null};
+  g.start=()=>{add(GW+90)};
+  g.tap=()=>{if(g.over)return;vy=JMP;wing=0;sfx('flap')};
+  function die(){if(g.over)return;g.over=true;flash=1;vy=Math.max(vy,0);sfx('hit')}
+  g.idle=(dt,st)=>{t+=dt;
+    if(st==='ready'){gx+=SP*dt;wing+=dt*.3;y=GH*.42+Math.sin(t*.1)*7}
+    else{deadT+=dt;flash=Math.max(0,flash-.05*dt);if(y+R<FL){vy=Math.min(12,vy+GR*dt);y=Math.min(FL-R,y+vy*dt);rot=Math.min(1.57,rot+.15*dt)}}};
+  g.update=dt=>{t+=dt;gx+=SP*dt;wing+=dt*(vy<0?.7:.3);vy=Math.min(11,vy+GR*dt);y+=vy*dt;
+    rot=vy<0?-.42:Math.min(1.57,rot+(vy>5?.09:.02)*dt);if(y<-R)y=-R;
+    pipes.forEach(p=>p.x-=SP*dt);if(pipes[pipes.length-1].x<GW-205)add(GW+40);pipes=pipes.filter(p=>p.x>-PW-20);
+    for(const p of pipes){if(!p.passed&&p.x+PW/2<HX){p.passed=true;g.score++;sfx('point')}
+      if(HX+R-4>p.x-3&&HX-R+4<p.x+PW+3&&(y-R+5<p.top||y+R-4>p.top+GAP)){die();return}}
+    if(y+R>=FL){y=FL-R;die()}};
+  function pipe(c,x,y0,h,capAtBottom){if(h<=0)return;
+    const body=(bx,by,bw,bh)=>{c.fillStyle='#73BF2E';c.fillRect(bx,by,bw,bh);c.fillStyle='#9CE659';c.fillRect(bx+5,by,6,bh);c.fillStyle='#558C22';c.fillRect(bx+bw-10,by,7,bh);c.strokeStyle='#543847';c.lineWidth=2;c.strokeRect(bx,by,bw,bh)};
+    body(x,y0,PW,h);const cy=capAtBottom?y0+h-26:y0;body(x-4,cy,PW+8,26)}
+  const BLD=[[0,70,34],[36,104,26],[64,56,30],[96,124,22],[120,80,36],[158,98,28],[188,60,32],[222,130,24],[248,84,30],[280,66,34],[316,108,26],[344,58,30]];
+  g.draw=(c,st)=>{
+    c.fillStyle='#4EC0CA';c.fillRect(0,0,GW,GH);
+    [[40,120,11],[150,70,8],[262,140,13],[330,52,7],[96,210,7],[214,226,10]].forEach(([x,y0,s])=>{const xx=((x-gx*.12)%(GW+60)+GW+60)%(GW+60)-30;heart(c,xx,y0,s,'rgba(255,255,255,.9)')});
+    const cb=FL-150;c.fillStyle='#E9FCD9';for(let i=-1;i<12;i++){const x=i*40-((gx*.2)%40);c.beginPath();c.arc(x,cb+34,28,0,7);c.fill()}c.fillRect(0,cb+34,GW,FL-cb-34);
+    const ox=(gx*.3)%360;for(const k of [0,360]){BLD.forEach(([bx,h,w])=>{const x=bx+k-ox,top=FL-22-h;c.fillStyle='#BCEFC7';c.fillRect(x,top,w,h);c.fillStyle='#9ADDB0';for(let wy=top+8;wy<FL-30;wy+=12)for(let wx=x+5;wx<x+w-6;wx+=9)c.fillRect(wx,wy,4,5)});
+      heart(c,222+k-ox+12,FL-22-130-12,9,'#FF8FB0')}
+    c.fillStyle='#5EE270';for(let i=-1;i<14;i++){const x=i*30-((gx*.5)%30);c.beginPath();c.arc(x,FL-8,18,0,7);c.fill()}
+    pipes&&pipes.forEach(p=>{pipe(c,p.x,-4,p.top+4,true);pipe(c,p.x,p.top+GAP,FL-p.top-GAP,false)});
+    c.fillStyle='#DED895';c.fillRect(0,FL,GW,GH-FL);c.fillStyle='#73BF2E';c.fillRect(0,FL,GW,14);
+    c.fillStyle='#9CE659';const so=gx%16;for(let x=-16-so;x<GW+16;x+=16){c.beginPath();c.moveTo(x,FL+14);c.lineTo(x+8,FL+14);c.lineTo(x+16,FL);c.lineTo(x+8,FL);c.closePath();c.fill()}
+    c.fillStyle='#543847';c.fillRect(0,FL-1,GW,2);c.fillRect(0,FL+14,GW,2);c.fillStyle='#D0C874';c.fillRect(0,FL+16,GW,4);
+    // širdis-paukštis
+    c.save();c.translate(HX,y);c.rotate(rot);heart(c,0,1,R,'#FF5C8A');c.lineWidth=2.2;c.strokeStyle='#543847';c.stroke();
+    c.fillStyle='#fff';c.beginPath();c.arc(6,-5,5,0,7);c.fill();c.lineWidth=1.6;c.stroke();c.fillStyle='#24070F';c.beginPath();c.arc(7.6,-5,2.2,0,7);c.fill();
+    c.fillStyle='rgba(255,190,210,.95)';c.beginPath();c.arc(9,5,2.6,0,7);c.fill();
+    c.save();c.translate(-7,3);c.rotate(Math.sin(wing)*.7);c.fillStyle='#FFF4F7';c.beginPath();c.ellipse(-4,0,9,5.5,0,0,7);c.fill();c.strokeStyle='#543847';c.lineWidth=1.6;c.stroke();c.restore();c.restore();
+    if(st==='ready'){otext(c,'Pasiruošk!',GW/2,150,46,'#FFB43A','#543847',8);
+      const k=(t%60)/60;c.strokeStyle='rgba(255,255,255,'+(1-k)+')';c.lineWidth=3;c.beginPath();c.arc(HX+110,GH*.42+30,12+k*18,0,7);c.stroke();
+      heart(c,HX+110,GH*.42+30,10,'#fff');otext(c,'Palieski',HX+110,GH*.42+78,20,'#fff','#543847',5)}
+    else if(!(st==='over'&&deadT>45))otext(c,String(g.score),GW/2,74,52,'#fff','#24070F',8);
+    if(flash>0){c.fillStyle='rgba(255,255,255,'+flash+')';c.fillRect(0,0,GW,GH)}
+    if(st==='over'&&deadT>45&&g.result)drawPanel(c)};
+  function medal(c,x,y,n){const m=n>=40?['#E5E4E2','#9A9A9A']:n>=30?['#F5C542','#B8860B']:n>=20?['#D6D6D6','#8C8C8C']:n>=10?['#D9894A','#8B4A1C']:null;
+    c.beginPath();c.arc(x,y,30,0,7);c.fillStyle=m?m[0]:'#CFC98C';c.fill();c.lineWidth=3;c.strokeStyle=m?m[1]:'#B5AE6E';c.stroke();
+    if(m){heart(c,x,y+2,13,'#FF5C8A');c.lineWidth=2;c.strokeStyle='#fff';c.stroke();if(n>=40){c.fillStyle='#fff';c.fillRect(x+14,y-20,3,9);c.fillRect(x+11,y-17,9,3)}}}
+  function drawPanel(c){const r=g.result;otext(c,'Žaidimas baigtas',GW/2,140,38,'#FFB43A','#543847',7);
+    rrect(c,34,186,GW-68,150,14);c.fillStyle='#DED895';c.fill();c.lineWidth=4;c.strokeStyle='#543847';c.stroke();
+    c.font='900 14px Nunito,system-ui,sans-serif';c.textAlign='center';c.fillStyle='#E86101';c.fillText('MEDALIS',102,214);medal(c,102,262,r.score);
+    c.textAlign='right';c.fillStyle='#E86101';c.fillText('REZULTATAS',GW-54,214);otext(c,String(r.score),GW-80,244,30,'#fff','#543847',6);
+    c.textAlign='right';c.font='900 14px Nunito,system-ui,sans-serif';c.fillStyle='#E86101';c.fillText('REKORDAS',GW-54,282);otext(c,String(r.best),GW-80,310,30,'#fff','#543847',6);
+    if(r.newBest){rrect(c,168,293,58,20,5);c.fillStyle='#E5383B';c.fill();c.font='900 11px Nunito,system-ui,sans-serif';c.textAlign='center';c.fillStyle='#fff';c.fillText('NAUJAS',197,304)}
+    if(r.theirs>0){c.font='800 15px Nunito,system-ui,sans-serif';c.textAlign='center';c.fillStyle='#fff';c.fillText(`${nameOf(other())||'Antra pusė'}: ${r.theirs}`,GW/2,362)}}
+  return g};
+
+/* 2. Šiauliai → Telšiai – kuo artimiau Geometry Dash */
+const DB=28,DGY=430,DSP=4.8,DG=.86,DJV=10.3,DPV=14.6,DPX=84;
+const DLEVEL=(()=>{const L=[],add=(t,x,y=0)=>L.push({t,x,y}),Sp=(a,b,y=0)=>{for(let x=a;x<=b;x++)add('s',x,y)},Bk=(a,b,y=0)=>{for(let x=a;x<=b;x++)add('b',x,y)};
+  Sp(12,12);Sp(20,20);Sp(28,29);Sp(37,38);
+  Bk(46,49);Sp(50,51);
+  add('p',58);Sp(60,62);
+  Sp(72,72);add('h',72,2.6);
+  Sp(80,85);add('o',82,1.3);
+  Bk(95,96);Bk(99,100);Bk(99,100,1);Bk(103,104);Bk(103,104,1);Bk(103,104,2);Sp(105,108);add('h',107,4.2);
+  Sp(116,117);Sp(123,124);Sp(130,131);
+  Bk(140,145);add('s',143,1);
+  add('p',152);Bk(156,160,3);Sp(155,162);add('h',158,5.6);
+  Sp(172,179);add('o',173,1.8);add('o',176,1.8);
+  Sp(190,190);Sp(194,194);Sp(198,199);Sp(204,205);
+  L.forEach((o,i)=>o.i=i);return{objs:L.sort((a,b)=>a.x-b.x),end:214}})();
+function dashInit(){return{x:0,y:DGY-DB,vy:0,ground:true,rot:0,buf:0,f:0,dead:false,done:false,used:new Set(),coins:new Set(),ev:''}}
+function dashOrb(s){const cx=s.x+DB/2,cy=s.y+DB/2;for(const o of DLEVEL.objs){if(o.t!=='o'||s.used.has(o.i))continue;const ox=(o.x+.5)*DB;if(ox<cx-2*DB)continue;if(ox>cx+2*DB)break;if(Math.hypot(ox-cx,DGY-(o.y+.5)*DB-cy)<DB*1.05)return o}return null}
+function dashStep(s,tap,hold){
+  if(s.dead||s.done)return;s.f++;s.ev='';s.x+=DSP;if(tap)s.buf=6;
+  const pl=s.x+3,pr=s.x+DB-3;
+  if(s.buf>0){const o=dashOrb(s);if(o){s.used.add(o.i);s.vy=-DJV;s.ground=false;s.buf=0;s.ev='orb'}}
+  if((s.buf>0||hold)&&s.ground){s.vy=-DJV;s.ground=false;s.buf=0;s.ev='jump'}
+  if(s.buf>0)s.buf--;
+  for(const o of DLEVEL.objs){if(o.x*DB>pr)break;if(o.t!=='p'||s.used.has(o.i)||(o.x+1)*DB<pl)continue;
+    const c=s.x+DB/2;if(c>=o.x*DB&&c<=(o.x+1)*DB&&s.y+DB>=DGY-DB*.35){s.used.add(o.i);s.vy=-DPV;s.ground=false;s.ev='pad'}}
+  const prevBottom=s.y+DB;
+  if(!s.ground){s.vy=Math.min(s.vy+DG,16);s.y+=s.vy}
+  if(s.y+DB>=DGY){s.y=DGY-DB;s.vy=0;s.ground=true}
+  let support=s.y+DB>=DGY-.01;
+  for(const o of DLEVEL.objs){const bx=o.x*DB;if(bx>pr)break;if(bx+DB<pl)continue;
+    if(o.t==='b'){const top=DGY-(o.y+1)*DB,bot=top+DB;
+      if(s.y+DB<=top+.01){if(Math.abs(s.y+DB-top)<.6)support=true;continue}
+      if(s.y>=bot-.01)continue;
+      if(prevBottom<=top+6&&s.vy>=0){s.y=top-DB;s.vy=0;s.ground=true;support=true}else{s.dead=true;return}}
+    else if(o.t==='s'){const top=DGY-(o.y+1)*DB;if(pr>bx+DB*.3&&pl<bx+DB*.7&&s.y+DB>top+DB*.42&&s.y<top+DB){s.dead=true;return}}
+    else if(o.t==='h'&&!s.coins.has(o.i)){if(Math.hypot(bx+DB/2-(s.x+DB/2),DGY-(o.y+.5)*DB-(s.y+DB/2))<DB*.95){s.coins.add(o.i);s.ev='coin'}}}
+  if(s.ground&&!support)s.ground=false;
+  if(s.ground)s.rot=Math.round(s.rot/(Math.PI/2))*(Math.PI/2);else s.rot+=Math.PI/24;
+  if(s.x>=DLEVEL.end*DB)s.done=true}
+GFACT.dash=()=>{
+  let s,parts=[],att=0,hold=false,tapQ=false,acc=0,deadT=0,trailT=0;const g={score:0,over:false,auto:true,ownScore:true,drawOver:true,overDelay:600};
+  const PAL=[[46,91,255],[138,43,226],[255,61,127],[255,120,40]];
+  const bg=k=>{const f=Math.min(.999,Math.max(0,k))*(PAL.length-1),i=Math.floor(f),u=f-i,a=PAL[i],b=PAL[i+1];return a.map((v,j)=>Math.round(v+(b[j]-v)*u))};
+  g.reset=()=>{s=dashInit();att++;parts=[];g.score=0;g.over=false;g.done=false;g.result=null;deadT=0;acc=0;tapQ=false};
+  g.start=()=>{};g.tap=()=>{tapQ=true;hold=true};g.release=()=>{hold=false};
+  const boom=(n,col,spd)=>{for(let i=0;i<n;i++){const a=Math.random()*7,v=1+Math.random()*spd;parts.push({x:s.x+DB/2,y:s.y+DB/2,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:30+Math.random()*25,c:col,z:3+Math.random()*5})}};
+  const tick=dt=>{parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=.15*dt;p.l-=dt});parts=parts.filter(p=>p.l>0)};
+  g.update=dt=>{acc+=dt;
+    while(acc>=1){acc-=1;dashStep(s,tapQ,hold);tapQ=false;
+      if(s.ev==='jump')sfx('jump');else if(s.ev==='orb'){sfx('pad');boom(8,'#F6BE4F',3)}else if(s.ev==='pad')sfx('pad');else if(s.ev==='coin'){sfx('coin');boom(12,'#FF5C8A',3)}
+      if(s.ground&&(trailT+=1)%3===0)parts.push({x:s.x+2,y:s.y+DB-4,vx:-1-Math.random(),vy:-Math.random()*1.2,l:16,c:'rgba(255,255,255,.7)',z:4});
+      if(s.dead){boom(26,'#FF5C8A',5);sfx('die');g.over=true;break}
+      if(s.done){g.done=true;g.over=true;sfx('win');hearts();break}}
+    g.score=s.done?100:Math.min(99,Math.floor(s.x/(DLEVEL.end*DB)*100));tick(dt)};
+  g.idle=(dt)=>{deadT+=dt;tick(dt)};
+  g.draw=(c,st)=>{
+    const k=s.x/(DLEVEL.end*DB),col=bg(k),cam=s.x-DPX;
+    c.fillStyle=`rgb(${col})`;c.fillRect(0,0,GW,GH);
+    c.strokeStyle='rgba(255,255,255,.10)';c.lineWidth=3;const sq=(cam*.25)%220;
+    for(let i=-1;i<4;i++){c.strokeRect(i*220-sq+30,90,80,80);c.strokeRect(i*220-sq+130,230,110,110)}
+    c.fillStyle=`rgb(${col.map(v=>Math.round(v*.45))})`;c.fillRect(0,DGY,GW,GH-DGY);
+    c.strokeStyle='rgba(255,255,255,.12)';c.lineWidth=2;const go=cam%(DB*4);for(let x=-go;x<GW;x+=DB*4){c.beginPath();c.moveTo(x,DGY);c.lineTo(x,GH);c.stroke()}
+    c.fillStyle='rgba(255,255,255,.9)';c.fillRect(0,DGY-1,GW,3);
+    // ženklai: Šiauliai, kilometrai, Telšiai
+    const sign=(wx,txt,big)=>{const x=wx-cam;if(x<-120||x>GW+120)return;c.fillStyle='rgba(255,255,255,.85)';c.fillRect(x-2,DGY-58,4,58);rrect(c,x-(big?52:30),DGY-84,big?104:60,26,6);c.fillStyle=big?'#fff':'rgba(255,255,255,.92)';c.fill();c.font=`900 ${big?15:13}px Nunito,system-ui,sans-serif`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#24070F';c.fillText(txt,x,DGY-71)};
+    sign(2*DB,'Šiauliai',true);for(let km=10;km<70;km+=10)sign(DLEVEL.end*DB*km/70,km+' km');
+    const fx=DLEVEL.end*DB-cam;if(fx<GW+80){c.fillStyle='rgba(255,92,138,.85)';rrect(c,fx,DGY-170,46,170,23);c.fill();c.strokeStyle='#fff';c.lineWidth=3;c.stroke();heart(c,fx+23,DGY-130,12,'#fff');
+      c.save();c.translate(fx+23,DGY-70);c.rotate(-Math.PI/2);c.font='900 16px Nunito,system-ui,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#fff';c.fillText('TELŠIAI',0,0);c.restore()}
+    c.font='900 24px Nunito,system-ui,sans-serif';c.textAlign='left';c.textBaseline='alphabetic';c.fillStyle='rgba(255,255,255,.9)';c.fillText('Bandymas '+att,7*DB-cam,DGY-6*DB);
+    for(const o of DLEVEL.objs){const x=o.x*DB-cam;if(x<-DB*2)continue;if(x>GW+DB)break;const top=DGY-(o.y+1)*DB;
+      if(o.t==='b'){c.fillStyle='rgba(0,0,0,.6)';c.fillRect(x,top,DB,DB);c.strokeStyle='#fff';c.lineWidth=2;c.strokeRect(x+1,top+1,DB-2,DB-2);c.strokeStyle='rgba(255,255,255,.35)';c.strokeRect(x+6,top+6,DB-12,DB-12)}
+      else if(o.t==='s'){c.beginPath();c.moveTo(x+2,top+DB);c.lineTo(x+DB/2,top+3);c.lineTo(x+DB-2,top+DB);c.closePath();c.fillStyle='#111';c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke()}
+      else if(o.t==='p'){c.fillStyle='#FFE14D';c.beginPath();c.ellipse(x+DB/2,DGY-2,DB/2-2,7,0,Math.PI,0);c.fill();c.fillStyle='rgba(255,225,77,.25)';c.fillRect(x+4,DGY-40,DB-8,38)}
+      else if(o.t==='o'){const cy=DGY-(o.y+.5)*DB,cx=x+DB/2,pulse=1+.12*Math.sin(s.f*.2);if(!s.used.has(o.i)){c.strokeStyle='#FFE14D';c.lineWidth=3;c.beginPath();c.arc(cx,cy,15*pulse,0,7);c.stroke()}
+        c.fillStyle='#fff';c.beginPath();c.arc(cx,cy,10,0,7);c.fill();c.strokeStyle='#2E5BFF';c.lineWidth=2;c.beginPath();c.arc(cx-12,cy,12,-.9,.9);c.stroke();c.strokeStyle='#F6BE4F';c.beginPath();c.arc(cx+12,cy,12,Math.PI-.9,Math.PI+.9);c.stroke();c.strokeStyle='#2E5BFF';c.beginPath();c.arc(cx,cy-13,10,.6,2.5);c.stroke()}
+      else if(o.t==='h'&&!s.coins.has(o.i)){const cy=DGY-(o.y+.5)*DB+Math.sin(s.f*.12+o.x)*3;heart(c,x+DB/2,cy,12,'#FF5C8A');c.lineWidth=2.5;c.strokeStyle='#fff';c.stroke()}}
+    parts.forEach(p=>{c.globalAlpha=Math.max(0,Math.min(1,p.l/20));c.fillStyle=p.c;c.fillRect(p.x-cam-p.z/2,p.y-p.z/2,p.z,p.z)});c.globalAlpha=1;
+    if(!s.dead){c.save();c.translate(DPX+DB/2,s.y+DB/2);c.rotate(s.rot);c.fillStyle='#FF5C8A';c.fillRect(-DB/2,-DB/2,DB,DB);c.strokeStyle='#24070F';c.lineWidth=2.5;c.strokeRect(-DB/2,-DB/2,DB,DB);
+      c.strokeStyle='#FFB3C8';c.lineWidth=2;c.strokeRect(-DB/2+5,-DB/2+5,DB-10,DB-10);c.fillStyle='#24070F';c.fillRect(-7,-6,4,4);c.fillRect(3,-6,4,4);heart(c,0,4,3.6,'#fff');c.restore()}
+    // HUD
+    rrect(c,60,18,GW-120,10,5);c.fillStyle='rgba(255,255,255,.25)';c.fill();if(k>0){rrect(c,60,18,Math.max(10,(GW-120)*Math.min(1,k)),10,5);c.fillStyle='#fff';c.fill()}
+    c.font='900 14px Nunito,system-ui,sans-serif';c.textAlign='left';c.textBaseline='middle';c.fillStyle='#fff';c.fillText(g.score+'%',GW-54,23);
+    c.textAlign='right';c.fillText(Math.round(70*Math.min(1,k))+' km',54,23);
+    const hs=DLEVEL.objs.filter(o=>o.t==='h');hs.forEach((o,i)=>{heart(c,GW/2-24+i*24,48,7,s.coins.has(o.i)?'#FF5C8A':'rgba(255,255,255,.25)')});
+    if(st==='over'&&g.done&&g.result&&deadT>30)donePanel(c,hs.filter(o=>s.coins.has(o.i)).length)};
+  function donePanel(c,got){c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,GW,GH);otext(c,'Atvykai į Telšius!',GW/2,170,34,'#FFE14D','#24070F',7);
+    heart(c,GW/2,240,26,'#FF5C8A');c.lineWidth=3;c.strokeStyle='#fff';c.stroke();
+    c.font='800 17px Nunito,system-ui,sans-serif';c.textAlign='center';c.fillStyle='#fff';c.fillText(`Bandymų: ${att}   ·   Širdelių: ${got}/3`,GW/2,300);
+    if(got<3){c.font='700 14px Nunito,system-ui,sans-serif';c.fillText('Kelyje dar liko paslėptų širdelių.',GW/2,326)}}
+  return g};
+
+/* 3. Širdelių lietus */
+GFACT.rush=()=>{
+  const TOTAL=20000,COLS=[GC.love,GC.sun,GC.plum];let hs,t,nextAt,pops;const g={score:0,over:false};
+  g.reset=()=>{hs=[];pops=[];t=0;nextAt=300;g.score=0;g.over=false};g.start=()=>{};
+  g.tap=(x,y)=>{if(g.over)return;let best=null,bd=1e9;hs.forEach(h=>{const d=Math.hypot(h.x-x,h.y-y);if(d<h.r*1.1+16&&d<bd){best=h;bd=d}});
+    if(best){hs=hs.filter(h=>h!==best);g.score++;sfx('tap');pops.push({x:best.x,y:best.y,t:0})}};
+  g.update=dt=>{t+=dt*16.667;pops.forEach(p=>p.t+=dt*16.667);pops=pops.filter(p=>p.t<350);hs=hs.filter(h=>t-h.born<h.life);
+    if(t>=nextAt&&hs.length<6){const r=26+Math.random()*10;hs.push({x:r+20+Math.random()*(GW-2*r-40),y:70+r+Math.random()*(GH-70-2*r-30),r,born:t,life:1500-Math.min(500,t/40),c:COLS[Math.floor(Math.random()*3)]});nextAt=t+450+Math.random()*350-Math.min(200,t/100)}
+    if(t>=TOTAL)g.over=true};
+  g.draw=c=>{c.fillStyle=GC.surface;c.fillRect(0,0,GW,GH);
+    const left=Math.max(0,1-t/TOTAL);c.fillStyle=GC.line;c.fillRect(20,28,GW-40,8);c.fillStyle=GC.sea;c.fillRect(20,28,(GW-40)*left,8);
+    hs.forEach(h=>{const age=t-h.born,k=Math.min(1,age/140),fade=1-age/h.life;c.globalAlpha=.35+.65*fade;heart(c,h.x,h.y,h.r*k*(.7+.3*fade),h.c);c.globalAlpha=1});
+    pops.forEach(p=>{const k=p.t/350;c.strokeStyle=GC.ink;c.globalAlpha=1-k;c.lineWidth=3;c.beginPath();c.arc(p.x,p.y,16+k*30,0,7);c.stroke();c.globalAlpha=1})};
+  return g};
+
+/* 4. Piešk ir spėk – kaip „Draw Something“: renkiesi žodį, piešiniai atkuriami, spėjama iš raidžių */
+const DW=360,DH=400,DMAX=4000,DPAPER='#FFFDF8',DALPH='AĄBCČDEĘĖFGHIĮYJKLMNOPRSŠTUŲŪVZŽ';
+const DCOL=['#1B1016','#FF5C8A','#E53935','#F6BE4F','#4CAF50','#3CC2BE','#2E5BFF','#9C8CFF','#8D5A3B',DPAPER];
+const DCN=['Juoda','Rožinė','Raudona','Geltona','Žalia','Turkio','Mėlyna','Violetinė','Ruda','Trintukas'];
+const DWORDS={1:['širdis','saulė','namas','katė','obuolys','gėlė','žuvis','mėnulis','kava','medis','pica','raktas','laivas','lietus','akiniai','debesis','ledai','žvaigždė'],
+ 2:['tinklinis','pianinas','gitara','krepšinis','žemėlapis','baseinas','kompasas','dviratis','traukinys','tortas','kalnas','bitė','vaivorykštė','kamuolys','plaukikas','ežeras','štanga'],
+ 3:['lego','žalgiris','rytas','telšiai','šiauliai','darželis','kartografas','inžinierius','pasimatymas','fejerverkai','žvaigždynas','sūpynės','gaublys']};
+function dSave(id,doc){S.drawings={...S.drawings,[id]:doc};
+  if(S.mode==='db'&&store&&store.setDoc){try{Promise.resolve(store.setDoc('drawings/'+id,doc)).catch(()=>toast('Piešinio nepavyko išsaugoti.'))}catch(e){toast('Piešinio nepavyko išsaugoti.')}}
+  else{const keep=Object.entries(S.drawings).sort((a,b)=>b[1].at-a[1].at).slice(0,20);ls.set('mr_draw',JSON.stringify(Object.fromEntries(keep)))}
+  renderGames()}
+const dPending=()=>S.me?Object.entries(S.drawings).filter(([,d])=>d&&d.to===S.me&&d.state==='open').sort((a,b)=>a[1].at-b[1].at)[0]:null;
+const dPoints=w=>Object.values(S.drawings).reduce((n,d)=>n+(d&&d.state==='done'&&d.ok&&(d.from===w||d.to===w)?Number(d.lvl)||0:0),0);
+function dPaint(c,strokes,limit){c.fillStyle=DPAPER;c.fillRect(0,0,DW,DH);let n=0;c.lineCap='round';c.lineJoin='round';
+  for(const s of strokes){const p=Array.isArray(s.p)?s.p:[];if(!p.length)continue;const m=Math.min(p.length/2,limit==null?1e9:limit-n);if(m<=0)break;
+    c.strokeStyle=c.fillStyle=DCOL[s.c]||'#000';c.lineWidth=s.w||6;
+    if(m===1||p.length===2){c.beginPath();c.arc(p[0],p[1],(s.w||6)/2,0,7);c.fill()}else{c.beginPath();c.moveTo(p[0],p[1]);for(let i=1;i<m;i++)c.lineTo(p[2*i],p[2*i+1]);c.stroke()}
+    n+=m}
+  c.fillStyle=DPAPER}
+function dCanvas(label){const cv=el('canvas',{class:'dcv',width:String(DW*2),height:String(DH*2),'aria-label':label});const c=cv.getContext('2d');c.setTransform(2,0,0,2,0,0);return[cv,c]}
+function dOpen(){if(!S.me||!nameOf(S.me)){toast('Pirmiausia skirtuke „Ratas“ pasirink, kas tu esi.');return}
+  $('drawOv').hidden=false;const p=dPending();if(p)dGuess(p[0],p[1]);else dPick()}
+function dClose(){$('drawOv').hidden=true;renderGames()}
+$('dclose').onclick=dClose;
+function dPick(){
+  const used=new Set(Object.values(S.drawings).map(d=>d&&d.word));
+  const pick=l=>{const a=DWORDS[l].filter(w=>!used.has(w)),src=a.length?a:DWORDS[l];return src[Math.floor(Math.random()*src.length)]};
+  const b=$('dbody');b.replaceChildren();$('dtitle').textContent='Pasirink žodį';
+  b.append(el('p',{class:'dnote'},`Nupiešk – ${nameOf(other())||'antra pusė'} spės. Kuo sunkesnis žodis, tuo daugiau ❤️ gausit abu.`));
+  [1,2,3].forEach(l=>{const w=pick(l);b.append(el('button',{class:'dword',type:'button',onclick:()=>dDraw(w,l)},el('small',null,['Lengvas','Vidutinis','Sunkus'][l-1]+' · '+'❤️'.repeat(l)),el('b',null,cap(w))))});
+  const waiting=Object.values(S.drawings).filter(d=>d&&d.from===S.me&&d.state==='open').length;
+  if(waiting)b.append(el('p',{class:'dnote'},`Tavo piešinių, laukiančių spėjimo: ${waiting}`))}
+function dDraw(word,lvl){
+  const b=$('dbody');b.replaceChildren();$('dtitle').textContent='Piešk: '+cap(word);
+  const [cv,c]=dCanvas('Piešimo lapas');let strokes=[],cur=null,col=0,wid=6,total=0;dPaint(c,strokes);
+  const pos=e=>{const r=cv.getBoundingClientRect();return[Math.round((e.clientX-r.left)/r.width*DW),Math.round((e.clientY-r.top)/r.height*DH)]};
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(_){}if(total>DMAX){toast('Piešinys jau didelis – siųsk!');return}
+    const[x,y]=pos(e);cur={c:col,w:wid,p:[x,y]};strokes.push(cur);total++;c.fillStyle=DCOL[col];c.beginPath();c.arc(x,y,wid/2,0,7);c.fill()});
+  cv.addEventListener('pointermove',e=>{if(!cur)return;const[x,y]=pos(e),p=cur.p,lx=p[p.length-2],ly=p[p.length-1];if(Math.hypot(x-lx,y-ly)<2||total>DMAX)return;
+    p.push(x,y);total++;c.strokeStyle=DCOL[cur.c];c.lineWidth=cur.w;c.lineCap='round';c.lineJoin='round';c.beginPath();c.moveTo(lx,ly);c.lineTo(x,y);c.stroke()});
+  const end=()=>{cur=null};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+  const sws=DCOL.map((hex,i)=>el('button',{class:'dsw',type:'button','aria-label':DCN[i],'aria-pressed':String(i===col),style:`background:${hex}`,onclick:()=>{col=i;sws.forEach((s,k)=>s.setAttribute('aria-pressed',String(k===i)))}}));
+  const sizeB=el('button',{class:'btn',type:'button',onclick:()=>{wid=wid===6?14:6;sizeB.textContent=wid===6?'✏️ Plonas':'🖌️ Storas'}},'✏️ Plonas');
+  const undo=el('button',{class:'btn',type:'button',onclick:()=>{const s=strokes.pop();if(s)total-=s.p.length/2;dPaint(c,strokes)}},'↶ Atšaukti');
+  const clr=el('button',{class:'btn',type:'button',onclick:()=>{strokes=[];total=0;dPaint(c,strokes)}},'Išvalyti');
+  const send=el('button',{class:'btn primary',type:'button',onclick:()=>{
+    if(!strokes.length){toast('Pirmiausia nupiešk ką nors.');return}
+    send.disabled=true;const id=Date.now().toString(36)+S.me;
+    dSave(id,{from:S.me,to:other(),word,lvl,strokes:strokes.map(s=>({c:s.c,w:s.w,p:s.p})),at:Date.now(),state:'open'});
+    notify(other(),`${nameOf(S.me)} tau nupiešė piešinį 🎨`,'Atidaryk žaidimus ir atspėk.');sfx('win');
+    b.replaceChildren(el('p',{class:'dbig'},'Išsiųsta! 💌'),el('p',{class:'dnote'},`${nameOf(other())||'Antra pusė'} gaus pranešimą ir spės, ką nupiešei.`),
+      el('div',{class:'row',style:'justify-content:center'},el('button',{class:'btn primary',type:'button',onclick:dClose},'Grįžti į žaidimus')))}},'Siųsti 💌');
+  b.append(cv,el('div',{class:'dtools'},...sws),el('div',{class:'dtools'},sizeB,undo,clr,send))}
+function dGuess(id,d){
+  const b=$('dbody');b.replaceChildren();$('dtitle').textContent=`${nameOf(d.from)||'Antra pusė'} nupiešė · ${'❤️'.repeat(Number(d.lvl)||1)}`;
+  const [cv,c]=dCanvas('Piešinys, kurį reikia atspėti'),strokes=Array.isArray(d.strokes)?d.strokes:[];
+  const N=strokes.reduce((n,s)=>n+(Array.isArray(s.p)?s.p.length/2:0),0),dur=Math.min(7000,Math.max(1800,N*6));let t0=performance.now();
+  const skip=el('button',{class:'btn',type:'button',onclick:()=>{t0=-1e9}},'⏩ Praleisti animaciją');
+  const anim=t=>{const k=Math.min(1,(t-t0)/dur);dPaint(c,strokes,Math.ceil(N*k));if(k<1&&cv.isConnected)requestAnimationFrame(anim);else skip.hidden=true};requestAnimationFrame(anim);
+  const W=String(d.word||'').toLocaleUpperCase('lt'),letters=[...W],n=Math.min(16,Math.max(12,letters.length+4)),tiles=letters.slice();
+  while(tiles.length<n)tiles.push(DALPH[Math.floor(Math.random()*DALPH.length)]);shuffle(tiles);
+  const fill=Array(letters.length).fill(null);let tries=0;
+  const slots=el('div',{class:'dslots'}),grid=el('div',{class:'dtiles'});
+  const finish=ok=>{dSave(id,{...d,state:'done',ok,tries:tries+(ok?1:0),doneAt:Date.now()});t0=-1e9;
+    if(ok){hearts();sfx('win');notify(d.from,`${nameOf(S.me)} atspėjo tavo piešinį 🎉`,`„${cap(d.word)}“ – po ${d.lvl} ❤️ jums abiem.`)}
+    else notify(d.from,`${nameOf(S.me)} neatspėjo tavo piešinio 🙈`,`Buvo „${cap(d.word)}“.`);
+    b.replaceChildren(el('p',{class:'dbig'},ok?'Atspėjai! 🎉':`Buvo „${cap(d.word)}“`),el('p',{class:'dnote'},ok?`„${cap(d.word)}“ – po ${d.lvl} ❤️ jums abiem.`:'Kitą kartą pavyks!'),cv,
+      el('div',{class:'row',style:'justify-content:center'},el('button',{class:'btn primary',type:'button',onclick:()=>{const p=dPending();if(p)dGuess(p[0],p[1]);else dPick()}},dPending()?'Kitas piešinys':'Dabar tavo eilė piešti'),el('button',{class:'btn',type:'button',onclick:dClose},'Uždaryti')))};
+  const check=()=>{if(fill.map(i=>tiles[i]).join('')===W)finish(true);else{tries++;sfx('hit');slots.classList.remove('bad');void slots.offsetWidth;slots.classList.add('bad');toast('Ne tas žodis – bandyk dar.')}};
+  const paint=()=>{
+    slots.replaceChildren(...fill.map((ti,k)=>el('button',{class:'dslot'+(ti!=null?' f':''),type:'button','aria-label':ti!=null?`${tiles[ti]}, nuimti`:`Tuščia ${k+1} raidė`,onclick:()=>{if(fill[k]!=null){fill[k]=null;paint()}}},ti!=null?tiles[ti]:'')));
+    grid.replaceChildren(...tiles.map((L,i)=>el('button',{class:'dtile',type:'button',disabled:fill.includes(i),onclick:()=>{const k=fill.indexOf(null);if(k<0)return;fill[k]=i;sfx('tap');paint();if(!fill.includes(null))check()}},L)))};
+  paint();
+  b.append(cv,skip,slots,grid,el('div',{class:'row',style:'justify-content:center'},
+    el('button',{class:'btn',type:'button',onclick:()=>{fill.fill(null);paint()}},'Išvalyti raides'),
+    el('button',{class:'btn',type:'button',onclick:()=>finish(false)},'Pasiduodu')))}
+
+/* ---------- Ramybei: fidget žaislai su vibracija ---------- */
+let hapT=0,hapEl=null;const hapOn=()=>ls.get('mr_hap')!=='0';
+// Android: navigator.vibrate. iPhone (Safari 18+): perjungiamas paslėptas „switch“ jungiklis duoda sisteminį tapteltelėjimą.
+function hap(ms){if(!hapOn())return;const n=performance.now();if(n-hapT<35)return;hapT=n;
+  try{if(typeof navigator.vibrate==='function'&&navigator.vibrate(ms||10))return}catch(e){}
+  try{if(!hapEl){const i=document.createElement('input');i.type='checkbox';i.setAttribute('switch','');i.id='hapSw';i.tabIndex=-1;i.setAttribute('aria-hidden','true');i.style.cssText='position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none';
+    hapEl=document.createElement('label');hapEl.htmlFor='hapSw';hapEl.setAttribute('aria-hidden','true');hapEl.style.cssText='position:fixed;left:-9999px;top:0';document.body.append(i,hapEl)}hapEl.click()}catch(e){}}
+let sndT=0;function tick(kind,ms){const n=performance.now();if(n-sndT>28){sndT=n;sfx(kind)}hap(ms)}
+GDEFS.push(
+ {id:'spin',name:'Fidget sukutis',line:'Įsuk pirštu ratu. Jauti kiekvieną sparną.',fidget:true},
+ {id:'pop',name:'Širdies pop-it',line:'Spausk burbuliukus. Visi paspausti – apverčiam.',fidget:true},
+ {id:'cube',name:'Fidget kubas',line:'Mygtukai, jungiklis, ratukas ir krumpliaračiai.',fidget:true});
+Object.assign(GART,{
+spin:'<svg viewBox="0 0 240 240" aria-hidden="true"><g class="g-spin"><circle cx="120" cy="62" r="40" fill="#FF5C8A"/><circle cx="70" cy="149" r="40" fill="#FF5C8A"/><circle cx="170" cy="149" r="40" fill="#FF5C8A"/><circle cx="120" cy="120" r="44" fill="#FF5C8A"/><circle cx="120" cy="62" r="26" fill="#C9CED6"/><circle cx="70" cy="149" r="26" fill="#C9CED6"/><circle cx="170" cy="149" r="26" fill="#C9CED6"/><circle cx="120" cy="62" r="12" fill="#5B6270"/><circle cx="70" cy="149" r="12" fill="#5B6270"/><circle cx="170" cy="149" r="12" fill="#5B6270"/></g><circle cx="120" cy="120" r="24" fill="#F4EBEF"/><path d="M120 132c-9-6-14-11-14-17 0-4 3-7 7-7 3 0 5 2 7 4 2-2 4-4 7-4 4 0 7 3 7 7 0 6-5 11-14 17z" fill="#FF5C8A"/></svg>',
+pop:'<svg viewBox="0 0 240 240" aria-hidden="true"><defs><clipPath id="gpopc"><path d="M120 206C60 166 26 132 26 92c0-30 22-52 50-52 20 0 34 10 44 26 10-16 24-26 44-26 28 0 50 22 50 52 0 40-34 74-94 114z"/></clipPath></defs><g clip-path="url(#gpopc)"><rect y="30" width="240" height="30" fill="#FF5C8A"/><rect y="60" width="240" height="30" fill="#FF8A3D"/><rect y="90" width="240" height="30" fill="#F6BE4F"/><rect y="120" width="240" height="30" fill="#7BD389"/><rect y="150" width="240" height="30" fill="#3CC2BE"/><rect y="180" width="240" height="30" fill="#9C8CFF"/><g fill="#fff" opacity=".35"><circle cx="76" cy="72" r="13"/><circle cx="164" cy="72" r="13"/><circle cx="56" cy="104" r="13"/><circle cx="92" cy="104" r="13" class="g-pulse"/><circle cx="128" cy="104" r="13"/><circle cx="164" cy="104" r="13"/><circle cx="74" cy="136" r="13"/><circle cx="110" cy="136" r="13"/><circle cx="146" cy="136" r="13" class="g-pulse2"/><circle cx="92" cy="166" r="13"/><circle cx="128" cy="166" r="13"/></g></g></svg>',
+cube:'<svg viewBox="0 0 240 240" aria-hidden="true"><rect x="36" y="36" width="168" height="168" rx="26" fill="#3CC2BE"/><circle cx="78" cy="84" r="16" fill="#F4EBEF" class="g-pulse"/><circle cx="120" cy="84" r="16" fill="#F4EBEF"/><circle cx="162" cy="84" r="16" fill="#F4EBEF"/><circle cx="99" cy="124" r="16" fill="#F4EBEF"/><circle cx="141" cy="124" r="16" fill="#F4EBEF" class="g-pulse3"/><rect x="70" y="156" width="100" height="26" rx="13" fill="#1E1925"/><circle cx="148" cy="169" r="11" fill="#FF5C8A"/></svg>'});
+
+/* 5. Fidget sukutis */
+GFACT.spin=()=>{
+  const CX=GW/2,CY=270,AR=88,LR=42;let a=0,w=0,grab=false,pa=0,mv=0,lastK=0,spins=0,capT=0,best=+ls.get('mr_spinbest')||0;
+  const g={score:0,over:false,fidget:true,ownScore:true};
+  g.reset=()=>{};g.start=()=>{};
+  const ang=(x,y)=>Math.atan2(y-CY,x-CX);
+  g.tap=(x,y)=>{if(Math.hypot(x-CX,y-CY)<28){capT=8;tick('click',14);return}grab=true;pa=ang(x,y);mv=0};
+  g.move=(x,y)=>{if(!grab)return;const na=ang(x,y);let d=na-pa;if(d>Math.PI)d-=2*Math.PI;if(d<-Math.PI)d+=2*Math.PI;pa=na;a+=d;mv+=d};
+  g.release=()=>{grab=false};
+  g.update=dt=>{
+    if(grab){w=w*.5+(mv/Math.max(dt,.5))*.5;mv=0}else{a+=w*dt;w*=Math.pow(.9935,dt);if(Math.abs(w)<.0008)w=0}
+    w=Math.max(-1.1,Math.min(1.1,w));
+    const k=Math.floor(a/(2*Math.PI/3));if(k!==lastK){spins+=Math.abs(k-lastK)/3;lastK=k;tick('tick',Math.abs(w)>.4?4:8)}
+    const rpm=Math.round(Math.abs(w)*3600/(2*Math.PI));if(rpm>best){best=rpm;ls.set('mr_spinbest',String(best))}if(capT>0)capT-=dt};
+  const body=(c,ang,alpha)=>{c.save();c.globalAlpha=alpha;c.translate(CX,CY);c.rotate(ang);c.fillStyle='#FF5C8A';
+    for(let i=0;i<3;i++){const t=i*2*Math.PI/3-Math.PI/2;c.beginPath();c.arc(Math.cos(t)*AR,Math.sin(t)*AR,LR+8,0,7);c.fill();
+      c.beginPath();c.moveTo(0,0);c.lineTo(Math.cos(t-.38)*AR,Math.sin(t-.38)*AR);c.lineTo(Math.cos(t+.38)*AR,Math.sin(t+.38)*AR);c.closePath();c.fill()}
+    c.beginPath();c.arc(0,0,52,0,7);c.fill();
+    if(alpha>.9)for(let i=0;i<3;i++){const t=i*2*Math.PI/3-Math.PI/2,x=Math.cos(t)*AR,y=Math.sin(t)*AR;
+      c.fillStyle='#C9CED6';c.beginPath();c.arc(x,y,LR-6,0,7);c.fill();c.fillStyle='#8B93A1';c.beginPath();c.arc(x,y,LR-14,0,7);c.fill();
+      c.fillStyle='#E8EBF0';for(let j=0;j<8;j++){const u=j*Math.PI/4;c.beginPath();c.arc(x+Math.cos(u)*(LR-20),y+Math.sin(u)*(LR-20),4,0,7);c.fill()}
+      c.fillStyle='#5B6270';c.beginPath();c.arc(x,y,LR-25,0,7);c.fill()}
+    c.restore()};
+  g.draw=c=>{c.fillStyle=GC.surface;c.fillRect(0,0,GW,GH);
+    const sp=Math.abs(w);if(sp>.12)for(let i=3;i>=1;i--)body(c,a-w*i*.9,.12);body(c,a,1);
+    const press=capT>0?3:0;c.fillStyle='#F4EBEF';c.beginPath();c.arc(CX,CY,30-press*.5,0,7);c.fill();c.strokeStyle='#C9B8C0';c.lineWidth=3;c.stroke();heart(c,CX,CY+press*.3,11,'#FF5C8A');
+    const rpm=Math.round(sp*3600/(2*Math.PI));
+    c.textAlign='center';c.textBaseline='middle';c.fillStyle=GC.ink;c.font='900 44px Nunito,system-ui,sans-serif';c.fillText(rpm.toLocaleString('lt-LT'),CX,450);
+    c.font='700 15px Nunito,system-ui,sans-serif';c.fillStyle='#A99DAE';c.fillText('apsukų per minutę',CX,482);
+    c.fillText(`Apsukų: ${Math.floor(spins).toLocaleString('lt-LT')}   ·   rekordas ${best.toLocaleString('lt-LT')} aps./min`,CX,520);
+    if(!spins&&!grab){c.fillStyle=GC.ink;c.font='800 17px Nunito,system-ui,sans-serif';c.fillText('Brauk pirštu ratu aplink, kad įsuktum',CX,70)}};
+  return g};
+
+/* 6. Širdies pop-it */
+GFACT.pop=()=>{
+  const R=16,CX=GW/2,CY=262,HS=152,ROWC=['#FF5C8A','#FF8A3D','#F6BE4F','#7BD389','#3CC2BE','#6C8CFF','#9C8CFF','#C77DFF'];
+  const hp=new Path2D();hp.moveTo(CX,CY+HS*.9);hp.bezierCurveTo(CX-HS*1.6,CY-HS*.1,CX-HS*.9,CY-HS*1.25,CX,CY-HS*.45);hp.bezierCurveTo(CX+HS*.9,CY-HS*1.25,CX+HS*1.6,CY-HS*.1,CX,CY+HS*.9);hp.closePath();
+  const tc=document.createElement('canvas').getContext('2d'),inside=(x,y)=>tc.isPointInPath(hp,x,y);
+  const bs=[];const top=CY-HS*.72,bot=CY+HS*.9;let row=0;
+  for(let y=top+R+4;y<bot-R;y+=R*1.78,row++){for(let x=(row%2?R+2:0)+20;x<GW-20;x+=R*2+4){if([[0,0],[R,0],[-R,0],[0,R],[0,-R]].every(([dx,dy])=>inside(x+dx*.95,y+dy*.95)))bs.push({x,y,row,down:false,t:0})}}
+  const rows=Math.max(1,...bs.map(b=>b.row))+1;let pops=+ls.get('mr_pops')||0,flipT=0,pressed=false,side=0;
+  const g={score:0,over:false,fidget:true,ownScore:true};
+  g.reset=()=>{};g.start=()=>{};
+  const hit=(x,y)=>{if(flipT>0)return;for(const b of bs)if(!b.down&&Math.hypot(b.x-x,b.y-y)<R+2){b.down=true;b.t=1;pops++;tick('pop',16);
+    if(bs.every(q=>q.down)){flipT=1;ls.set('mr_pops',String(pops));setTimeout(()=>{sfx('pad');hap(30)},350)}return}};
+  g.tap=(x,y)=>{pressed=true;hit(x,y)};g.move=(x,y)=>{if(pressed)hit(x,y)};g.release=()=>{pressed=false;ls.set('mr_pops',String(pops))};
+  g.update=dt=>{bs.forEach(b=>{if(b.t>0)b.t=Math.max(0,b.t-.12*dt)});
+    if(flipT>0){flipT+=.04*dt;if(flipT>=1.5&&bs.some(b=>b.down)){bs.forEach(b=>b.down=false);side^=1}if(flipT>=2)flipT=0}};
+  g.draw=c=>{c.fillStyle=GC.surface;c.fillRect(0,0,GW,GH);
+    const sy=flipT>0?Math.abs(Math.cos((flipT-1)*Math.PI)):1;
+    c.save();c.translate(0,CY);c.scale(1,Math.max(.05,sy));c.translate(0,-CY);
+    c.save();c.clip(hp);for(let r=0;top+r*R*1.78<bot+R;r++){const y0=top+r*R*1.78;c.fillStyle=ROWC[(r+side*3)%ROWC.length];c.fillRect(0,y0-R*.2,GW,R*1.78+1)}c.restore();
+    c.lineWidth=4;c.strokeStyle='rgba(0,0,0,.25)';c.stroke(hp);
+    bs.forEach(b=>{const s=1-b.t*.12;
+      if(!b.down){c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.arc(b.x+1.5,b.y+2.5,R,0,7);c.fill();
+        const gr=c.createRadialGradient(b.x-R*.35,b.y-R*.4,2,b.x,b.y,R);gr.addColorStop(0,'rgba(255,255,255,.75)');gr.addColorStop(.45,'rgba(255,255,255,.15)');gr.addColorStop(1,'rgba(0,0,0,.08)');
+        c.fillStyle=gr;c.beginPath();c.arc(b.x,b.y,R,0,7);c.fill()}
+      else{c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.arc(b.x,b.y,R*s,0,7);c.fill();
+        const gr=c.createRadialGradient(b.x+R*.3,b.y+R*.35,1,b.x,b.y,R);gr.addColorStop(0,'rgba(255,255,255,.35)');gr.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=gr;c.beginPath();c.arc(b.x,b.y,R*s,0,7);c.fill()}});
+    c.restore();
+    const left=bs.filter(b=>!b.down).length;c.textAlign='center';c.textBaseline='middle';c.fillStyle=GC.ink;c.font='800 17px Nunito,system-ui,sans-serif';
+    c.fillText(flipT>0?'Apverčiam…':left===bs.length?'Spausk arba brauk per burbuliukus':`Liko ${left}`,CX,470);
+    c.font='700 15px Nunito,system-ui,sans-serif';c.fillStyle='#A99DAE';c.fillText(`Iš viso paspausta: ${pops.toLocaleString('lt-LT')}`,CX,505)};
+  return g};
+
+/* 7. Fidget kubas */
+GFACT.cube=()=>{
+  const BT=[[90,140],[180,140],[270,140],[135,205],[225,205]],BC=['#FF5C8A','#F6BE4F','#3CC2BE','#9C8CFF','#7BD389'];
+  const SW={x:40,y:280,w:96,h:130},DL={x:255,y:345,r:58},GR=[{x:52},{x:144},{x:236}],GY=450,GHt=96,GWd=72;
+  let down=-1,sw=false,swT=0,mode=null,da=0,dial=0,dk=0,gi=0,gy=0,goff=[0,0,0],gk=[0,0,0],clicks=+ls.get('mr_clicks')||0;
+  const g={score:0,over:false,fidget:true,ownScore:true};g.reset=()=>{};g.start=()=>{};
+  const cnt=()=>{clicks++};
+  g.tap=(x,y)=>{
+    for(let i=0;i<BT.length;i++)if(Math.hypot(x-BT[i][0],y-BT[i][1])<30){down=i;cnt();tick(i===3?'tap':'click',i===3?6:12);return}
+    if(x>SW.x&&x<SW.x+SW.w&&y>SW.y&&y<SW.y+SW.h){sw=!sw;swT=1;cnt();tick('thunk',28);return}
+    if(Math.hypot(x-DL.x,y-DL.y)<DL.r+12){mode='dial';da=Math.atan2(y-DL.y,x-DL.x);return}
+    for(let i=0;i<3;i++)if(x>GR[i].x&&x<GR[i].x+GWd&&y>GY&&y<GY+GHt){mode='gear';gi=i;gy=y;return}};
+  g.move=(x,y)=>{
+    if(mode==='dial'){const na=Math.atan2(y-DL.y,x-DL.x);let d=na-da;if(d>Math.PI)d-=2*Math.PI;if(d<-Math.PI)d+=2*Math.PI;da=na;dial+=d;const k=Math.floor(dial/(Math.PI/8));if(k!==dk){dk=k;cnt();tick('tick',7)}}
+    else if(mode==='gear'){goff[gi]+=y-gy;gy=y;const k=Math.floor(goff[gi]/14);if(k!==gk[gi]){gk[gi]=k;cnt();tick('tick',6)}}};
+  g.release=()=>{if(down>=0){if(down!==3)tick('click2',6);down=-1}mode=null;ls.set('mr_clicks',String(clicks))};
+  g.update=dt=>{if(swT>0)swT=Math.max(0,swT-.12*dt)};
+  g.draw=c=>{c.fillStyle=GC.surface;c.fillRect(0,0,GW,GH);
+    rrect(c,20,20,GW-40,GH-40,28);c.fillStyle='#2A8F8B';c.fill();
+    c.textAlign='center';c.textBaseline='middle';c.font='800 15px Nunito,system-ui,sans-serif';c.fillStyle='rgba(255,255,255,.85)';c.fillText(`Spragtelėjimų: ${clicks.toLocaleString('lt-LT')}`,GW/2,62);
+    BT.forEach(([x,y],i)=>{const p=down===i;c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.arc(x,y+4,28,0,7);c.fill();c.fillStyle=BC[i];c.beginPath();c.arc(x,y+(p?3:0),27,0,7);c.fill();
+      c.fillStyle='rgba(255,255,255,'+(p?.15:.35)+')';c.beginPath();c.arc(x-7,y-8+(p?3:0),9,0,7);c.fill();if(i===3){c.fillStyle='rgba(0,0,0,.25)';c.font='700 10px Nunito,system-ui,sans-serif';c.fillText('tylus',x,y+14+(p?3:0))}});
+    rrect(c,SW.x,SW.y,SW.w,SW.h,18);c.fillStyle='#1E1925';c.fill();
+    const ly=sw?SW.y+SW.h-38:SW.y+38,bump=swT*4;c.strokeStyle='#C9CED6';c.lineWidth=12;c.lineCap='round';c.beginPath();c.moveTo(SW.x+SW.w/2,SW.y+SW.h/2);c.lineTo(SW.x+SW.w/2,ly+(sw?bump:-bump));c.stroke();
+    c.fillStyle=sw?'#FF5C8A':'#8B93A1';c.beginPath();c.arc(SW.x+SW.w/2,ly+(sw?bump:-bump),15,0,7);c.fill();
+    c.font='800 12px Nunito,system-ui,sans-serif';c.fillStyle='rgba(255,255,255,.8)';c.fillText(sw?'ĮJ.':'IŠJ.',SW.x+SW.w/2,SW.y+SW.h+16);
+    c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.arc(DL.x,DL.y+4,DL.r,0,7);c.fill();c.fillStyle='#F4EBEF';c.beginPath();c.arc(DL.x,DL.y,DL.r,0,7);c.fill();
+    c.strokeStyle='#C9B8C0';c.lineWidth=3;for(let i=0;i<16;i++){const t=dial+i*Math.PI/8;c.beginPath();c.moveTo(DL.x+Math.cos(t)*(DL.r-4),DL.y+Math.sin(t)*(DL.r-4));c.lineTo(DL.x+Math.cos(t)*(DL.r-14),DL.y+Math.sin(t)*(DL.r-14));c.stroke()}
+    heart(c,DL.x+Math.cos(dial-Math.PI/2)*(DL.r-30),DL.y+Math.sin(dial-Math.PI/2)*(DL.r-30),9,'#FF5C8A');
+    GR.forEach((gq,i)=>{rrect(c,gq.x,GY,GWd,GHt,14);c.fillStyle='#1E1925';c.fill();c.save();rrect(c,gq.x+6,GY+6,GWd-12,GHt-12,10);c.clip();
+      c.fillStyle='#C9CED6';c.fillRect(gq.x,GY,GWd,GHt);c.fillStyle='#8B93A1';const o=((goff[i]%14)+14)%14;for(let yy=GY-14+o;yy<GY+GHt;yy+=14)c.fillRect(gq.x,yy,GWd,5);c.restore()});
+    c.font='700 13px Nunito,system-ui,sans-serif';c.fillStyle='rgba(255,255,255,.8)';c.fillText('Brauk aukštyn ir žemyn',GW/2,GY+GHt+22)};
+  return g};
+
 (async function boot(){
   S.me=ls.get('mr_me');if(S.me!=='a'&&S.me!=='b')S.me=null;render();
   fetch('news.json').then(r=>r.ok?r.json():[]).then(a=>{if(Array.isArray(a))S.newsFile=a}).catch(()=>{});
