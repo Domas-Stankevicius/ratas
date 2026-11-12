@@ -19,15 +19,16 @@
 :root{
   --bg:#EEF3F1; --surface:#FFFFFF; --ink:#14232B; --muted:#5B6B73; --line:#D3DEDB; --contour:rgba(20,125,133,.09);
   --love:#E23E63; --on-love:#FFFFFF; --sea:#147D85; --sun:#E9A91F; --plum:#5A4BC4;
+  --rimA:#F2C867; --rimB:#B97F1E; --bulb:#FFF4C9; --envB:#E9C7B8; --envF:#F6DDD1; --envT:#EFD0C2;
   --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
   --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0F1A1F; --surface:#18262D; --ink:#EAF2F1; --muted:#94A6AD; --line:#2A3B43; --contour:rgba(60,184,191,.08);
-  --love:#FF6B8A; --on-love:#22060D; --sea:#3CB8BF; --sun:#F4C04E; --plum:#8E82F0; color-scheme:dark}}
+  --love:#FF6B8A; --on-love:#22060D; --sea:#3CB8BF; --sun:#F4C04E; --plum:#8E82F0; --envB:#4A3740; --envF:#5B4550; --envT:#533E48; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0F1A1F; --surface:#18262D; --ink:#EAF2F1; --muted:#94A6AD; --line:#2A3B43; --contour:rgba(60,184,191,.08);
-  --love:#FF6B8A; --on-love:#22060D; --sea:#3CB8BF; --sun:#F4C04E; --plum:#8E82F0; color-scheme:dark}
+  --love:#FF6B8A; --on-love:#22060D; --sea:#3CB8BF; --sun:#F4C04E; --plum:#8E82F0; --envB:#4A3740; --envF:#5B4550; --envT:#533E48; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body);
   background-image:repeating-radial-gradient(circle at 85% -120px,transparent 0 46px,var(--contour) 46px 47.5px);
@@ -67,14 +68,25 @@ input{flex:1 1 160px}
 /* wheel */
 .stage{position:relative;width:min(100%,360px);aspect-ratio:1;margin:4px auto}
 .stage svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-#wheel{transform-box:fill-box;transform-origin:center;transition:transform 5.2s cubic-bezier(.12,.72,.1,1)}
-.seg{stroke:var(--surface);stroke-width:1.5}
-.bezel{fill:var(--surface);stroke:var(--line)}
-.tick{stroke:var(--muted);stroke-width:.6}
-.tick.major{stroke:var(--ink);stroke-width:1.1}
-.pointer{fill:var(--ink);stroke:var(--surface);stroke-width:1.5}
-.hub{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:4px solid var(--surface);
-  background:var(--ink);color:var(--bg);font:800 1.05rem var(--display);letter-spacing:.04em;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.seg{stroke:rgba(255,255,255,.55);stroke-width:1.2}
+.inner{fill:var(--ink)}
+.bulb{fill:var(--bulb);opacity:.55;transition:opacity .15s}
+.stage.spinning .bulb{animation:blink .32s steps(1) infinite}
+.stage.spinning .bulb:nth-child(even){animation-delay:.16s}
+@keyframes blink{0%{opacity:1}50%{opacity:.25}}
+.stage.won .bulb{animation:blink .5s steps(1) 4}
+#pointer{transform-box:fill-box;transform-origin:50% 8%;transition:transform .09s ease-out}
+#pointer.tick{transform:rotate(-16deg);transition:none}
+.pin{fill:var(--rimA);stroke:var(--ink);stroke-width:1}
+.stage svg{filter:drop-shadow(0 10px 18px rgba(20,35,43,.28))}
+.sticker{position:absolute;width:15%;max-width:56px;animation:bob 4s ease-in-out infinite;pointer-events:none}
+.sticker svg{width:100%;height:auto;filter:none;display:block}
+.st1{left:-2%;top:2%;transform:rotate(-12deg)}.st2{right:-2%;top:4%;animation-delay:-1s}.st3{left:0;bottom:2%;animation-delay:-2s}.st4{right:0;bottom:0;animation-delay:-3s}
+@keyframes bob{50%{translate:0 -6px}}
+.pointer{fill:var(--love);stroke:var(--ink);stroke-width:1.5;stroke-linejoin:round}
+.hub{position:absolute;left:50%;top:50%;width:25%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:3px solid var(--rimA);
+  background:radial-gradient(circle at 35% 30%,#3a4f5a,var(--ink) 70%);color:#fff;font:800 1.05rem var(--display);letter-spacing:.05em;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35),inset 0 2px 6px rgba(255,255,255,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;line-height:1.1}
+.hub::before{content:'♥';color:var(--love);font-size:.85em}
 .hub:disabled{cursor:default;font-size:.78rem;letter-spacing:0}
 .hub:not(:disabled):active{transform:translate(-50%,-50%) scale(.95)}
 #confetti{position:absolute;inset:-20%;width:140%;height:140%;pointer-events:none}
@@ -100,7 +112,40 @@ details summary{cursor:pointer;font-weight:600}
 .foot{text-align:center;font-size:.8rem;color:var(--muted)}
 .foot button{font:inherit;color:inherit;background:none;border:0;text-decoration:underline;cursor:pointer}
 #toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:.9rem;max-width:calc(100% - 32px);z-index:5}
-@media (prefers-reduced-motion: reduce){#wheel{transition:none}.pop{animation:none}}
+/* reveal envelope */
+#reveal{position:fixed;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--ink) 55%,transparent);backdrop-filter:blur(3px);padding:16px}
+.env{position:relative;width:min(330px,88vw);height:200px;margin-top:190px;perspective:900px}
+.env-back{position:absolute;inset:0;background:var(--envB);border-radius:10px}
+.letter{position:absolute;left:12px;right:12px;bottom:10px;min-height:178px;background:var(--surface);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px;z-index:2;transform:translateY(0);transition:transform .7s cubic-bezier(.2,.9,.3,1.1) .45s;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.letter .task{font-size:1.15rem}
+.env-front{position:absolute;inset:0;z-index:3;background:var(--envF);border-radius:10px;clip-path:polygon(0 38%,50% 72%,100% 38%,100% 100%,0 100%)}
+.flap{position:absolute;left:0;right:0;top:0;height:62%;z-index:4;background:var(--envT);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .5s ease-in,z-index 0s .25s;border-radius:10px 10px 0 0}
+.seal{position:absolute;left:50%;top:52%;z-index:5;width:44px;height:44px;margin-left:-22px;border-radius:50%;background:var(--love);color:#fff;display:grid;place-items:center;font-size:1.3rem;box-shadow:0 2px 6px rgba(0,0,0,.3);transition:opacity .2s}
+.env.open .flap{transform:rotateX(180deg);z-index:1}
+.env.open .seal{opacity:0}
+.env.open .letter{transform:translateY(-178px)}
+/* in-app games */
+.game{display:flex;flex-direction:column;gap:12px}
+.q{display:flex;flex-direction:column;gap:6px}
+.qt{margin:0;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 .9rem var(--body);padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.chip.on{background:var(--sea);border-color:var(--sea);color:#fff}
+.chip.ok{background:color-mix(in srgb,var(--sea) 25%,var(--bg));border-color:var(--sea)}
+.chip.bad{background:color-mix(in srgb,var(--love) 22%,var(--bg));border-color:var(--love)}
+textarea{font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:84px;resize:vertical;width:100%}
+.res{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.res li{display:flex;justify-content:space-between;gap:10px;font-size:.92rem;border-top:1px solid var(--line);padding-top:6px}
+.res b{font-variant-numeric:tabular-nums}
+.ans{background:var(--bg);border-radius:12px;padding:10px 12px;font-size:.95rem;overflow-wrap:anywhere}
+.ans small{display:block;color:var(--muted);font-weight:600;margin-bottom:2px}
+#mapOv{position:fixed;inset:0;z-index:9;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.mapbar{display:flex;align-items:center;gap:8px;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
+#mapInfo{flex:1;min-width:0;font-weight:700;font-family:var(--display)}
+#map{flex:1;min-height:0;background:#dfe7e5}
+.sound{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;width:38px;height:38px;cursor:pointer;font-size:1rem}
+.top-r{display:flex;gap:8px;align-items:center}
+@media (prefers-reduced-motion: reduce){.pop,.sticker{animation:none}.letter,.flap{transition:none}}
 </style>
 
 </head>
@@ -108,7 +153,7 @@ details summary{cursor:pointer;font-weight:600}
 <div class="app">
   <div class="top">
     <div><h1>Mudviejų ratas</h1><p class="sub" id="sub">Vienas sukimas per dieną. Užduotį atliekat Instagrame.</p></div>
-    <div class="streak" title="Dienos iš eilės"><span>🔥</span><span class="num" id="streakNum">0</span><small>d. iš eilės</small></div>
+    <div class="top-r"><button class="sound" id="soundBtn" type="button" aria-label="Garsas">🔊</button><div class="streak" title="Dienos iš eilės"><span>🔥</span><span class="num" id="streakNum">0</span><small>d. iš eilės</small></div></div>
   </div>
   <div class="note" id="note" hidden></div>
   <div class="card" id="setup" hidden></div>
@@ -120,12 +165,21 @@ details summary{cursor:pointer;font-weight:600}
     <p class="legend" id="legend"></p>
   </div>
 
-  <div class="stage">
-    <svg viewBox="-110 -110 220 220" aria-hidden="true">
-      <circle class="bezel" r="108"/><g id="ticks"></g>
+  <div class="stage" id="stage">
+    <svg viewBox="-114 -120 228 234" aria-hidden="true">
+      <defs>
+        <radialGradient id="segShade" cx="0" cy="0" r="92" gradientUnits="userSpaceOnUse"><stop offset="0" style="stop-color:#fff;stop-opacity:.25"/><stop offset=".5" style="stop-color:#fff;stop-opacity:0"/><stop offset="1" style="stop-color:#000;stop-opacity:.25"/></radialGradient>
+        <linearGradient id="gloss" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:#fff;stop-opacity:.42"/><stop offset=".42" style="stop-color:#fff;stop-opacity:0"/></linearGradient>
+        <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--rimA)"/><stop offset="1" style="stop-color:var(--rimB)"/></linearGradient>
+      </defs>
+      <circle r="108" fill="url(#rim)"/>
+      <circle r="96" class="inner"/>
+      <g id="bulbs"></g>
       <g id="wheel"></g>
-      <path class="pointer" d="M-9 -110 L9 -110 L0 -90 Z"/>
+      <circle r="92" fill="url(#gloss)" pointer-events="none"/>
+      <g id="pointer"><path class="pointer" d="M-11 -116 Q0 -122 11 -116 L0 -86 Z"/><circle cy="-112" r="3.5" class="pin"/></g>
     </svg>
+    <span class="sticker st1"><svg viewBox="0 0 48 48"><path d="M24 15c-9-2.5-17 4-17 13.5S14.5 44 24 44s17-6 17-15.5S33 12.5 24 15z" fill="#FFB08A"/><path d="M24 15c-3 7-3 19 0 29" stroke="#EE8466" stroke-width="2" fill="none"/><path d="M24.5 14.5c2-6 8.5-8.5 14-6.5-2 5.5-8.5 7.5-14 6.5z" fill="#5BAE5B"/><path d="M24 15c0-4-1-7-3.5-9.5" stroke="#7A5232" stroke-width="2.2" fill="none" stroke-linecap="round"/><ellipse cx="16" cy="25" rx="3" ry="5" fill="#fff" opacity=".35"/></svg></span><span class="sticker st2"><svg viewBox="0 0 48 48"><path d="M10 6v38" stroke="#333" stroke-width="3" stroke-linecap="round"/><rect x="11" y="8" width="29" height="19" fill="#fff" stroke="#222" stroke-width="1.4"/><rect x="11.00" y="8.00" width="7.25" height="6.33" fill="#222"/><rect x="25.50" y="8.00" width="7.25" height="6.33" fill="#222"/><rect x="18.25" y="14.33" width="7.25" height="6.33" fill="#222"/><rect x="32.75" y="14.33" width="7.25" height="6.33" fill="#222"/><rect x="11.00" y="20.66" width="7.25" height="6.33" fill="#222"/><rect x="25.50" y="20.66" width="7.25" height="6.33" fill="#222"/></svg></span><span class="sticker st3"><svg viewBox="0 0 48 48"><rect x="10" y="12" width="10" height="8" rx="2" fill="#D93A3A"/><rect x="28" y="12" width="10" height="8" rx="2" fill="#D93A3A"/><rect x="10" y="12" width="10" height="3" rx="1.5" fill="#FF7B6F"/><rect x="28" y="12" width="10" height="3" rx="1.5" fill="#FF7B6F"/><rect x="6" y="19" width="36" height="21" rx="3" fill="#E54444"/><rect x="6" y="19" width="36" height="5" rx="2" fill="#FF7B6F" opacity=".7"/></svg></span><span class="sticker st4"><svg viewBox="0 0 48 48"><path d="M24 45s14-14 14-25a14 14 0 1 0-28 0c0 11 14 25 14 25z" fill="#147D85"/><circle cx="24" cy="20" r="7.5" fill="#fff"/><path d="M24 24.5l-3.6-3.6a2.4 2.4 0 0 1 3.6-3.2 2.4 2.4 0 0 1 3.6 3.2z" fill="#E23E63"/></svg></span>
     <canvas id="confetti"></canvas>
     <button class="hub" id="hub" type="button">SUK</button>
   </div>
@@ -157,12 +211,14 @@ details summary{cursor:pointer;font-weight:600}
   <p class="foot" id="foot"></p>
 </div>
 <div id="toast" hidden role="status"></div>
+<div id="reveal" hidden><div class="env" id="env"><div class="env-back"></div><div class="letter"><span class="cat" id="rvCat"></span><p class="task" id="rvText"></p><button class="btn primary" id="rvOk" type="button">Priimu 💌</button></div><div class="env-front"></div><div class="flap"></div><div class="seal">♥</div></div></div>
+<div id="mapOv" hidden><div class="mapbar"><span id="mapInfo">Žemėlapis</span><button class="btn primary" id="mapNext" type="button" hidden>Toliau</button><button class="btn" id="mapClose" type="button" aria-label="Uždaryti">✕</button></div><div id="map"></div></div>
 
 <script>
 const CATS=[
  {k:'foto',e:'📸',n:'Nuotrauka'},{k:'kl',e:'💬',n:'Klausimas'},{k:'zem',e:'🗺️',n:'Žemėlapis'},{k:'muz',e:'🎹',n:'Muzika'},
  {k:'spo',e:'🏐',n:'Sportas'},{k:'zaid',e:'🎲',n:'Mini žaidimas'},{k:'pris',e:'💌',n:'Šiltas žodis'},{k:'drasa',e:'⚡',n:'Iššūkis'},{k:'gyvai',e:'🤝',n:'Gyvai'},{k:'akt',e:'🌍',n:'Aktualijos'}];
-const SEG=360/CATS.length, LIVE_PER_WEEK=2, ROOM_RE=/^[A-Za-z0-9-]{12,40}$/, GAMES={zaid8:'reakcija'};
+const SEG=360/CATS.length, LIVE_PER_WEEK=2, ROOM_RE=/^[A-Za-z0-9-]{12,40}$/, GAMES={zaid8:'reakcija',zaid15:'quiz',zaid16:'same',zem10:'map'};
 // Firebase projekto „mudvieju-ratas“ web konfigūracija (vieša, apsaugą daro Firestore taisyklės ir kambario kodas).
 const PUSH='https://ratas-push.domjyjy360.workers.dev';let ROOM=null,VKEY=null,SWREG=null;
 const FIREBASE={apiKey:"AIzaSyB-6u2upI9AeED4Xqa0oGJxYvm0QVPPr34",authDomain:"mudvieju-ratas.firebaseapp.com",projectId:"mudvieju-ratas",storageBucket:"mudvieju-ratas.firebasestorage.app",messagingSenderId:"402604471259",appId:"1:402604471259:web:56c33de0a305a55e462dfe"};
@@ -170,15 +226,34 @@ const FIREBASE={apiKey:"AIzaSyB-6u2upI9AeED4Xqa0oGJxYvm0QVPPr34",authDomain:"mud
 const BANK={
  foto:[null,'Nufotografuok vaizdą pro artimiausią langą.','Atsiųsk asmenukę su juokingiausia mina, kokią moki.','Nufotografuok daiktą šalia savęs, kuris primena antrą pusę, ir parašyk kodėl.','Atsiųsk šiandienos pietų ar vakarienės nuotrauką ir įvertink ją nuo 1 iki 10.',null,'Nufotografuok savo darbo ar mokymosi vietą tokią, kokia yra dabar.','Atsiųsk nuotrauką kažko raudono, kas yra šalia tavęs dabar.','Būk gidas: trimis nuotraukomis aprodyk vietą, kurioje šiandien praleidai daugiausia laiko.','Nufotografuok savo puodelį ar gertuvę ir parašyk, kas jame šiandien.'],
  kl:['Paklausk: kas šiandien buvo geriausia dienos akimirka?','Paklausk: kokio mažo dalyko iš manęs pasiilgsti labiausiai, kai nesimatom?','Paklausk: kur norėtum su manimi atsibusti po metų?','Paklausk: ką apie tave žinau tik aš?','Paklausk: koks mano įprotis tave juokina?','Paklausk: ko norėtum išmokti kartu per šiuos metus?','Paklausk: koks buvo pirmas įspūdis apie mane? Tik sąžiningai.','Paklausk: ką prisimeni iš pirmo pasimatymo sporto bare, ko aš tikrai nepamenu?','Paklausk: kokia mano savybė tave labiausiai traukia?','Paklausk: koks buvo keisčiausias tavo šios savaitės sapnas? Kartu pabandykit jį išaiškinti.','Paklausk: ką norėtum padaryti per gyvenimą, ko dar niekam nesakei?','Paklausk: kaip atrodytų tobula diena su manimi nuo ryto iki vakaro?'],
- zem:[null,'Atsiųsk žemėlapio ekrano nuotrauką su vieta, į kurią norėtum nuvežti antrą pusę.','Pažymėk žemėlapyje tašką tarp Šiaulių ir Telšių, kur verta sustoti kartu, ir pagrįsk.','Atsiųsk trijų Lietuvos vietų sąrašą, kuriose dar nebuvot kartu. Antra pusė išrenka vieną.',null,'Atsiųsk koordinates vietos, kuri tau svarbi. Antra pusė turi atspėti, kas ten.','Išmatuok žemėlapyje atstumą tarp judviejų šiuo metu ir parašyk, per kiek jį nubėgtum.','Kur aš esu? Aprašyk vietą trimis užuominomis be pavadinimo, antra pusė spėja klausinėdama.','Išsirink šalį, kurioje norėtumėt pabūti kartu, ir atsiųsk tris priežastis, kodėl būtent ji.'],
+ zem:[null,'Atsiųsk žemėlapio ekrano nuotrauką su vieta, į kurią norėtum nuvežti antrą pusę.','Pažymėk žemėlapyje tašką tarp Šiaulių ir Telšių, kur verta sustoti kartu, ir pagrįsk.','Atsiųsk trijų Lietuvos vietų sąrašą, kuriose dar nebuvot kartu. Antra pusė išrenka vieną.',null,'Atsiųsk koordinates vietos, kuri tau svarbi. Antra pusė turi atspėti, kas ten.','Išmatuok žemėlapyje atstumą tarp judviejų šiuo metu ir parašyk, per kiek jį nubėgtum.','Kur aš esu? Aprašyk vietą trimis užuominomis be pavadinimo, antra pusė spėja klausinėdama.','Išsirink šalį, kurioje norėtumėt pabūti kartu, ir atsiųsk tris priežastis, kodėl būtent ji.','Spėk vietą: pažymėk žemėlapyje be pavadinimų tris Lietuvos vietas. Antra pusė žais tas pačias. Kas arčiau?'],
  muz:['Atsiųsk dainą, kuri šiandien sukasi galvoje.','Įrašyk balso žinutę: paniūniuok melodiją, o antra pusė turi atspėti dainą.','Sugrok ar pabarbenk 20 sekundžių bet kuo, kas po ranka: pianinu, gitara ar stalu.','Atsiųsk dainą, kuri primena judviejų pradžią.','Sudarykit trijų dainų grojaraštį rytojaus rytui: tu renkiesi dvi, antra pusė vieną.','Atsiųsk dainą, kurios gėdiniesi, bet vis tiek klausai.','Parašyk, kokią dainą norėtum išgirsti grojamą gyvai ir kas ją turėtų groti.','Dainų asociacijos: parašyk žodį, antra pusė per 10 sekundžių atsiunčia dainą su tuo žodžiu.','Įrašyk 15 sekundžių lip-sync video pagal bet kurią dainą. Antra pusė įvertina nuo 1 iki 10.'],
  spo:['Spėk artimiausių „Ryto“ arba „Žalgirio“ rungtynių rezultatą. Kas arčiau, tam priklauso kava.','Padaryk 15 pritūpimų ir atsiųsk įrodymą.','Išlaikyk lentą kiek gali ir atsiųsk video įrodymą. Antra pusė bando pagerinti.','Atsiųsk šios savaitės judėjimo planą: bent vienas dalykas, kurį tikrai padarysi.','Papasakok geriausią savo sportinį prisiminimą: aikštelėje, baseine ar tribūnoje.','Išmokyk antrą pusę vienos savo sporto šakos taisyklės, kurios ji tikrai nežino.','Sutarkit dieną per artimiausią savaitę, kada kartu pažaisit tinklinį, pamėtysit į krepšį ar nueisit į baseiną.','Savaitės lenktynės: išsikelkit po vieną sportinį tikslą. Kas pirmas įvykdo, tas renkasi kito pasimatymo vietą.'],
- zaid:['Du teiginiai tiesa, vienas melas: parašyk tris faktus apie savo dieną, antra pusė spėja melą.','Aprašyk filmą jaustukais, kiek tik nori. Antra pusė turi atspėti.','20 klausimų: sugalvok daiktą, antra pusė spėja klausdama tik „taip“ arba „ne“.','Atsiųsk trečią naujausią nuotrauką iš savo galerijos. Be atrankos ir be trynimo.','Užbaik sakinį: „Jei rytoj abu turėtume laisvą dieną, mes…“ Rašot abu, tada palyginat.','Papasakok savo dieną penkiais jaustukais, antra pusė ją atpasakoja žodžiais.',null,'Reakcijos dvikova: spausk laukelį žemiau ir lauk, kol jis nusidažys ir parašys „SPAUSK!“. Tada spausk kuo greičiau. 3 bandymai, skaičiuojamas vidurkis milisekundėmis. Antra pusė savo lange bandys tave pralenkti.','Tiesa ar užduotis: pasirink pats, o antra pusė sugalvoja klausimą arba užduotį.','Tik neteisingi atsakymai: užduok tris klausimus, antra pusė gali atsakyti tik neteisingai ir kuo juokingiau.','Istorija po sakinį: parašyk pirmą sakinį, toliau rašot pakaitomis, kol bus 10 sakinių.','Atspėk garsą: įrašyk 5 sekundžių garsą iš savo aplinkos, antra pusė spėja, kas tai.','Paskutinė raidė: rašot žodžius pakaitomis, kiekvienas prasideda paskutine ankstesnio raide. Kas pirmas užstringa, pralaimi.','Atspėk prisiminimą: aprašyk bendrą akimirką vienu sakiniu be detalių, antra pusė spėja, kuri tai.'],
+ zaid:['Du teiginiai tiesa, vienas melas: parašyk tris faktus apie savo dieną, antra pusė spėja melą.','Aprašyk filmą jaustukais, kiek tik nori. Antra pusė turi atspėti.','20 klausimų: sugalvok daiktą, antra pusė spėja klausdama tik „taip“ arba „ne“.','Atsiųsk trečią naujausią nuotrauką iš savo galerijos. Be atrankos ir be trynimo.','Užbaik sakinį: „Jei rytoj abu turėtume laisvą dieną, mes…“ Rašot abu, tada palyginat.','Papasakok savo dieną penkiais jaustukais, antra pusė ją atpasakoja žodžiais.',null,'Reakcijos dvikova: spausk laukelį žemiau ir lauk, kol jis nusidažys ir parašys „SPAUSK!“. Tada spausk kuo greičiau. 3 bandymai, skaičiuojamas vidurkis milisekundėmis. Antra pusė savo lange bandys tave pralenkti.','Tiesa ar užduotis: pasirink pats, o antra pusė sugalvoja klausimą arba užduotį.','Tik neteisingi atsakymai: užduok tris klausimus, antra pusė gali atsakyti tik neteisingai ir kuo juokingiau.','Istorija po sakinį: parašyk pirmą sakinį, toliau rašot pakaitomis, kol bus 10 sakinių.','Atspėk garsą: įrašyk 5 sekundžių garsą iš savo aplinkos, antra pusė spėja, kas tai.','Paskutinė raidė: rašot žodžius pakaitomis, kiekvienas prasideda paskutine ankstesnio raide. Kas pirmas užstringa, pralaimi.','Atspėk prisiminimą: aprašyk bendrą akimirką vienu sakiniu be detalių, antra pusė spėja, kuri tai.','Kaip gerai mane pažįsti: atsakyk čia į 5 klausimus apie save. Antra pusė savo lange bandys atspėti tavo atsakymus.','Tas pats klausimas: atsakyk čia, o antra pusė atsakys į tą patį. Atsakymai atsivers, kai atsakysit abu.'],
  pris:['Parašyk tris dalykus, už kuriuos šiandien dėkoji antrai pusei.','Prisimink vieną judviejų akimirką ir aprašyk ją trimis sakiniais.','Parašyk komplimentą, kurio dar niekada nesakei.','Įrašyk balso žinutę su palinkėjimu rytojaus dienai.','Parašyk, ko iš antros pusės išmokai.','Parašyk, ką norėtum veikti kartu, kai kitą kartą susitiksit.','Padėkok už vieną konkretų dalyką, kurį antra pusė padarė šią savaitę.','Sugalvok antrai pusei naują meilų vardą. „Persikutė“ jau užimta.','Suskaičiuok, kiek dienų praėjo nuo rugsėjo 1-osios, ir parašyk, kuri iš jų buvo geriausia.','Komplimentų abėcėlė: parašyk septynis komplimentus, prasidedančius raidėmis nuo A iki G.','Laiškas pakaitomis: parašyk pirmą meilaus laiško sakinį, antra pusė tęsia, kol bus penki sakiniai.'],
  drasa:['Iki vakaro nusiųsk antrai pusei tris žinutes be jokios priežasties.','Suplanuok kitą pasimatymą: vieta, laikas ir viena staigmena.','Šiandien paskambink, o ne parašyk. Bent penkios minutės.','Nupiešk antros pusės portretą per 60 sekundžių ir atsiųsk.','Išmok pasakyti „pasiilgau tavęs“ nauja kalba ir įrašyk balso žinute.','Pagamink ar nupirk ką nors skanaus ir atsiųsk nuotrauką su pažadu pavaišinti.','Parašyk keturių eilučių eilėraštį apie šią dieną.','Parašyk tris dalykus, kurie tave antroje pusėje labiausiai traukia.','Atsiųsk nuotrauką, kurios paprastai nesiųstum, nes joje atrodai per juokingai.','Per 3 minutes nupiešk savo svajonių namą ir atsiųsk. Antra pusė prideda vieną kambarį.','Įrašyk video, kaip šiandien atrodo tavo kambarys, ir pasakok kaip gidas muziejuje.'],
  gyvai:['Kitą kartą susitikę sudėliokit Lego rinkinį, kaip per pirmą pasimatymą. Šiandien sutarkit, kurį.','Susitikę pasigaminkit vakarienę kartu. Šiandien nuspręskit, ką gaminsit.','Nueikit pasivaikščioti be telefonų bent 30 minučių. Šiandien sutarkit dieną.','Kitas „Formulės 1“ lenktynes žiūrėkit kartu. Šiandien abu parašykit, kas laimės.','Susitikę sužaiskit stalo ar kortų žaidimą. Pralaimėjęs plauna indus.','Susitikę paprašyk antros pusės sugroti vieną dainą arba išmokyti tave trijų akordų.','Nueikit į vietą Vilniuje, kur nė vienas dar nebuvot. Šiandien išrinkit ją žemėlapyje.','Susitikę 10 minučių pamėtykit kamuolį: tinklinio arba krepšinio.','Susitikę minutę tylėdami žiūrėkit vienas kitam į akis. Kas pirmas nusijuokia, pralaimi.','Susitikę nusifotografuokit kartu pozoje, kurią sugalvoja antra pusė.'],
  akt:[] // pildoma tik iš news.json arba „news“ kolekcijos
 };
+const QUIZ=[
+ ['Kas mane labiausiai pralinksmina?',['Mymai','Gyvūnų video','Tavo žinutės','Kvaili juokeliai']],
+ ['Mano tobulas savaitgalio rytas?',['Ilgas miegas','Sportas','Kava ir pusryčiai','Pasivaikščiojimas']],
+ ['Ką rinkčiausi vakarienei?',['Picą','Sušius','Cepelinus','Burgerį']],
+ ['Kur norėčiau nuvažiuoti labiausiai?',['Prie jūros','Į kalnus','Į didmiestį','Į kaimą']],
+ ['Kokią supergalią rinkčiausi?',['Teleportaciją','Skraidymą','Laiko stabdymą','Minčių skaitymą']],
+ ['Kaip ilsiuosi po sunkios dienos?',['Serialas','Sportas','Muzika','Miegas']],
+ ['Mano mėgstamiausias metų laikas?',['Pavasaris','Vasara','Ruduo','Žiema']],
+ ['Ką dabar gerčiau?',['Kavą','Arbatą','Kakavą','Limonadą']],
+ ['Ko labiausiai bijau?',['Vorų','Aukščio','Tamsos','Egzaminų']],
+ ['Kokį filmą žiūrėčiau šiandien?',['Komediją','Romantinį','Veiksmo','Siaubo']],
+ ['Mano didžiausias įprotis?',['Vėluoju','Per daug telefone','Užkandžiauju naktį','Viską planuoju']],
+ ['Tobuliausias pasimatymas man?',['Vakarienė','Žygis','Kinas','Vakaras namie']],
+ ['Ką pirmiausia išgelbėčiau iš degančio namo?',['Telefoną','Nuotraukas','Gitarą ar instrumentą','Mėgstamą megztinį']],
+ ['Kokia mano „kalba“ meilei rodyti?',['Žodžiai','Laikas kartu','Dovanėlės','Apkabinimai']],
+ ['Kurią sporto šaką žiūrėčiau mieliausiai?',['Krepšinį','Tinklinį','Formulę 1','Plaukimą']]];
+const SAMEQ=['Geriausia mūsų akimirka iki šiol?','Vienas žodis, kuris apibūdina mus.','Kur kitą kartą turėtume nueiti kartu?','Kokia daina yra „mūsų“?','Ką veiksime lygiai po metų?','Kas iš mūsų geriau gamina valgyti?','Kas iš mūsų pirmas atsiprašo po ginčo?','Kuris gyvūnas labiausiai panašus į mane?','Koks mano juokingiausias įprotis?','Kurį filmą turėtume pažiūrėti kartu artimiausiu metu?','Kur norėtum gyventi su manimi po penkerių metų?','Ką aš dažniausiai sakau?'];
+// Lietuvos vietos žemėlapio žaidimui (apytikslės koordinatės)
+const PLACES=[{n:'Kryžių kalnas',la:56.0153,lo:23.4167},{n:'Trakų pilis',la:54.6522,lo:24.9339},{n:'Parnidžio kopa',la:55.2924,lo:21.0006},{n:'Druskininkai',la:54.0167,lo:23.9667},{n:'Platelių ežeras',la:56.0430,lo:21.8530},{n:'Masčio ežeras (Telšiai)',la:55.9814,lo:22.2472},{n:'Šiaulių katedra',la:55.9335,lo:23.3143},{n:'Kernavė',la:54.8870,lo:24.8540},{n:'Anykščiai',la:55.5262,lo:25.1029},{n:'Birštonas',la:54.6100,lo:24.0300},{n:'Rusnė',la:55.2981,lo:21.3726},{n:'Ignalina',la:55.3406,lo:26.1606},{n:'Palangos tiltas',la:55.9175,lo:21.0461},{n:'Biržų pilis',la:56.2006,lo:24.7542},{n:'Kauno pilis',la:54.8990,lo:23.8854},{n:'Klaipėdos senamiestis',la:55.7090,lo:21.1330},{n:'Europos geografinis centras',la:54.9049,lo:25.3195},{n:'Raganų kalnas (Juodkrantė)',la:55.5428,lo:21.1203},{n:'Rambyno kalnas',la:55.0880,lo:22.0060},{n:'Vilniaus Gedimino pilis',la:54.6867,lo:25.2907},{n:'Merkinė',la:54.1604,lo:24.1893},{n:'Zarasai',la:55.7314,lo:26.2475},{n:'Plungės dvaras',la:55.9142,lo:21.8455},{n:'Ventės ragas',la:55.3417,lo:21.1919}];
 const MILES=[3,7,14,30,60,100], WD=['Sk','Pr','An','Tr','Kt','Pn','Št'], NS='http://www.w3.org/2000/svg';
 const $=id=>document.getElementById(id);
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -193,26 +268,105 @@ function shift(key,n){const d=new Date(key+'T12:00:00Z');d.setUTCDate(d.getUTCDa
 let toastT;function toast(t){const b=$('toast');b.textContent=t;b.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>b.hidden=true,3200)}
 
 /* ---------- wheel drawing ---------- */
+const FILLS=['--love','--sea','--sun','--plum'];
 (function draw(){
-  const fills=['var(--love)','var(--sea)','var(--sun)','var(--plum)'],w=$('wheel'),pt=(a,r)=>[r*Math.sin(a*Math.PI/180),-r*Math.cos(a*Math.PI/180)];
-  CATS.forEach((c,i)=>{const [x1,y1]=pt(i*SEG,90),[x2,y2]=pt((i+1)*SEG,90);
-    const p=document.createElementNS(NS,'path');p.setAttribute('d',`M0 0L${x1.toFixed(2)} ${y1.toFixed(2)}A90 90 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)}Z`);p.setAttribute('class','seg');p.setAttribute('fill',fills[i%4]);w.append(p);
-    const t=document.createElementNS(NS,'text');t.textContent=c.e;t.setAttribute('transform',`rotate(${(i+.5)*SEG}) translate(0,-63)`);t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','central');t.setAttribute('font-size','19');w.append(t)});
-  const g=$('ticks');for(let a=0;a<360;a+=5){const major=a%45===0,[x1,y1]=pt(a,major?94:99),[x2,y2]=pt(a,105);const l=document.createElementNS(NS,'line');
-    l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('class','tick'+(major?' major':''));g.append(l)}
+  const w=$('wheel'),pt=(a,r)=>[r*Math.sin(a*Math.PI/180),-r*Math.cos(a*Math.PI/180)],mk=(t,o)=>{const n=document.createElementNS(NS,t);for(const k in o)n.setAttribute(k,o[k]);return n};
+  CATS.forEach((c,i)=>{const [x1,y1]=pt(i*SEG,92),[x2,y2]=pt((i+1)*SEG,92),d=`M0 0L${x1.toFixed(2)} ${y1.toFixed(2)}A92 92 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)}Z`;
+    w.append(mk('path',{d,class:'seg',style:`fill:var(${FILLS[i%4]})`}),mk('path',{d,fill:'url(#segShade)','pointer-events':'none'}));
+    const t=mk('text',{transform:`rotate(${(i+.5)*SEG}) translate(0,-64)`,'text-anchor':'middle','dominant-baseline':'central','font-size':'19'});t.textContent=c.e;w.append(t)});
+  w.append(mk('circle',{r:3,fill:'#fff',opacity:.6}));
+  const g=$('bulbs');for(let i=0;i<24;i++){const [x,y]=pt(i*15+7.5,102);g.append(mk('circle',{cx:x.toFixed(2),cy:y.toFixed(2),r:2.8,class:'bulb'}))}
   CATS.filter(c=>c.k!=='akt').forEach(c=>$('customCat').append(el('option',{value:c.k},c.e+' '+c.n)));
 })();
-function setRot(deg,animate){const w=$('wheel');if(!animate){w.style.transition='none';w.style.transform=`rotate(${deg}deg)`;void w.getBoundingClientRect();w.style.transition=''}else w.style.transform=`rotate(${deg}deg)`}
+function setRot(deg){$('wheel').setAttribute('transform',`rotate(${deg})`)}
+const underPointer=a=>((-a%360)+360)%360;
+let audio=null;const soundOn=()=>ls.get('mr_sound')!=='0';
+function ac(){try{if(!audio)audio=new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();return audio}catch(e){return null}}
+function tone(f,t0,dur,vol,type){const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain(),t=a.currentTime+t0;o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(.0008,t+dur);o.connect(g).connect(a.destination);o.start(t);o.stop(t+dur+.02)}
+function tickSound(){if(soundOn())tone(1500+Math.random()*250,0,.045,.09,'triangle')}
+function chime(){if(soundOn())[784,1047,1319,1568].forEach((f,i)=>tone(f,i*.09,.7,.12))}
+function pointerTick(){const p=$('pointer');p.classList.remove('tick');void p.getBoundingClientRect();p.classList.add('tick');setTimeout(()=>p.classList.remove('tick'),60);tickSound();try{navigator.vibrate&&navigator.vibrate(4)}catch(e){}}
 function animateTo(i){return new Promise(res=>{
-  rot=Math.ceil(rot/360)*360+360*5+(360-(i+.5)*SEG)+(Math.random()-.5)*(SEG-10);
-  if(reduced){setRot(rot,false);setTimeout(res,60);return}
-  let done=false;const fin=()=>{if(!done){done=true;res()}};
-  $('wheel').addEventListener('transitionend',fin,{once:true});setTimeout(fin,5700);setRot(rot,true)})}
-function burst(){if(reduced)return;const c=$('confetti'),r=c.getBoundingClientRect(),x=c.getContext('2d');c.width=r.width;c.height=r.height;
-  const cs=getComputedStyle(document.documentElement),cols=['--love','--sea','--sun','--plum'].map(v=>cs.getPropertyValue(v).trim());
-  const ps=Array.from({length:90},()=>{const a=Math.random()*Math.PI*2,v=3+Math.random()*7;return{x:r.width/2,y:r.height/2,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3,s:4+Math.random()*5,c:cols[Math.random()*4|0],r:Math.random()*6}});
-  let f=0;(function step(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.22;p.r+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.globalAlpha=Math.max(0,1-f/80);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});
+  const start=rot,target=Math.ceil(rot/360)*360+360*6+(360-(i+.5)*SEG)+(Math.random()-.5)*(SEG-10);rot=target;
+  if(reduced){setRot(rot);chime();res();return}
+  const D=5800,t0=performance.now(),st=$('stage');let last=Math.floor(underPointer(start)/SEG);st.classList.remove('won');st.classList.add('spinning');
+  (function f(now){const k=Math.min(1,(now-t0)/D),e=1-Math.pow(1-k,4),a=start+(target-start)*e;setRot(a);
+    const sg=Math.floor(underPointer(a)/SEG);if(sg!==last){last=sg;pointerTick()}
+    if(k<1)requestAnimationFrame(f);else{st.classList.remove('spinning');st.classList.add('won');chime();try{navigator.vibrate&&navigator.vibrate([20,40,30])}catch(e){}setTimeout(res,350)}})(t0)})}
+function burst(kind){if(reduced)return;const c=$('confetti'),r=c.getBoundingClientRect(),x=c.getContext('2d');c.width=r.width;c.height=r.height;
+  const cs=getComputedStyle(document.documentElement),cols=['--love','--sea','--sun','--plum'].map(v=>cs.getPropertyValue(v).trim()),love=cs.getPropertyValue('--love').trim();
+  const ps=Array.from({length:kind==='hearts'?36:90},()=>{const a=Math.random()*Math.PI*2,v=3+Math.random()*7;return{x:r.width/2,y:r.height/2,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3,s:kind==='hearts'?9+Math.random()*8:4+Math.random()*5,c:kind==='hearts'?love:cols[Math.random()*4|0],r:Math.random()*6}});
+  const heart=(s)=>{x.beginPath();x.moveTo(0,s*.3);x.bezierCurveTo(-s*.9,-s*.3,-s*.4,-s*.9,0,-s*.35);x.bezierCurveTo(s*.4,-s*.9,s*.9,-s*.3,0,s*.3);x.fill()};
+  let f=0;(function step(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=kind==='hearts'?.12:.22;p.r+=kind==='hearts'?.03:.2;x.save();x.translate(p.x,p.y);x.rotate(kind==='hearts'?Math.sin(p.r)*.4:p.r);x.globalAlpha=Math.max(0,1-f/80);x.fillStyle=p.c;if(kind==='hearts')heart(p.s);else x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});
     if(++f<80)requestAnimationFrame(step);else x.clearRect(0,0,c.width,c.height)})()}
+const hearts=()=>burst('hearts');
+function showReveal(t){const c=CATS.find(c=>c.k===t.cat)||CATS[0];$('rvCat').textContent=c.e+' '+c.n;$('rvText').textContent=t.text;const env=$('env');env.classList.remove('open');$('reveal').hidden=false;
+  setTimeout(()=>{env.classList.add('open');if(soundOn())tone(520,0,.25,.07,'sine')},reduced?0:450);setTimeout(()=>$('rvOk').focus(),1200)}
+$('rvOk').addEventListener('click',()=>{$('reveal').hidden=true;burst()});
+function syncSound(){$('soundBtn').textContent=soundOn()?'🔊':'🔇';$('soundBtn').setAttribute('aria-label',soundOn()?'Išjungti garsą':'Įjungti garsą')}
+$('soundBtn').addEventListener('click',()=>{ls.set('mr_sound',soundOn()?'0':'1');syncSound();if(soundOn())tickSound()});syncSound();
+
+/* ---------- in-app games ---------- */
+function seeded(str){let h=2166136261;for(const ch of String(str))h=Math.imul(h^ch.charCodeAt(0),16777619);return()=>{h=Math.imul(h^(h>>>15),2246822507);h=Math.imul(h^(h>>>13),3266489909);return((h^=h>>>16)>>>0)/4294967296}}
+function pickN(len,n,seed){const r=seeded(seed),idx=Array.from({length:len},(_,i)=>i);for(let i=len-1;i>0;i--){const j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}return idx.slice(0,n)}
+const WG={};function widget(key,make){return WG[key]||(WG[key]=make())}
+const hav=(a,b,c,d)=>{const R=6371,t=x=>x*Math.PI/180,dl=t(c-a),dn=t(d-b),h=Math.sin(dl/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
+function choiceForm(qs,onSave,label){const ans=[],box=el('div',{class:'game'});let btn;
+  qs.forEach((qi,n)=>{const [q,opts]=QUIZ[qi]||['?',[]],ch=el('div',{class:'chips'});
+    opts.forEach((o,k)=>ch.append(el('button',{class:'chip',type:'button',onclick:e=>{ans[n]=k;[...ch.children].forEach(b=>b.classList.remove('on'));e.currentTarget.classList.add('on');btn.disabled=qs.some((_,m)=>ans[m]==null)}},o)));
+    box.append(el('div',{class:'q'},el('p',{class:'qt'},(n+1)+'. '+q),ch))});
+  btn=el('button',{class:'btn primary',type:'button',disabled:true,onclick:()=>{btn.disabled=true;onSave(ans.slice()).catch(()=>{btn.disabled=false})}},label);box.append(btn);return box}
+function quizResult(d,author){const g=d.guess||[],a=(d.quiz&&d.quiz.a)||[];
+  return el('div',{class:'game'},el('p',{class:'state ok'},`${nameOf(author===S.me?other():S.me)||'Antra pusė'} atspėjo ${Number(d.guessScore)||0} iš ${a.length}`),
+    el('ul',{class:'res'},...((d.quiz&&d.quiz.q)||[]).map((qi,n)=>{const [q,opts]=QUIZ[qi]||['?',[]];return el('li',null,el('span',null,q),el('b',null,(g[n]===a[n]?'✓ ':'✗ ')+(opts[a[n]]||'?')))})))}
+function sameView(d,author){const other_=author==='a'?'b':'a';return el('div',{class:'game'},el('p',{class:'qt'},'„'+String((d.same&&d.same.q)||'')+'“'),
+  el('div',{class:'ans'},el('small',null,nameOf(author)||'Atsakė'),String((d.same&&d.same.a)||'')),el('div',{class:'ans'},el('small',null,nameOf(other_)||'Antra pusė'),String(d.sameB||'')))}
+function mapResult(d,author){const pl=(d.map&&d.map.p)||[],da=(d.map&&d.map.d)||[],db=(d.mapB&&d.mapB.d)||[],o=author==='a'?'b':'a';
+  return el('div',{class:'game'},el('ul',{class:'res'},el('li',null,el('span',null,'Vieta'),el('b',null,`${nameOf(author)||'?'} / ${nameOf(o)||'?'}`)),
+    ...pl.map((pi,n)=>el('li',null,el('span',null,(PLACES[pi]||{}).n||'?'),el('b',null,`${da[n]??'–'} / ${db[n]??'–'} km`))),
+    el('li',null,el('span',null,'Iš viso'),el('b',null,`${d.map?d.map.t:'–'} / ${d.mapB?d.mapB.t:'–'} km`))))}
+let LP=null,MAP=null;
+function leaflet(){return LP||(LP=new Promise((ok,no)=>{const l=document.createElement('link');l.rel='stylesheet';l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.append(l);
+  const sc=document.createElement('script');sc.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';sc.onload=ok;sc.onerror=()=>{LP=null;no()};document.head.append(sc)}))}
+const LT=[[53.85,20.9],[56.45,26.85]];
+async function playMap(pl,done){const ov=$('mapOv');ov.hidden=false;$('mapInfo').textContent='Kraunamas žemėlapis…';$('mapNext').hidden=true;
+  try{await leaflet()}catch(e){ov.hidden=true;return toast('Nepavyko užkrauti žemėlapio. Patikrink internetą.')}
+  if(!MAP){MAP=L.map('map',{maxBounds:[[53.2,19.8],[57.1,27.9]],minZoom:6,maxZoom:12}).fitBounds(LT);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:12,attribution:'© OpenStreetMap, © CARTO'}).addTo(MAP)}
+  else{MAP.invalidateSize();MAP.fitBounds(LT)}
+  const layer=L.layerGroup().addTo(MAP),d=[];let n=0,locked=false;
+  const ask=()=>{layer.clearLayers();MAP.fitBounds(LT);locked=false;$('mapInfo').textContent=`${n+1}/${pl.length} · Kur yra ${PLACES[pl[n]].n}?`;$('mapNext').hidden=true};
+  const close=()=>{ov.hidden=true;MAP.off('click');layer.remove()};
+  MAP.off('click');MAP.on('click',e=>{if(locked)return;locked=true;const P=PLACES[pl[n]],km=Math.round(hav(e.latlng.lat,e.latlng.lng,P.la,P.lo));d.push(km);
+    L.circleMarker(e.latlng,{radius:8,color:'#E23E63',fillColor:'#E23E63',fillOpacity:1}).addTo(layer);L.circleMarker([P.la,P.lo],{radius:8,color:'#147D85',fillColor:'#147D85',fillOpacity:1}).addTo(layer);
+    L.polyline([e.latlng,[P.la,P.lo]],{color:'#5A4BC4',dashArray:'5 7'}).addTo(layer);MAP.fitBounds(L.latLngBounds([e.latlng,[P.la,P.lo]]).pad(.6),{maxZoom:9});
+    $('mapInfo').textContent=`${P.n}: ${km} km nuo tikrosios vietos`+(km<=10?' 🎯':'');tickSound();const nb=$('mapNext');nb.hidden=false;nb.textContent=n<pl.length-1?'Kita vieta':'Baigti'});
+  $('mapNext').onclick=()=>{n++;if(n<pl.length)ask();else{close();done(d)}};
+  $('mapClose').onclick=close;setTimeout(()=>MAP.invalidateSize(),50);ask()}
+// mine: the game the spinner plays first
+function gameMine(kind,id,doc){
+  if(kind==='quiz')return widget('qs'+id,()=>choiceForm(pickN(QUIZ.length,5,id),ans=>{const qs=pickN(QUIZ.length,5,id);return patch(id,{status:'done',doneAt:Date.now(),quiz:{q:qs,a:ans}},'Atsakymai išsaugoti!').then(()=>{hearts();notify(other(),`${nameOf(S.me)} atsakė į klausimus apie save 🧠`,'Atspėk atsakymus programėlėje!')})},'Išsaugoti atsakymus'));
+  if(kind==='same')return widget('ss'+id,()=>{const q=SAMEQ[pickN(SAMEQ.length,1,id)[0]],ta=el('textarea',{id:'sameA',maxlength:'300',placeholder:'Tavo atsakymas (antra pusė jo nematys, kol neatsakys pati)','aria-label':'Tavo atsakymas'});let btn;
+    btn=el('button',{class:'btn primary',type:'button',onclick:()=>{const v=ta.value.trim();if(!v)return toast('Parašyk atsakymą.');btn.disabled=true;patch(id,{status:'done',doneAt:Date.now(),same:{q,a:v.slice(0,300)}},'Atsakymas išsaugotas!').then(()=>notify(other(),'Tas pats klausimas 🤝',`Atsakyk į „${q}“. Atsakymai atsivers, kai atsakysi.`)).catch(()=>btn.disabled=false)}},'Išsaugoti');
+    return el('div',{class:'game'},el('p',{class:'qt'},'„'+q+'“'),ta,btn)});
+  if(kind==='map')return el('div',{class:'row'},el('button',{class:'btn primary',type:'button',onclick:()=>{const pl=pickN(PLACES.length,3,id);playMap(pl,d=>{const t=d.reduce((x,y)=>x+y,0);patch(id,{status:'done',doneAt:Date.now(),map:{p:pl,d,t}},`Iš viso ${t} km`).then(()=>notify(other(),`${nameOf(S.me)} sužaidė „Spėk vietą“ 🗺️`,`Nuokrypis iš viso ${t} km. Ar tu tikslesnė(-is)?`)).catch(()=>{})})}},'Žaisti 🗺️'));
+  return null}
+function gameMineDone(kind,doc){
+  if(kind==='quiz')return doc.guess?quizResult(doc,S.me):el('p',{class:'state'},`Laukiam, kol ${nameOf(other())||'antra pusė'} spės tavo atsakymus.`);
+  if(kind==='same')return doc.sameB?sameView(doc,S.me):el('div',{class:'game'},el('p',{class:'qt'},'„'+String(doc.same&&doc.same.q||'')+'“'),el('div',{class:'ans'},el('small',null,'Tavo atsakymas'),String(doc.same&&doc.same.a||'')),el('p',{class:'state'},`Laukiam, kol atsakys ${nameOf(other())||'antra pusė'}.`));
+  if(kind==='map')return mapResult(doc,S.me);
+  return null}
+// theirs: the partner's reply to the spinner's game
+function gameTheirs(kind,pid,ps,o){
+  if(kind==='quiz'){if(ps.guess)return quizResult(ps,o);if(!ps.quiz)return null;
+    return widget('qg'+pid,()=>el('div',{class:'game'},el('p',{class:'state'},`Atspėk, ką atsakė ${nameOf(o)}:`),choiceForm(ps.quiz.q,ans=>{const sc=ps.quiz.q.filter((_,n)=>ans[n]===ps.quiz.a[n]).length;return patch(pid,{guess:ans,guessScore:sc},`Atspėjai ${sc} iš ${ps.quiz.q.length}!`).then(()=>{if(sc>=4)hearts();notify(o,`${nameOf(S.me)} atspėjo ${sc} iš ${ps.quiz.q.length} 🧠`,sc>=4?'Pažįsta tave puikiai!':'Dar yra ko pasimokyti 😄')})},'Tikrinti')))}
+  if(kind==='same'){if(ps.sameB)return sameView(ps,o);if(!ps.same)return null;
+    return widget('sg'+pid,()=>{const ta=el('textarea',{id:'sameB',maxlength:'300',placeholder:'Tavo atsakymas','aria-label':'Tavo atsakymas'});let btn;
+      btn=el('button',{class:'btn primary',type:'button',onclick:()=>{const v=ta.value.trim();if(!v)return toast('Parašyk atsakymą.');btn.disabled=true;patch(pid,{sameB:v.slice(0,300)},'Atsakymai atsivėrė!').then(()=>{hearts();notify(o,'Atsakymai atsivėrė 🤝',`${nameOf(S.me)} atsakė į „${ps.same.q}“`)}).catch(()=>btn.disabled=false)}},'Atsakyti ir atverti');
+      return el('div',{class:'game'},el('p',{class:'qt'},'„'+ps.same.q+'“'),el('p',{class:'state'},`${nameOf(o)} jau atsakė. Atsakymą pamatysi, kai atsakysi pats(-i).`),ta,btn)})}
+  if(kind==='map'){if(!ps.map)return null;if(ps.mapB)return mapResult(ps,o);
+    return el('div',{class:'game'},mapResult(ps,o),el('div',{class:'row'},el('button',{class:'btn primary',type:'button',onclick:()=>playMap(ps.map.p,d=>{const t=d.reduce((x,y)=>x+y,0);patch(pid,{mapB:{d,t}},`Iš viso ${t} km`).then(()=>{if(t<ps.map.t)hearts();notify(o,t<ps.map.t?`${nameOf(S.me)} buvo tikslesnis(-ė) 🗺️`:`${nameOf(S.me)} tavęs neaplenkė 🗺️`,`${t} km prieš tavo ${ps.map.t} km.`)}).catch(()=>{})})},'Žaisti tas pačias vietas 🗺️')))}
+  return null}
 
 /* ---------- game logic ---------- */
 function allNews(){return[...S.newsFile,...S.newsDb].filter(n=>n&&typeof n.id==='string'&&typeof n.task==='string'&&/^\d{4}-\d\d-\d\d$/.test(n.date||'')&&/^https:\/\//.test(n.url||''))}
@@ -223,7 +377,7 @@ function pick(extra){const t=today(),from=shift(t,-6),used=new Set(extra);let li
     if(s.day>=from){used.add(s.taskId);(s.skipped||[]).forEach(k=>used.add(k));if(s.cat==='gyvai')live++}}
   const news=allNews().filter(n=>n.date>=shift(t,-2)&&n.date<=t&&!used.has('n_'+n.id));
   if(news.length&&Math.random()<.5){const n=news[0];return{id:'n_'+n.id,cat:'akt',text:n.task.slice(0,220),url:n.url,title:String(n.title||'').slice(0,120)}}
-  const all=allTasks().filter(x=>x.cat!=='gyvai'||live<LIVE_PER_WEEK),ok=all.filter(x=>!used.has(x.id)),pool=ok.length?ok:all;return pool[Math.random()*pool.length|0]}
+  const all=allTasks().filter(x=>x.cat!=='gyvai'||live<LIVE_PER_WEEK),ok=all.filter(x=>!used.has(x.id)),base=ok.length?ok:all,pool=base.flatMap(x=>GAMES[x.id]?[x,x,x]:[x]);return pool[Math.random()*pool.length|0]}
 function slots(){const p=['a','b'].filter(s=>S.players[s]&&S.players[s].name);return p.length?p:(S.me?[S.me]:[])}
 function full(day){const p=slots();return p.length>0&&p.every(s=>(S.spins[day+'_'+s]||{}).status==='done')}
 // Serija: praleista diena atleidžiama, jei per paskutines 7 dienas atleidimas dar nenaudotas.
@@ -242,7 +396,7 @@ async function spin(reroll){
   busy=true;render();const t=pick(cur?[cur.taskId]:[]);
   await animateTo(CATS.findIndex(c=>c.k===t.cat));
   const doc={day:today(),slot:S.me,taskId:t.id,cat:t.cat,text:t.text,status:'open',ts:Date.now(),rerolled:!!reroll,skipped:cur?[cur.taskId]:[],...(t.url?{url:t.url,title:t.title}:{})};
-  try{await store.putSpin(id,doc);S.spins={...S.spins,[id]:doc};fresh=true;burst();const cc=CATS.find(c=>c.k===t.cat)||CATS[0];notify(other(),`${nameOf(S.me)} išsuko ratą 🎡`,`${cc.e} ${cc.n}`+(reroll?' (pakeista užduotis)':''))}catch(e){toast('Nepavyko išsaugoti. Pabandyk dar kartą.')}
+  try{await store.putSpin(id,doc);S.spins={...S.spins,[id]:doc};fresh=true;showReveal(t);const cc=CATS.find(c=>c.k===t.cat)||CATS[0];notify(other(),`${nameOf(S.me)} išsuko ratą 🎡`,`${cc.e} ${cc.n}`+(reroll?' (pakeista užduotis)':''))}catch(e){toast('Nepavyko išsaugoti. Pabandyk dar kartą.')}
   busy=false;render();fresh=false}
 async function patch(id,p,msg){try{await store.patchSpin(id,p);S.spins={...S.spins,[id]:{...S.spins[id],...p}};if(msg)toast(msg);render()}catch(e){toast('Nepavyko išsaugoti.');throw e}}
 async function claim(slot,name){name=name.trim().slice(0,20);if(!name)return toast('Įrašyk savo vardą.');
@@ -323,12 +477,14 @@ function render(){
   else{const c=CATS.find(c=>c.k===mine.cat)||CATS[0],txt=el('p',{class:'task'+(fresh?' pop':'')},mine.text),id=t+'_'+me,game=GAMES[mine.taskId];
     m.append(el('span',{class:'cat'},c.e+' '+c.n),txt);
     if(mine.status==='done'){
+      {const gv=game&&game!=='reakcija'?gameMineDone(game,mine):null;if(gv)m.append(gv)}
       if(mine.score)m.append(el('p',{class:'state'},`Tavo vidurkis: ${mine.score} ms.`+(mine.rival?` ${nameOf(other())||'Antra pusė'}: ${mine.rival} ms. ${mine.rival<mine.score?'Šįkart tave pralenkė.':'Likai greitesnis rezultatas.'}`:'')));
       m.append(el('p',{class:'state ok'},mine.heart?`Atlikta. ${nameOf(other())||'Antra pusė'} patvirtino ❤️`:'Atlikta. Lauk patvirtinimo iš antros pusės.'));
       const l=srcLink(mine);if(l)m.append(el('div',{class:'row'},l))}
-    else{if(game)m.append(pad('m'+id,ms=>patch(id,{status:'done',doneAt:Date.now(),score:ms},'Užskaityta!').then(()=>notify(other(),`${nameOf(S.me)} sužaidė reakcijos dvikovą ⚡`,`Vidurkis ${ms} ms. Pabandyk pralenkti!`))));
+    else{if(game&&game!=='reakcija'){const gw=gameMine(game,id,mine);if(gw)m.append(gw)}
+      if(game==='reakcija')m.append(pad('m'+id,ms=>patch(id,{status:'done',doneAt:Date.now(),score:ms},'Užskaityta!').then(()=>notify(other(),`${nameOf(S.me)} sužaidė reakcijos dvikovą ⚡`,`Vidurkis ${ms} ms. Pabandyk pralenkti!`))));
       m.append(el('div',{class:'row'},
-      !game&&el('button',{class:'btn primary',type:'button',onclick:()=>patch(id,{status:'done',doneAt:Date.now()},'Užskaityta!').then(()=>notify(other(),`${nameOf(S.me)} atliko užduotį ✅`,'Užeik ir patvirtink ❤️'))},'Atlikau'),
+      !game&&el('button',{class:'btn primary',type:'button',onclick:()=>patch(id,{status:'done',doneAt:Date.now()},'Užskaityta!').then(()=>{hearts();return notify(other(),`${nameOf(S.me)} atliko užduotį ✅`,'Užeik ir patvirtink ❤️')}).catch(()=>{})},'Atlikau'),
       srcLink(mine),
       el('button',{class:'btn',type:'button',onclick:()=>copyTask(mine,txt)},'Kopijuoti'),
       el('a',{class:'btn',href:'https://www.instagram.com/direct/inbox/',target:'_blank',rel:'noopener'},'Atverti Instagram'),
@@ -341,10 +497,11 @@ function render(){
   else{const c=CATS.find(c=>c.k===ps.cat)||CATS[0],pid=t+'_'+o;th.append(el('span',{class:'cat'},c.e+' '+c.n),el('p',{class:'task'},String(ps.text||'')));
     const l=srcLink(ps);if(l)th.append(el('div',{class:'row'},l));
     if(ps.status!=='done')th.append(el('p',{class:'state'},'Dar vykdo.'));
-    else{if(ps.score){th.append(el('p',{class:'state'},`${pn} vidurkis: ${Number(ps.score)} ms.`+(ps.rival?` Tavo: ${Number(ps.rival)} ms. ${ps.rival<ps.score?'Pralenkei!':'Šįkart nepavyko.'}`:' Pabandyk pralenkti.')));
+    else{const pg=GAMES[ps.taskId];if(pg&&pg!=='reakcija'){const gw=gameTheirs(pg,pid,ps,o);if(gw)th.append(gw)}
+      if(ps.score){th.append(el('p',{class:'state'},`${pn} vidurkis: ${Number(ps.score)} ms.`+(ps.rival?` Tavo: ${Number(ps.rival)} ms. ${ps.rival<ps.score?'Pralenkei!':'Šįkart nepavyko.'}`:' Pabandyk pralenkti.')));
         if(!ps.rival)th.append(pad('r'+pid,ms=>patch(pid,{rival:ms}).then(()=>notify(o,ms<ps.score?`${nameOf(S.me)} tave pralenkė ⚡`:`${nameOf(S.me)} tavęs nepralenkė 😎`,`${ms} ms prieš tavo ${ps.score} ms.`))))}
       if(ps.heart)th.append(el('p',{class:'state ok'},'Atlikta ir tavo patvirtinta ❤️'));
-      else th.append(el('div',{class:'row'},el('span',{class:'state ok'},'Sako, kad atliko.'),el('button',{class:'btn primary',type:'button',onclick:()=>patch(pid,{heart:true}).then(()=>notify(o,`${nameOf(S.me)} patvirtino ❤️`,'Šiandienos užduotis užskaityta.'))},'❤️ Patvirtinu')))}}
+      else th.append(el('div',{class:'row'},el('span',{class:'state ok'},'Sako, kad atliko.'),el('button',{class:'btn primary',type:'button',onclick:()=>patch(pid,{heart:true}).then(()=>{hearts();notify(o,`${nameOf(S.me)} patvirtino ❤️`,'Šiandienos užduotis užskaityta.')}).catch(()=>{})},'❤️ Patvirtinu')))}}
   // stats
   const done=Object.values(S.spins).filter(s=>s.status==='done').length;
   $('streakNum').textContent=st.cur;$('sCur').textContent=st.cur;$('sBest').textContent=st.best;$('sDone').textContent=done;
