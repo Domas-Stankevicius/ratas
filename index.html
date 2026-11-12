@@ -536,7 +536,7 @@ function render(){
   const st=streaks(),wk=$('week');wk.replaceChildren();const order=me?[me,other()]:['a','b'];
   const mon=shift(t,-((new Date(t+'T12:00:00Z').getUTCDay()+6)%7)),days=[0,1,2,3,4,5,6].map(i=>shift(mon,i)),WK=['Pr','An','Tr','Kt','Pn','Št','Sk'];
   wk.append(el('span',null),...days.map((d,i)=>el('span',{class:'wh'+(d===t?' today':''),title:d},WK[i])));
-  order.forEach(sl=>{wk.append(el('span',{class:'wn'},nameOf(sl)||(sl===me?'Tu':'Antra pusė')));
+  order.forEach(sl=>{wk.append(el('span',{class:'wn'},nameOf(sl)||(!me?(sl==='a'?'Žaidėjas 1':'Žaidėjas 2'):sl===me?'Tu':'Antra pusė')));
     days.forEach(d=>{const fut=d>t,sp=S.spins[d+'_'+sl],fr=st.frozen.has(d);
       wk.append(el('span',{class:'wc'+(full(d)?' full':'')+(fut?' future':''),title:d},fr?el('span',{class:'frz',title:'Atleista diena'},'❄'):el('span',{class:'dot'+(sp?(sp.status==='done'?' done':' spun'):'')})))})});
   $('legend').textContent='● atlikta · ○ išsukta · ❄ atleista diena (viena per savaitę)';
