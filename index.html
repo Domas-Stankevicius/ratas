@@ -3,42 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#E23E63">
+<meta name="theme-color" content="#141019">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Ratas">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Mudviejų ratas</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800;900&display=swap">
 <style>
 /* Layout: one phone-width column; the wheel sits in a fixed compass bezel, everything else is quiet cards on a contour-line map ground. */
 :root{
-  --bg:#EEF3F1; --surface:#FFFFFF; --ink:#14232B; --muted:#5B6B73; --line:#D3DEDB; --contour:rgba(20,125,133,.09);
-  --love:#E23E63; --on-love:#FFFFFF; --sea:#147D85; --sun:#E9A91F; --plum:#5A4BC4;
-  --rimA:#F2C867; --rimB:#B97F1E; --bulb:#FFF4C9; --envB:#E9C7B8; --envF:#F6DDD1; --envT:#EFD0C2;
-  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
-  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg:#141019; --surface:#1E1925; --raise:#272030; --ink:#F4EBEF; --muted:#A99DAE; --line:#352C3E; --contour:rgba(255,92,138,.05);
+  --love:#FF5C8A; --on-love:#24070F; --sea:#3CC2BE; --sun:#F6BE4F; --plum:#9C8CFF;
+  --rimA:#F2C867; --rimB:#A86F15; --bulb:#FFF1C2; --envB:#3E2C38; --envF:#52394A; --envT:#4A3343;
+  --title:"Caveat","Segoe Print","Bradley Hand",cursive;
+  --display:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0F1A1F; --surface:#18262D; --ink:#EAF2F1; --muted:#94A6AD; --line:#2A3B43; --contour:rgba(60,184,191,.08);
-  --love:#FF6B8A; --on-love:#22060D; --sea:#3CB8BF; --sun:#F4C04E; --plum:#8E82F0; --envB:#4A3740; --envF:#5B4550; --envT:#533E48; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0F1A1F; --surface:#18262D; --ink:#EAF2F1; --muted:#94A6AD; --line:#2A3B43; --contour:rgba(60,184,191,.08);
-  --love:#FF6B8A; --on-love:#22060D; --sea:#3CB8BF; --sun:#F4C04E; --plum:#8E82F0; --envB:#4A3740; --envF:#5B4550; --envT:#533E48; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body);
-  background-image:repeating-radial-gradient(circle at 85% -120px,transparent 0 46px,var(--contour) 46px 47.5px);
+  background-image:radial-gradient(900px 500px at 50% -10%,rgba(255,92,138,.10),transparent 70%);
   padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .app{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-h1,h2,.task,.num{font-family:var(--display)}
-h1{font-size:1.9rem;font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
+h2,.task,.num{font-family:var(--display)}
+h1{font-family:var(--title);font-size:clamp(2.6rem,12vw,3.4rem);font-weight:700;letter-spacing:.01em;margin:0;line-height:1;white-space:nowrap;text-align:center;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.6)}
 h2{font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0}
-.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
-.sub{color:var(--muted);font-size:.9rem;margin:2px 0 0}
+.top{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding-top:150px;margin-top:-20px}
+.hero{position:absolute;left:50%;top:0;width:min(560px,calc(100% + 32px));height:230px;transform:translateX(-50%);overflow:hidden;pointer-events:none;
+  -webkit-mask-image:linear-gradient(#000 55%,transparent);mask-image:linear-gradient(#000 55%,transparent)}
+.pol{position:absolute;width:31%;background:#efe6dc;padding:5px 5px 18px;border-radius:3px;box-shadow:0 8px 20px rgba(0,0,0,.5);opacity:0;transition:opacity .8s}
+.pol.on{opacity:.92}
+.pol img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:1px}
+.top>*:not(.hero){position:relative}
+.days{font-size:.95rem;color:var(--muted);margin:0}
+.days b{color:var(--ink)}
+.anniv{background:linear-gradient(135deg,color-mix(in srgb,var(--sun) 25%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,var(--sun) 50%,transparent);border-radius:18px;padding:14px 16px;text-align:center;font-weight:800;font-size:1.05rem}
+.anniv small{display:block;font-weight:600;color:var(--muted);font-size:.85rem}
+.cat.gold{color:var(--sun)}
+.sub{color:var(--muted);font-size:.9rem;margin:0}
 .streak{display:flex;align-items:baseline;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;white-space:nowrap}
 .streak .num{font-size:1.4rem;font-weight:800;color:var(--love);font-variant-numeric:tabular-nums}
 .streak small{color:var(--muted);font-size:.8rem}
@@ -75,7 +82,7 @@ input{flex:1 1 160px}
 .stage{position:relative;width:min(100%,360px);aspect-ratio:1;margin:4px auto}
 .stage svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .seg{stroke:rgba(255,255,255,.55);stroke-width:1.2}
-.inner{fill:var(--ink)}
+.inner{fill:#0d0a11}
 .bulb{fill:var(--bulb);opacity:.55;transition:opacity .15s}
 .stage.spinning .bulb{animation:blink .32s steps(1) infinite}
 .stage.spinning .bulb:nth-child(even){animation-delay:.16s}
@@ -85,6 +92,13 @@ input{flex:1 1 160px}
 #pointer.tick{transform:rotate(-16deg);transition:none}
 .pin{fill:var(--rimA);stroke:var(--ink);stroke-width:1}
 .stage svg{filter:drop-shadow(0 10px 18px rgba(20,35,43,.28))}
+.drawbox{display:flex;flex-direction:column;gap:8px}
+.drawbox canvas{width:100%;max-width:360px;aspect-ratio:1;align-self:center;background:#fff;border-radius:12px;touch-action:none;cursor:crosshair;border:2px solid var(--line)}
+.word{font-weight:900;font-size:1.2rem;color:var(--sun);letter-spacing:.04em}
+.pens{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}
+.pen{width:30px;height:30px;border-radius:50%;border:3px solid transparent;cursor:pointer}
+.pen.on{border-color:var(--ink)}
+.drawn{width:100%;max-width:360px;align-self:center;border-radius:12px;background:#fff}
 .sticker{position:absolute;width:15%;max-width:56px;animation:bob 4s ease-in-out infinite;pointer-events:none}
 .sticker svg{width:100%;height:auto;filter:none;display:block}
 .st1{left:-2%;top:2%;transform:rotate(-12deg)}.st2{right:-2%;top:4%;animation-delay:-1s}.st3{left:0;bottom:2%;animation-delay:-2s}.st4{right:0;bottom:0;animation-delay:-3s}
@@ -98,7 +112,7 @@ input{flex:1 1 160px}
 #confetti{position:absolute;inset:-20%;width:140%;height:140%;pointer-events:none}
 /* task cards */
 .cat{font-size:.8rem;font-weight:700;color:var(--sea)}
-.task{font-size:1.3rem;font-weight:700;line-height:1.25;margin:0;text-wrap:balance;overflow-wrap:anywhere}
+.task{font-size:1.3rem;font-weight:800;line-height:1.25;margin:0;text-wrap:balance;overflow-wrap:anywhere}
 .state{font-size:.85rem;color:var(--muted)}
 .state.ok{color:var(--love);font-weight:600}
 .pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
@@ -150,8 +164,7 @@ textarea{font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:
 #mapInfo{flex:1;min-width:0;font-weight:700;font-family:var(--display)}
 #map{flex:1;min-height:0;background:#cfe2e8}
 #map .leaflet-container{background:#cfe2e8}
-.sound{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;width:38px;height:38px;cursor:pointer;font-size:1rem}
-.top-r{display:flex;gap:8px;align-items:center}
+.top-r{display:flex;gap:8px;align-items:center;justify-content:center}
 @media (prefers-reduced-motion: reduce){.pop,.sticker{animation:none}.letter,.flap{transition:none}}
 </style>
 
@@ -159,9 +172,12 @@ textarea{font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:
 <body>
 <div class="app">
   <div class="top">
-    <div><h1>Mudviejų ratas</h1><p class="sub" id="sub">Vienas sukimas per dieną. Užduotį atliekat Instagrame.</p></div>
-    <div class="top-r"><button class="sound" id="soundBtn" type="button" aria-label="Garsas">🔊</button><div class="streak" title="Dienos iš eilės"><span>🔥</span><span class="num" id="streakNum">0</span><small>d. iš eilės</small></div></div>
+    <div class="hero" id="hero" aria-hidden="true"></div>
+    <h1>Mudviejų ratas</h1>
+    <p class="days" id="days"></p>
+    <div class="top-r"><div class="streak" title="Dienos iš eilės"><span>🔥</span><span class="num" id="streakNum">0</span><small>d. iš eilės</small></div></div>
   </div>
+  <div class="anniv" id="anniv" hidden></div>
   <div class="note" id="note" hidden></div>
   <div class="card" id="setup" hidden></div>
   <div class="card" id="pushCard" hidden></div>
@@ -215,7 +231,7 @@ textarea{font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:
 const CATS=[
  {k:'foto',e:'📸',n:'Nuotrauka'},{k:'kl',e:'💬',n:'Klausimas'},{k:'zem',e:'🗺️',n:'Žemėlapis'},{k:'muz',e:'🎹',n:'Muzika'},
  {k:'spo',e:'🏐',n:'Sportas'},{k:'zaid',e:'🎲',n:'Mini žaidimas'},{k:'pris',e:'💌',n:'Šiltas žodis'},{k:'drasa',e:'⚡',n:'Iššūkis'},{k:'gyvai',e:'🤝',n:'Gyvai'},{k:'akt',e:'🌍',n:'Aktualijos'}];
-const SEG=360/CATS.length, LIVE_PER_WEEK=2, ROOM_RE=/^[A-Za-z0-9-]{12,40}$/, GAMES={zaid8:'reakcija',zaid15:'quiz',zaid16:'same',zem10:'map'};
+const SEG=360/CATS.length, LIVE_PER_WEEK=2, ROOM_RE=/^[A-Za-z0-9-]{12,40}$/, GAMES={zaid8:'reakcija',zaid15:'quiz',zaid16:'same',zem10:'map',zaid17:'draw'};
 // Firebase projekto „mudvieju-ratas“ web konfigūracija (vieša, apsaugą daro Firestore taisyklės ir kambario kodas).
 const PUSH='https://ratas-push.domjyjy360.workers.dev';let ROOM=null,VKEY=null,SWREG=null;
 const FIREBASE={apiKey:"AIzaSyB-6u2upI9AeED4Xqa0oGJxYvm0QVPPr34",authDomain:"mudvieju-ratas.firebaseapp.com",projectId:"mudvieju-ratas",storageBucket:"mudvieju-ratas.firebasestorage.app",messagingSenderId:"402604471259",appId:"1:402604471259:web:56c33de0a305a55e462dfe"};
@@ -226,7 +242,7 @@ const BANK={
  zem:[null,'Atsiųsk žemėlapio ekrano nuotrauką su vieta, į kurią norėtum nuvežti antrą pusę.','Pažymėk žemėlapyje tašką tarp Šiaulių ir Telšių, kur verta sustoti kartu, ir pagrįsk.','Atsiųsk trijų Lietuvos vietų sąrašą, kuriose dar nebuvot kartu. Antra pusė išrenka vieną.',null,'Atsiųsk koordinates vietos, kuri tau svarbi. Antra pusė turi atspėti, kas ten.','Išmatuok žemėlapyje atstumą tarp judviejų šiuo metu ir parašyk, per kiek jį nubėgtum.','Kur aš esu? Aprašyk vietą trimis užuominomis be pavadinimo, antra pusė spėja klausinėdama.','Išsirink šalį, kurioje norėtumėt pabūti kartu, ir atsiųsk tris priežastis, kodėl būtent ji.','Spėk vietą: pažymėk žemėlapyje be pavadinimų tris Lietuvos vietas. Antra pusė žais tas pačias. Kas arčiau?'],
  muz:['Atsiųsk dainą, kuri šiandien sukasi galvoje.','Įrašyk balso žinutę: paniūniuok melodiją, o antra pusė turi atspėti dainą.','Sugrok ar pabarbenk 20 sekundžių bet kuo, kas po ranka: pianinu, gitara ar stalu.','Atsiųsk dainą, kuri primena judviejų pradžią.','Sudarykit trijų dainų grojaraštį rytojaus rytui: tu renkiesi dvi, antra pusė vieną.','Atsiųsk dainą, kurios gėdiniesi, bet vis tiek klausai.','Parašyk, kokią dainą norėtum išgirsti grojamą gyvai ir kas ją turėtų groti.','Dainų asociacijos: parašyk žodį, antra pusė per 10 sekundžių atsiunčia dainą su tuo žodžiu.','Įrašyk 15 sekundžių lip-sync video pagal bet kurią dainą. Antra pusė įvertina nuo 1 iki 10.'],
  spo:['Spėk artimiausių „Ryto“ arba „Žalgirio“ rungtynių rezultatą. Kas arčiau, tam priklauso kava.','Padaryk 15 pritūpimų ir atsiųsk įrodymą.','Išlaikyk lentą kiek gali ir atsiųsk video įrodymą. Antra pusė bando pagerinti.','Atsiųsk šios savaitės judėjimo planą: bent vienas dalykas, kurį tikrai padarysi.','Papasakok geriausią savo sportinį prisiminimą: aikštelėje, baseine ar tribūnoje.','Išmokyk antrą pusę vienos savo sporto šakos taisyklės, kurios ji tikrai nežino.','Sutarkit dieną per artimiausią savaitę, kada kartu pažaisit tinklinį, pamėtysit į krepšį ar nueisit į baseiną.','Savaitės lenktynės: išsikelkit po vieną sportinį tikslą. Kas pirmas įvykdo, tas renkasi kito pasimatymo vietą.'],
- zaid:['Du teiginiai tiesa, vienas melas: parašyk tris faktus apie savo dieną, antra pusė spėja melą.','Aprašyk filmą jaustukais, kiek tik nori. Antra pusė turi atspėti.','20 klausimų: sugalvok daiktą, antra pusė spėja klausdama tik „taip“ arba „ne“.','Atsiųsk trečią naujausią nuotrauką iš savo galerijos. Be atrankos ir be trynimo.','Užbaik sakinį: „Jei rytoj abu turėtume laisvą dieną, mes…“ Rašot abu, tada palyginat.','Papasakok savo dieną penkiais jaustukais, antra pusė ją atpasakoja žodžiais.',null,'Reakcijos dvikova: spausk laukelį žemiau ir lauk, kol jis nusidažys ir parašys „SPAUSK!“. Tada spausk kuo greičiau. 3 bandymai, skaičiuojamas vidurkis milisekundėmis. Antra pusė savo lange bandys tave pralenkti.','Tiesa ar užduotis: pasirink pats, o antra pusė sugalvoja klausimą arba užduotį.','Tik neteisingi atsakymai: užduok tris klausimus, antra pusė gali atsakyti tik neteisingai ir kuo juokingiau.','Istorija po sakinį: parašyk pirmą sakinį, toliau rašot pakaitomis, kol bus 10 sakinių.','Atspėk garsą: įrašyk 5 sekundžių garsą iš savo aplinkos, antra pusė spėja, kas tai.','Paskutinė raidė: rašot žodžius pakaitomis, kiekvienas prasideda paskutine ankstesnio raide. Kas pirmas užstringa, pralaimi.','Atspėk prisiminimą: aprašyk bendrą akimirką vienu sakiniu be detalių, antra pusė spėja, kuri tai.','Kaip gerai mane pažįsti: atsakyk čia į 5 klausimus apie save. Antra pusė savo lange bandys atspėti tavo atsakymus.','Tas pats klausimas: atsakyk čia, o antra pusė atsakys į tą patį. Atsakymai atsivers, kai atsakysit abu.'],
+ zaid:['Du teiginiai tiesa, vienas melas: parašyk tris faktus apie savo dieną, antra pusė spėja melą.','Aprašyk filmą jaustukais, kiek tik nori. Antra pusė turi atspėti.','20 klausimų: sugalvok daiktą, antra pusė spėja klausdama tik „taip“ arba „ne“.','Atsiųsk trečią naujausią nuotrauką iš savo galerijos. Be atrankos ir be trynimo.','Užbaik sakinį: „Jei rytoj abu turėtume laisvą dieną, mes…“ Rašot abu, tada palyginat.','Papasakok savo dieną penkiais jaustukais, antra pusė ją atpasakoja žodžiais.',null,'Reakcijos dvikova: spausk laukelį žemiau ir lauk, kol jis nusidažys ir parašys „SPAUSK!“. Tada spausk kuo greičiau. 3 bandymai, skaičiuojamas vidurkis milisekundėmis. Antra pusė savo lange bandys tave pralenkti.','Tiesa ar užduotis: pasirink pats, o antra pusė sugalvoja klausimą arba užduotį.','Tik neteisingi atsakymai: užduok tris klausimus, antra pusė gali atsakyti tik neteisingai ir kuo juokingiau.','Istorija po sakinį: parašyk pirmą sakinį, toliau rašot pakaitomis, kol bus 10 sakinių.','Atspėk garsą: įrašyk 5 sekundžių garsą iš savo aplinkos, antra pusė spėja, kas tai.','Paskutinė raidė: rašot žodžius pakaitomis, kiekvienas prasideda paskutine ankstesnio raide. Kas pirmas užstringa, pralaimi.','Atspėk prisiminimą: aprašyk bendrą akimirką vienu sakiniu be detalių, antra pusė spėja, kuri tai.','Kaip gerai mane pažįsti: atsakyk čia į 5 klausimus apie save. Antra pusė savo lange bandys atspėti tavo atsakymus.','Tas pats klausimas: atsakyk čia, o antra pusė atsakys į tą patį. Atsakymai atsivers, kai atsakysit abu.','Nupiešk ir atspėk: nupiešk čia gautą žodį, o antra pusė turės atspėti, kas nupiešta. Raidžių ir skaičių piešti negalima!'],
  pris:['Parašyk tris dalykus, už kuriuos šiandien dėkoji antrai pusei.','Prisimink vieną judviejų akimirką ir aprašyk ją trimis sakiniais.','Parašyk komplimentą, kurio dar niekada nesakei.','Įrašyk balso žinutę su palinkėjimu rytojaus dienai.','Parašyk, ko iš antros pusės išmokai.','Parašyk, ką norėtum veikti kartu, kai kitą kartą susitiksit.','Padėkok už vieną konkretų dalyką, kurį antra pusė padarė šią savaitę.','Sugalvok antrai pusei naują meilų vardą. „Persikutė“ jau užimta.','Suskaičiuok, kiek dienų praėjo nuo rugsėjo 1-osios, ir parašyk, kuri iš jų buvo geriausia.','Komplimentų abėcėlė: parašyk septynis komplimentus, prasidedančius raidėmis nuo A iki G.','Laiškas pakaitomis: parašyk pirmą meilaus laiško sakinį, antra pusė tęsia, kol bus penki sakiniai.'],
  drasa:['Iki vakaro nusiųsk antrai pusei tris žinutes be jokios priežasties.','Suplanuok kitą pasimatymą: vieta, laikas ir viena staigmena.','Šiandien paskambink, o ne parašyk. Bent penkios minutės.','Nupiešk antros pusės portretą per 60 sekundžių ir atsiųsk.','Išmok pasakyti „pasiilgau tavęs“ nauja kalba ir įrašyk balso žinute.','Pagamink ar nupirk ką nors skanaus ir atsiųsk nuotrauką su pažadu pavaišinti.','Parašyk keturių eilučių eilėraštį apie šią dieną.','Parašyk tris dalykus, kurie tave antroje pusėje labiausiai traukia.','Atsiųsk nuotrauką, kurios paprastai nesiųstum, nes joje atrodai per juokingai.','Per 3 minutes nupiešk savo svajonių namą ir atsiųsk. Antra pusė prideda vieną kambarį.','Įrašyk video, kaip šiandien atrodo tavo kambarys, ir pasakok kaip gidas muziejuje.'],
  gyvai:['Kitą kartą susitikę sudėliokit Lego rinkinį, kaip per pirmą pasimatymą. Šiandien sutarkit, kurį.','Susitikę pasigaminkit vakarienę kartu. Šiandien nuspręskit, ką gaminsit.','Nueikit pasivaikščioti be telefonų bent 30 minučių. Šiandien sutarkit dieną.','Kitas „Formulės 1“ lenktynes žiūrėkit kartu. Šiandien abu parašykit, kas laimės.','Susitikę sužaiskit stalo ar kortų žaidimą. Pralaimėjęs plauna indus.','Susitikę paprašyk antros pusės sugroti vieną dainą arba išmokyti tave trijų akordų.','Nueikit į vietą Vilniuje, kur nė vienas dar nebuvot. Šiandien išrinkit ją žemėlapyje.','Susitikę 10 minučių pamėtykit kamuolį: tinklinio arba krepšinio.','Susitikę minutę tylėdami žiūrėkit vienas kitam į akis. Kas pirmas nusijuokia, pralaimi.','Susitikę nusifotografuokit kartu pozoje, kurią sugalvoja antra pusė.'],
@@ -254,10 +270,13 @@ const PLACES=[{n:'Kryžių kalnas',la:56.0153,lo:23.4167},{n:'Trakų pilis',la:5
 // Sienos: Natural Earth (viešasis domenas), [ilguma, platuma]
 const LTGEO=[[[[26.595,55.666],[26.602,55.643],[26.606,55.617],[26.606,55.59],[26.595,55.568],[26.577,55.551],[26.552,55.534],[26.53,55.516],[26.527,55.492],[26.545,55.472],[26.545,55.46],[26.509,55.44],[26.498,55.428],[26.487,55.391],[26.48,55.381],[26.455,55.355],[26.444,55.337],[26.451,55.327],[26.466,55.32],[26.527,55.308],[26.541,55.308],[26.602,55.317],[26.768,55.3],[26.793,55.29],[26.8,55.273],[26.79,55.258],[26.764,55.247],[26.739,55.242],[26.7,55.237],[26.685,55.232],[26.656,55.215],[26.642,55.204],[26.635,55.192],[26.628,55.165],[26.617,55.136],[26.602,55.121],[26.577,55.119],[26.473,55.146],[26.458,55.144],[26.451,55.139],[26.444,55.134],[26.437,55.129],[26.43,55.128],[26.419,55.128],[26.311,55.144],[26.264,55.139],[26.232,55.112],[26.232,55.101],[26.232,55.075],[26.228,55.063],[26.224,55.055],[26.188,55.009],[26.17,54.992],[26.152,54.979],[26.138,54.969],[26.102,54.957],[25.98,54.943],[25.962,54.943],[25.926,54.949],[25.908,54.949],[25.872,54.938],[25.857,54.933],[25.854,54.925],[25.854,54.916],[25.846,54.906],[25.825,54.893],[25.803,54.881],[25.782,54.869],[25.771,54.851],[25.774,54.842],[25.782,54.822],[25.782,54.813],[25.778,54.805],[25.774,54.803],[25.767,54.803],[25.756,54.8],[25.735,54.79],[25.724,54.78],[25.72,54.766],[25.724,54.716],[25.724,54.705],[25.72,54.695],[25.713,54.685],[25.71,54.675],[25.71,54.663],[25.717,54.643],[25.738,54.607],[25.746,54.589],[25.742,54.569],[25.728,54.553],[25.706,54.542],[25.645,54.52],[25.63,54.508],[25.62,54.488],[25.616,54.462],[25.616,54.44],[25.612,54.422],[25.594,54.4],[25.548,54.368],[25.53,54.346],[25.53,54.32],[25.544,54.309],[25.566,54.304],[25.609,54.305],[25.666,54.324],[25.681,54.325],[25.695,54.32],[25.702,54.312],[25.706,54.304],[25.717,54.285],[25.72,54.282],[25.724,54.282],[25.735,54.283],[25.738,54.283],[25.749,54.276],[25.756,54.27],[25.767,54.26],[25.771,54.249],[25.778,54.246],[25.782,54.244],[25.785,54.243],[25.789,54.236],[25.785,54.233],[25.774,54.222],[25.771,54.217],[25.771,54.172],[25.764,54.157],[25.738,54.146],[25.728,54.145],[25.692,54.148],[25.681,54.145],[25.663,54.133],[25.652,54.128],[25.63,54.128],[25.544,54.136],[25.515,54.145],[25.494,54.158],[25.486,54.175],[25.494,54.182],[25.522,54.189],[25.53,54.195],[25.522,54.204],[25.501,54.212],[25.501,54.222],[25.522,54.229],[25.544,54.228],[25.555,54.231],[25.483,54.288],[25.479,54.293],[25.472,54.297],[25.458,54.298],[25.432,54.292],[25.393,54.258],[25.371,54.248],[25.288,54.244],[25.224,54.258],[25.206,54.256],[25.195,54.244],[25.173,54.197],[25.155,54.175],[25.116,54.148],[25.072,54.133],[25.026,54.128],[24.95,54.146],[24.903,54.15],[24.856,54.146],[24.849,54.145],[24.82,54.135],[24.817,54.128],[24.817,54.121],[24.82,54.114],[24.817,54.109],[24.799,54.103],[24.792,54.096],[24.784,54.096],[24.781,54.092],[24.788,54.077],[24.799,54.055],[24.813,54.038],[24.82,54.02],[24.82,53.993],[24.806,53.976],[24.788,53.969],[24.723,53.964],[24.705,53.964],[24.691,53.973],[24.676,53.993],[24.673,53.995],[24.669,53.995],[24.666,53.995],[24.644,53.983],[24.579,53.976],[24.529,53.959],[24.414,53.898],[24.378,53.886],[24.342,53.886],[24.309,53.893],[24.277,53.892],[24.259,53.893],[24.248,53.903],[24.23,53.932],[24.201,53.952],[24.169,53.959],[24.136,53.956],[24.075,53.935],[24.046,53.93],[23.982,53.93],[23.964,53.932],[23.935,53.944],[23.92,53.947],[23.906,53.946],[23.827,53.92],[23.82,53.919],[23.812,53.92],[23.794,53.927],[23.787,53.929],[23.773,53.924],[23.755,53.917],[23.694,53.912],[23.643,53.898],[23.629,53.898],[23.611,53.902],[23.521,53.934],[23.485,53.939],[23.488,53.946],[23.492,53.951],[23.488,53.956],[23.481,53.961],[23.47,53.966],[23.463,53.973],[23.46,53.981],[23.46,53.993],[23.463,53.996],[23.47,54.001],[23.481,54.006],[23.496,54.022],[23.496,54.045],[23.481,54.091],[23.474,54.113],[23.463,54.135],[23.449,54.155],[23.431,54.17],[23.424,54.172],[23.402,54.175],[23.391,54.18],[23.384,54.189],[23.362,54.209],[23.355,54.217],[23.337,54.226],[23.316,54.236],[23.236,54.255],[23.197,54.268],[23.136,54.298],[23.118,54.304],[23.096,54.3],[23.074,54.295],[23.049,54.295],[23.031,54.31],[23.031,54.32],[23.038,54.332],[23.042,54.341],[23.035,54.346],[23.002,54.349],[22.988,54.354],[22.984,54.359],[22.977,54.368],[22.974,54.376],[22.963,54.381],[22.952,54.383],[22.93,54.379],[22.92,54.381],[22.858,54.4],[22.837,54.401],[22.812,54.395],[22.812,54.393],[22.786,54.366],[22.768,54.356],[22.707,54.418],[22.682,54.454],[22.675,54.493],[22.682,54.57],[22.704,54.618],[22.707,54.636],[22.707,54.646],[22.7,54.67],[22.7,54.68],[22.704,54.687],[22.725,54.705],[22.729,54.709],[22.725,54.714],[22.722,54.719],[22.725,54.724],[22.729,54.726],[22.736,54.726],[22.747,54.732],[22.765,54.737],[22.772,54.743],[22.786,54.756],[22.819,54.77],[22.833,54.778],[22.844,54.797],[22.848,54.813],[22.844,54.832],[22.83,54.873],[22.822,54.886],[22.808,54.895],[22.75,54.91],[22.74,54.918],[22.75,54.932],[22.74,54.933],[22.729,54.94],[22.722,54.947],[22.714,54.952],[22.707,54.954],[22.65,54.954],[22.635,54.959],[22.621,54.971],[22.61,54.992],[22.592,55.038],[22.581,55.058],[22.57,55.063],[22.567,55.068],[22.542,55.075],[22.437,55.058],[22.272,55.07],[22.25,55.07],[22.142,55.055],[22.131,55.046],[22.117,55.038],[22.099,55.03],[22.077,55.028],[22.048,55.033],[22.027,55.045],[22.02,55.062],[22.02,55.077],[22.016,55.089],[22.005,55.094],[21.976,55.092],[21.951,55.08],[21.944,55.079],[21.933,55.08],[21.908,55.09],[21.872,55.095],[21.854,55.102],[21.822,55.119],[21.75,55.128],[21.732,55.136],[21.717,55.149],[21.645,55.182],[21.606,55.192],[21.505,55.195],[21.469,55.212],[21.404,55.273],[21.375,55.29],[21.35,55.288],[21.267,55.249],[21.271,55.254],[21.264,55.276],[21.264,55.285],[21.271,55.288],[21.278,55.286],[21.285,55.286],[21.292,55.296],[21.289,55.305],[21.282,55.317],[21.274,55.327],[21.267,55.332],[21.26,55.337],[21.256,55.347],[21.256,55.369],[21.246,55.371],[21.188,55.339],[21.184,55.345],[21.184,55.349],[21.224,55.399],[21.231,55.406],[21.249,55.418],[21.249,55.442],[21.235,55.482],[21.224,55.513],[21.224,55.521],[21.217,55.524],[21.21,55.529],[21.199,55.538],[21.195,55.548],[21.195,55.56],[21.199,55.567],[21.199,55.575],[21.195,55.585],[21.159,55.643],[21.148,55.659],[21.148,55.678],[21.141,55.688],[21.098,55.729],[21.091,55.735],[21.08,55.739],[21.073,55.746],[21.069,55.769],[21.062,55.789],[21.044,55.874],[21.044,55.918],[21.048,55.928],[21.055,55.943],[21.058,55.952],[21.058,56.038],[21.055,56.073],[21.091,56.078],[21.148,56.078],[21.192,56.085],[21.206,56.104],[21.213,56.131],[21.231,56.163],[21.256,56.185],[21.289,56.207],[21.328,56.225],[21.357,56.234],[21.404,56.235],[21.418,56.237],[21.559,56.298],[21.595,56.308],[21.685,56.31],[21.966,56.384],[21.984,56.389],[22.095,56.418],[22.138,56.416],[22.156,56.411],[22.196,56.396],[22.214,56.391],[22.513,56.396],[22.574,56.387],[22.578,56.387],[22.606,56.379],[22.65,56.353],[22.668,56.348],[22.682,56.35],[22.822,56.382],[22.858,56.397],[22.887,56.409],[22.923,56.413],[22.956,56.402],[22.981,56.374],[23.017,56.323],[23.064,56.304],[23.114,56.311],[23.164,56.342],[23.154,56.352],[23.172,56.359],[23.287,56.374],[23.312,56.37],[23.377,56.355],[23.481,56.33],[23.517,56.328],[23.578,56.348],[23.611,56.353],[23.679,56.352],[23.708,56.355],[23.715,56.353],[23.722,56.345],[23.726,56.338],[23.722,56.331],[23.726,56.328],[23.755,56.326],[23.823,56.335],[23.859,56.335],[23.87,56.331],[23.982,56.313],[24.075,56.271],[24.108,56.261],[24.14,56.257],[24.165,56.261],[24.288,56.296],[24.32,56.299],[24.352,56.291],[24.414,56.266],[24.446,56.261],[24.482,56.269],[24.54,56.288],[24.558,56.299],[24.64,56.36],[24.68,56.377],[24.716,56.386],[24.806,56.409],[24.817,56.409],[24.838,56.404],[24.846,56.404],[24.853,56.414],[24.853,56.424],[24.856,56.436],[24.871,56.443],[24.892,56.44],[24.91,56.423],[24.936,56.38],[24.961,56.32],[24.972,56.301],[24.982,56.291],[25.015,56.271],[25.026,56.261],[25.044,56.228],[25.072,56.198],[25.108,56.183],[25.35,56.159],[25.454,56.149],[25.522,56.156],[25.573,56.142],[25.591,56.141],[25.648,56.144],[25.663,56.141],[25.67,56.132],[25.688,56.098],[25.695,56.088],[25.71,56.082],[25.767,56.058],[25.796,56.039],[25.872,55.992],[25.962,55.958],[26.019,55.938],[26.08,55.898],[26.178,55.85],[26.203,55.827],[26.228,55.796],[26.278,55.744],[26.343,55.717],[26.48,55.678],[26.538,55.67],[26.595,55.666]]],[[[20.99,55.273],[20.925,55.283],[21.001,55.357],[21.04,55.416],[21.084,55.497],[21.094,55.582],[21.098,55.599],[21.094,55.604],[21.098,55.612],[21.091,55.632],[21.094,55.695],[21.084,55.724],[21.116,55.7],[21.13,55.656],[21.134,55.568],[21.13,55.556],[21.123,55.54],[21.12,55.528],[21.12,55.489],[21.109,55.474],[21.094,55.457],[21.087,55.442],[21.105,55.428],[21.105,55.421],[21.091,55.411],[21.073,55.391],[21.058,55.369],[21.051,55.349],[21.037,55.328],[20.99,55.291],[20.99,55.273]]]];
 const NBGEO=[[[27.6,57],[27.6,55.81],[27.59,55.79],[27.56,55.79],[27.44,55.8],[27.41,55.8],[27.37,55.81],[27.35,55.83],[27.33,55.82],[27.28,55.79],[27.26,55.79],[27.24,55.8],[27.17,55.82],[27.15,55.83],[27.11,55.84],[26.98,55.83],[26.96,55.82],[26.9,55.78],[26.84,55.72],[26.82,55.71],[26.74,55.68],[26.72,55.68],[26.67,55.69],[26.64,55.69],[26.62,55.69],[26.6,55.67],[26.54,55.67],[26.48,55.68],[26.34,55.72],[26.28,55.74],[26.23,55.8],[26.2,55.83],[26.18,55.85],[26.08,55.9],[26.02,55.94],[25.96,55.96],[25.87,55.99],[25.8,56.04],[25.77,56.06],[25.71,56.08],[25.7,56.09],[25.69,56.1],[25.67,56.13],[25.66,56.14],[25.65,56.14],[25.59,56.14],[25.57,56.14],[25.52,56.16],[25.45,56.15],[25.35,56.16],[25.11,56.18],[25.07,56.2],[25.04,56.23],[25.03,56.26],[25.01,56.27],[24.98,56.29],[24.97,56.3],[24.96,56.32],[24.94,56.38],[24.91,56.42],[24.89,56.44],[24.87,56.44],[24.86,56.44],[24.85,56.42],[24.85,56.41],[24.85,56.4],[24.84,56.4],[24.82,56.41],[24.81,56.41],[24.72,56.39],[24.68,56.38],[24.64,56.36],[24.56,56.3],[24.54,56.29],[24.48,56.27],[24.45,56.26],[24.41,56.27],[24.35,56.29],[24.32,56.3],[24.29,56.3],[24.17,56.26],[24.14,56.26],[24.11,56.26],[24.08,56.27],[23.98,56.31],[23.87,56.33],[23.86,56.33],[23.82,56.33],[23.75,56.33],[23.73,56.33],[23.72,56.33],[23.73,56.34],[23.72,56.35],[23.71,56.36],[23.68,56.35],[23.61,56.35],[23.58,56.35],[23.52,56.33],[23.48,56.33],[23.38,56.36],[23.31,56.37],[23.29,56.37],[23.17,56.36],[23.15,56.35],[23.16,56.34],[23.11,56.31],[23.06,56.3],[23.02,56.32],[22.98,56.37],[22.96,56.4],[22.92,56.41],[22.89,56.41],[22.86,56.4],[22.82,56.38],[22.68,56.35],[22.67,56.35],[22.65,56.35],[22.61,56.38],[22.58,56.39],[22.57,56.39],[22.51,56.4],[22.21,56.39],[22.2,56.4],[22.16,56.41],[22.14,56.42],[22.1,56.42],[21.98,56.39],[21.97,56.38],[21.68,56.31],[21.59,56.31],[21.56,56.3],[21.42,56.24],[21.4,56.24],[21.36,56.23],[21.33,56.23],[21.29,56.21],[21.26,56.18],[21.23,56.16],[21.21,56.13],[21.21,56.1],[21.19,56.08],[21.15,56.08],[21.09,56.08],[21.05,56.07],[21.05,56.08],[21.04,56.12],[21.03,56.15],[20.98,56.21],[20.97,56.23],[20.97,56.25],[20.97,56.26],[20.98,56.28],[20.98,56.29],[20.98,56.3],[20.98,56.31],[20.97,56.35],[20.97,56.37],[20.97,56.39],[20.98,56.4],[20.99,56.42],[21,56.43],[21,56.45],[21,56.46],[21.01,56.48],[21,56.49],[21,56.51],[21.01,56.52],[21.03,56.51],[21.03,56.5],[21.04,56.47],[21.04,56.46],[21.03,56.45],[21.04,56.44],[21.04,56.43],[21.04,56.42],[21.03,56.41],[21.05,56.39],[21.06,56.39],[21.07,56.39],[21.08,56.4],[21.07,56.42],[21.07,56.44],[21.07,56.46],[21.07,56.47],[21.07,56.48],[21.06,56.49],[21.06,56.5],[21.05,56.51],[21.05,56.52],[21.03,56.52],[21.02,56.53],[21.01,56.53],[21,56.53],[21,56.54],[20.99,56.55],[21,56.56],[21.01,56.6],[21.05,56.66],[21.06,56.69],[21.07,56.77],[21.06,56.79],[21.05,56.81],[21.05,56.83],[21.07,56.85],[21.15,56.88],[21.16,56.89],[21.22,56.91],[21.24,56.92],[21.28,56.95],[21.29,56.96],[21.3,56.96],[21.33,56.97],[21.36,56.99],[21.37,57],[23.55,57],[23.57,56.99],[23.58,56.98],[23.59,56.98],[23.63,56.97],[23.69,56.97],[23.87,56.99],[23.9,57]],[[23.68,53.46],[23.59,53.61],[23.57,53.68],[23.56,53.74],[23.54,53.76],[23.53,53.78],[23.52,53.84],[23.51,53.86],[23.5,53.88],[23.49,53.91],[23.48,53.94],[23.52,53.93],[23.61,53.9],[23.63,53.9],[23.64,53.9],[23.69,53.91],[23.75,53.92],[23.77,53.92],[23.79,53.93],[23.81,53.92],[23.82,53.92],[23.83,53.92],[23.91,53.95],[23.92,53.95],[23.93,53.94],[23.96,53.93],[23.98,53.93],[24.05,53.93],[24.08,53.94],[24.14,53.96],[24.17,53.96],[24.2,53.95],[24.23,53.93],[24.25,53.9],[24.26,53.89],[24.28,53.89],[24.31,53.89],[24.34,53.89],[24.38,53.89],[24.41,53.9],[24.53,53.96],[24.58,53.98],[24.64,53.98],[24.67,53.99],[24.68,53.99],[24.69,53.97],[24.71,53.96],[24.72,53.96],[24.79,53.97],[24.81,53.98],[24.82,53.99],[24.82,54.02],[24.81,54.04],[24.8,54.06],[24.79,54.08],[24.78,54.09],[24.78,54.1],[24.79,54.1],[24.8,54.1],[24.82,54.11],[24.82,54.12],[24.82,54.13],[24.85,54.14],[24.86,54.15],[24.9,54.15],[24.95,54.15],[25.03,54.13],[25.07,54.13],[25.12,54.15],[25.16,54.18],[25.17,54.2],[25.19,54.24],[25.21,54.26],[25.22,54.26],[25.29,54.24],[25.37,54.25],[25.39,54.26],[25.43,54.29],[25.46,54.3],[25.47,54.3],[25.48,54.29],[25.55,54.23],[25.54,54.23],[25.52,54.23],[25.5,54.22],[25.5,54.21],[25.52,54.2],[25.53,54.2],[25.52,54.19],[25.49,54.18],[25.49,54.16],[25.52,54.14],[25.54,54.14],[25.63,54.13],[25.65,54.13],[25.66,54.13],[25.68,54.14],[25.69,54.15],[25.73,54.14],[25.74,54.15],[25.76,54.16],[25.77,54.17],[25.77,54.22],[25.79,54.23],[25.79,54.24],[25.78,54.24],[25.78,54.25],[25.77,54.25],[25.77,54.26],[25.76,54.27],[25.75,54.28],[25.74,54.28],[25.73,54.28],[25.72,54.28],[25.71,54.3],[25.7,54.31],[25.7,54.32],[25.68,54.33],[25.67,54.32],[25.61,54.31],[25.57,54.3],[25.54,54.31],[25.53,54.32],[25.53,54.35],[25.55,54.37],[25.59,54.4],[25.61,54.42],[25.62,54.44],[25.62,54.46],[25.62,54.49],[25.63,54.51],[25.64,54.52],[25.71,54.54],[25.73,54.55],[25.74,54.57],[25.75,54.59],[25.74,54.61],[25.72,54.64],[25.71,54.66],[25.71,54.68],[25.71,54.69],[25.72,54.7],[25.72,54.71],[25.72,54.72],[25.72,54.77],[25.72,54.78],[25.73,54.79],[25.76,54.8],[25.77,54.8],[25.78,54.81],[25.78,54.82],[25.77,54.84],[25.77,54.85],[25.78,54.87],[25.8,54.88],[25.82,54.89],[25.85,54.91],[25.85,54.92],[25.86,54.93],[25.87,54.94],[25.91,54.95],[25.93,54.95],[25.96,54.94],[25.98,54.94],[26.1,54.96],[26.14,54.97],[26.15,54.98],[26.17,54.99],[26.19,55.01],[26.22,55.05],[26.23,55.06],[26.23,55.08],[26.23,55.1],[26.23,55.11],[26.26,55.14],[26.31,55.14],[26.42,55.13],[26.43,55.13],[26.44,55.13],[26.45,55.14],[26.46,55.14],[26.47,55.15],[26.58,55.12],[26.6,55.12],[26.62,55.14],[26.63,55.16],[26.63,55.19],[26.64,55.2],[26.66,55.22],[26.69,55.23],[26.7,55.24],[26.74,55.24],[26.76,55.25],[26.79,55.26],[26.8,55.27],[26.79,55.29],[26.77,55.3],[26.6,55.32],[26.54,55.31],[26.53,55.31],[26.47,55.32],[26.45,55.33],[26.44,55.34],[26.45,55.36],[26.48,55.38],[26.49,55.39],[26.5,55.43],[26.51,55.44],[26.54,55.46],[26.54,55.47],[26.53,55.49],[26.53,55.52],[26.55,55.53],[26.58,55.55],[26.6,55.57],[26.61,55.59],[26.61,55.62],[26.6,55.64],[26.6,55.67],[26.62,55.69],[26.64,55.69],[26.67,55.69],[26.72,55.68],[26.74,55.68],[26.82,55.71],[26.84,55.72],[26.9,55.78],[26.96,55.82],[26.98,55.83],[27.11,55.84],[27.15,55.83],[27.17,55.82],[27.24,55.8],[27.26,55.79],[27.28,55.79],[27.33,55.82],[27.35,55.83],[27.37,55.81],[27.41,55.8],[27.44,55.8],[27.56,55.79],[27.59,55.79],[27.6,55.81],[27.6,53.4],[23.72,53.4]],[[20.93,54.4],[21.29,54.39],[21.72,54.37],[22,54.36],[22.28,54.36],[22.51,54.35],[22.7,54.34],[22.77,54.36],[22.79,54.37],[22.81,54.39],[22.84,54.4],[22.86,54.4],[22.92,54.38],[22.93,54.38],[22.95,54.38],[22.96,54.38],[22.97,54.38],[22.98,54.37],[22.98,54.36],[22.99,54.35],[23,54.35],[23.03,54.35],[23.04,54.34],[23.04,54.33],[23.03,54.32],[23.03,54.31],[23.05,54.3],[23.07,54.3],[23.1,54.3],[23.12,54.3],[23.14,54.3],[23.2,54.27],[23.24,54.25],[23.32,54.24],[23.34,54.23],[23.36,54.22],[23.36,54.21],[23.38,54.19],[23.39,54.18],[23.4,54.18],[23.42,54.17],[23.43,54.17],[23.45,54.15],[23.46,54.13],[23.47,54.11],[23.48,54.09],[23.5,54.05],[23.5,54.02],[23.48,54.01],[23.47,54],[23.46,54],[23.46,53.99],[23.46,53.98],[23.46,53.97],[23.47,53.97],[23.48,53.96],[23.49,53.96],[23.49,53.95],[23.48,53.94],[23.49,53.91],[23.5,53.88],[23.51,53.86],[23.52,53.84],[23.53,53.78],[23.54,53.76],[23.56,53.74],[23.57,53.68],[23.59,53.61],[23.68,53.46],[23.72,53.4],[20,53.4],[20,54.43],[20.35,54.41],[20.64,54.41]],[[22,54.36],[21.72,54.37],[21.29,54.39],[20.93,54.4],[20.64,54.41],[20.35,54.41],[20,54.43],[20,54.97],[20.02,54.95],[20.03,54.95],[20.08,54.95],[20.14,54.95],[20.21,54.96],[20.37,54.95],[20.41,54.95],[20.48,54.98],[20.63,55.05],[20.81,55.18],[20.82,55.18],[20.93,55.28],[20.99,55.27],[20.95,55.25],[20.94,55.25],[20.94,55.24],[20.91,55.23],[20.9,55.23],[20.91,55.22],[20.9,55.22],[20.89,55.21],[20.89,55.2],[20.88,55.19],[20.86,55.18],[20.85,55.17],[20.84,55.15],[20.82,55.14],[20.77,55.11],[20.69,55.05],[20.56,54.98],[20.55,54.98],[20.54,54.98],[20.53,54.97],[20.53,54.96],[20.54,54.95],[20.55,54.95],[20.56,54.94],[20.58,54.94],[20.76,54.95],[20.81,54.94],[20.86,54.91],[20.97,54.9],[21.04,54.9],[21.05,54.91],[21.07,54.91],[21.08,54.9],[21.09,54.9],[21.1,54.9],[21.1,54.91],[21.11,54.91],[21.19,54.93],[21.23,54.94],[21.24,54.96],[21.23,54.98],[21.22,55.01],[21.2,55.14],[21.19,55.14],[21.19,55.15],[21.18,55.17],[21.18,55.19],[21.18,55.2],[21.19,55.21],[21.2,55.21],[21.21,55.21],[21.22,55.21],[21.22,55.2],[21.24,55.2],[21.25,55.2],[21.26,55.21],[21.27,55.21],[21.27,55.22],[21.27,55.23],[21.27,55.24],[21.27,55.25],[21.35,55.29],[21.38,55.29],[21.4,55.27],[21.47,55.21],[21.5,55.2],[21.61,55.19],[21.65,55.18],[21.72,55.15],[21.73,55.14],[21.75,55.13],[21.82,55.12],[21.85,55.1],[21.87,55.1],[21.91,55.09],[21.93,55.08],[21.94,55.08],[21.95,55.08],[21.98,55.09],[22.01,55.09],[22.02,55.09],[22.02,55.08],[22.02,55.06],[22.03,55.04],[22.05,55.03],[22.08,55.03],[22.1,55.03],[22.12,55.04],[22.13,55.05],[22.14,55.05],[22.25,55.07],[22.27,55.07],[22.44,55.06],[22.54,55.08],[22.57,55.07],[22.57,55.06],[22.58,55.06],[22.59,55.04],[22.61,54.99],[22.62,54.97],[22.64,54.96],[22.65,54.95],[22.71,54.95],[22.72,54.95],[22.73,54.94],[22.74,54.93],[22.75,54.93],[22.74,54.92],[22.75,54.91],[22.81,54.89],[22.82,54.89],[22.83,54.87],[22.84,54.83],[22.85,54.81],[22.84,54.8],[22.83,54.78],[22.82,54.77],[22.79,54.76],[22.77,54.74],[22.76,54.74],[22.75,54.73],[22.74,54.73],[22.73,54.73],[22.73,54.72],[22.72,54.72],[22.73,54.71],[22.7,54.69],[22.7,54.68],[22.7,54.67],[22.71,54.65],[22.71,54.64],[22.7,54.62],[22.68,54.57],[22.67,54.49],[22.68,54.45],[22.71,54.42],[22.77,54.36],[22.7,54.34],[22.51,54.35],[22.28,54.36]]];
+const START='2026-09-01';
+const ANNIV=['Parašyk antrai pusei laišką apie tris akimirkas, kurias prisiminsi visada.','Atsiųsk nuotrauką, kuri geriausiai apibūdina judviejų laiką kartu, ir paaiškink, kodėl būtent ji.','Suplanuokit šventinį pasimatymą: kiekvienas pasiūlo po idėją, išrenkat vieną.','Įrašyk balso žinutę: ką norėtum pasakyti antrai pusei lygiai po metų nuo šios dienos?','Išvardink 10 dalykų, kuriuos myli antroje pusėje.','Prisiminkit pirmą pasimatymą sporto bare: kiekvienas parašo, ką prisimena geriausiai, ir palyginkit.'];
+const DRAW=['drakonas','persikas','paspirtukas','kava','gitara','pianinas','kalnai','ežeras','saulė','širdis','katė','šuo','namas','medis','lėktuvas','pica','ledai','dviratis','laivas','mėnulis','gėlė','akiniai','skrybėlė','žuvis','kompasas','pingvinas','tiltas','raktas','laikrodis','skėtis','varlė','krepšinis','tinklinis','automobilis','bokštas','žvaigždė','debesis','obuolys','batai','kamuolys','sniego senis','tortas'];
 const MILES=[3,7,14,30,60,100], WD=['Sk','Pr','An','Tr','Kt','Pn','Št'], NS='http://www.w3.org/2000/svg';
 const $=id=>document.getElementById(id);
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const S={mode:'load',players:{},spins:{},custom:{},newsFile:[],newsDb:[],me:null,note:'',placed:false};
+const S={photos:{},mode:'load',players:{},spins:{},custom:{},newsFile:[],newsDb:[],me:null,note:'',placed:false};
 let store=null,busy=false,rot=0,fresh=false;
 
 function el(tag,props,...kids){const n=document.createElement(tag);for(const k in props||{}){const v=props[k];if(k==='class')n.className=v;else if(k.startsWith('on'))n.addEventListener(k.slice(2),v);else if(v===true)n.setAttribute(k,'');else if(v!==false&&v!=null)n.setAttribute(k,v)}
@@ -279,7 +298,7 @@ const FILLS=['--love','--sea','--sun','--plum'];
   })();
 function setRot(deg){$('wheel').setAttribute('transform',`rotate(${deg})`)}
 const underPointer=a=>((-a%360)+360)%360;
-let audio=null;const soundOn=()=>ls.get('mr_sound')!=='0';
+let audio=null;const soundOn=()=>true;
 function ac(){try{if(!audio)audio=new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();return audio}catch(e){return null}}
 function tone(f,t0,dur,vol,type){const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain(),t=a.currentTime+t0;o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(.0008,t+dur);o.connect(g).connect(a.destination);o.start(t);o.stop(t+dur+.02)}
 function tickSound(){if(soundOn())tone(1500+Math.random()*250,0,.045,.09,'triangle')}
@@ -299,11 +318,10 @@ function burst(kind){if(reduced)return;const c=$('confetti'),r=c.getBoundingClie
   let f=0;(function step(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=kind==='hearts'?.12:.22;p.r+=kind==='hearts'?.03:.2;x.save();x.translate(p.x,p.y);x.rotate(kind==='hearts'?Math.sin(p.r)*.4:p.r);x.globalAlpha=Math.max(0,1-f/80);x.fillStyle=p.c;if(kind==='hearts')heart(p.s);else x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});
     if(++f<80)requestAnimationFrame(step);else x.clearRect(0,0,c.width,c.height)})()}
 const hearts=()=>burst('hearts');
-function showReveal(t){const c=CATS.find(c=>c.k===t.cat)||CATS[0];$('rvCat').textContent=c.e+' '+c.n;$('rvText').textContent=t.text;const env=$('env');env.classList.remove('open');$('reveal').hidden=false;
+const catLabel=d=>{if(d.special)return'🎉 Sukaktis: '+d.special;const c=CATS.find(c=>c.k===d.cat)||CATS[0];return c.e+' '+c.n};
+function showReveal(t){$('rvCat').textContent=catLabel(t);$('rvCat').className='cat'+(t.special?' gold':'');$('rvText').textContent=t.text;const env=$('env');env.classList.remove('open');$('reveal').hidden=false;
   setTimeout(()=>{env.classList.add('open');if(soundOn())tone(520,0,.25,.07,'sine')},reduced?0:450);setTimeout(()=>$('rvOk').focus(),1200)}
 $('rvOk').addEventListener('click',()=>{$('reveal').hidden=true;burst()});
-function syncSound(){$('soundBtn').textContent=soundOn()?'🔊':'🔇';$('soundBtn').setAttribute('aria-label',soundOn()?'Išjungti garsą':'Įjungti garsą')}
-$('soundBtn').addEventListener('click',()=>{ls.set('mr_sound',soundOn()?'0':'1');syncSound();if(soundOn())tickSound()});syncSound();
 
 /* ---------- in-app games ---------- */
 function seeded(str){let h=2166136261;for(const ch of String(str))h=Math.imul(h^ch.charCodeAt(0),16777619);return()=>{h=Math.imul(h^(h>>>15),2246822507);h=Math.imul(h^(h>>>13),3266489909);return((h^=h>>>16)>>>0)/4294967296}}
@@ -345,18 +363,36 @@ async function playMap(pl,done){const me_=++MSESS,ov=$('mapOv');$('mapNext').onc
     $('mapInfo').textContent=`${P.n}: ${km} km nuo tikrosios vietos`+(km<=10?' 🎯':'');tickSound();const nb=$('mapNext');nb.hidden=false;nb.textContent=n<pl.length-1?'Kita vieta':'Baigti'});
   $('mapNext').onclick=()=>{if(fin||me_!==MSESS||!locked)return;n++;if(n<pl.length)ask();else{close();done(d)}};
   $('mapClose').onclick=close;setTimeout(()=>MAP.invalidateSize(),50);ask()}
+function normWord(w){return String(w||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z ]/g,'').trim()}
+function lev(a,b){const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);for(let j=1;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
+function guessOk(g,w){g=normWord(g);w=normWord(w);if(!g)return false;if(g===w)return true;const stem=w.slice(0,Math.max(4,w.length-2));return g.startsWith(stem)||lev(g,w)<=(w.length>6?2:1)}
+function drawPad(onDone){const cv=el('canvas',{width:'360',height:'360','aria-label':'Piešimo laukas'}),x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,360,360);x.lineCap='round';x.lineJoin='round';
+  let col='#1b1420',w=6,down=false,last=null,strokes=0;
+  const pos=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*360/r.width,(e.clientY-r.top)*360/r.height]};
+  cv.addEventListener('pointerdown',e=>{down=true;last=pos(e);cv.setPointerCapture(e.pointerId);x.fillStyle=col;x.beginPath();x.arc(last[0],last[1],w/2,0,7);x.fill();strokes++});
+  cv.addEventListener('pointermove',e=>{if(!down)return;const p=pos(e);x.strokeStyle=col;x.lineWidth=w;x.beginPath();x.moveTo(last[0],last[1]);x.lineTo(p[0],p[1]);x.stroke();last=p});
+  const up=()=>{down=false};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+  const pens=el('div',{class:'pens'});['#1b1420','#E23E63','#147D85','#E9A91F','#7a5232'].forEach((c,i)=>{const b=el('button',{class:'pen'+(i?'':' on'),type:'button',style:`background:${c}`,'aria-label':'Spalva',onclick:()=>{col=c;w=6;[...pens.children].forEach(n=>n.classList&&n.classList.remove('on'));b.classList.add('on')}});pens.append(b)});
+  pens.append(el('button',{class:'btn',type:'button',onclick:()=>{col='#fff';w=22;[...pens.children].forEach(n=>n.classList&&n.classList.remove('on'))}},'Trintukas'),el('button',{class:'btn',type:'button',onclick:()=>{x.fillStyle='#fff';x.fillRect(0,0,360,360);strokes=0}},'Išvalyti'));
+  let btn;btn=el('button',{class:'btn primary',type:'button',onclick:()=>{if(!strokes)return toast('Pirma ką nors nupiešk 🙂');btn.disabled=true;onDone(cv.toDataURL('image/jpeg',.7)).catch(()=>btn.disabled=false)}},'Baigiau piešti');
+  return el('div',{class:'drawbox'},cv,pens,btn)}
+function drawResult(d,author){const g=d.drawGuess||{},o=author==='a'?'b':'a';return el('div',{class:'game'},el('img',{class:'drawn',alt:'Piešinys',src:String(d.draw&&d.draw.img||'')}),
+  el('p',{class:'state'+(g.ok?' ok':'')},g.ok!=null?(g.ok?`${nameOf(o)||'Antra pusė'} atspėjo iš ${g.tries} karto: „${d.draw.w}“ 🎨`:`${nameOf(o)||'Antra pusė'} neatspėjo. Buvo „${d.draw.w}“.`):`Laukiam, kol ${nameOf(o)||'antra pusė'} spės.`))}
 // mine: the game the spinner plays first
 function gameMine(kind,id,doc){
   if(kind==='quiz')return widget('qs'+id,()=>choiceForm(pickN(QUIZ.length,5,id),ans=>{const qs=pickN(QUIZ.length,5,id);return patch(id,{status:'done',doneAt:Date.now(),quiz:{q:qs,a:ans}},'Atsakymai išsaugoti!').then(()=>{hearts();notify(other(),`${nameOf(S.me)} atsakė į klausimus apie save 🧠`,'Atspėk atsakymus programėlėje!')})},'Išsaugoti atsakymus'));
   if(kind==='same')return widget('ss'+id,()=>{const q=SAMEQ[pickN(SAMEQ.length,1,id)[0]],ta=el('textarea',{id:'sameA',maxlength:'300',placeholder:'Tavo atsakymas (antra pusė jo nematys, kol neatsakys pati)','aria-label':'Tavo atsakymas'});let btn;
     btn=el('button',{class:'btn primary',type:'button',onclick:()=>{const v=ta.value.trim();if(!v)return toast('Parašyk atsakymą.');btn.disabled=true;patch(id,{status:'done',doneAt:Date.now(),same:{q,a:v.slice(0,300)}},'Atsakymas išsaugotas!').then(()=>notify(other(),'Tas pats klausimas 🤝',`Atsakyk į „${q}“. Atsakymai atsivers, kai atsakysi.`)).catch(()=>btn.disabled=false)}},'Išsaugoti');
     return el('div',{class:'game'},el('p',{class:'qt'},'„'+q+'“'),ta,btn)});
+  if(kind==='draw')return widget('dw'+id,()=>{const word=DRAW[pickN(DRAW.length,1,id)[0]];return el('div',{class:'game'},el('p',{class:'qt'},'Piešk: ',el('span',{class:'word'},word.toUpperCase())),
+    drawPad(img=>patch(id,{status:'done',doneAt:Date.now(),draw:{w:word,img}},'Piešinys išsiųstas!').then(()=>{hearts();notify(other(),`${nameOf(S.me)} nupiešė tau piešinį 🎨`,'Atspėk, kas jame!')})))});
   if(kind==='map')return el('div',{class:'row'},el('button',{class:'btn primary',type:'button',onclick:()=>{const pl=pickN(PLACES.length,3,id);playMap(pl,d=>{const t=d.reduce((x,y)=>x+y,0);patch(id,{status:'done',doneAt:Date.now(),map:{p:pl,d,t}},`Iš viso ${t} km`).then(()=>notify(other(),`${nameOf(S.me)} sužaidė „Spėk vietą“ 🗺️`,`Nuokrypis iš viso ${t} km. Ar tu tikslesnė(-is)?`)).catch(()=>{})})}},'Žaisti 🗺️'));
   return null}
 function gameMineDone(kind,doc){
   if(kind==='quiz')return doc.guess?quizResult(doc,S.me):el('p',{class:'state'},`Laukiam, kol ${nameOf(other())||'antra pusė'} spės tavo atsakymus.`);
   if(kind==='same')return doc.sameB?sameView(doc,S.me):el('div',{class:'game'},el('p',{class:'qt'},'„'+String(doc.same&&doc.same.q||'')+'“'),el('div',{class:'ans'},el('small',null,'Tavo atsakymas'),String(doc.same&&doc.same.a||'')),el('p',{class:'state'},`Laukiam, kol atsakys ${nameOf(other())||'antra pusė'}.`));
   if(kind==='map')return mapResult(doc,S.me);
+  if(kind==='draw'&&doc.draw)return drawResult(doc,S.me);
   return null}
 // theirs: the partner's reply to the spinner's game
 function gameTheirs(kind,pid,ps,o){
@@ -366,6 +402,13 @@ function gameTheirs(kind,pid,ps,o){
     return widget('sg'+pid,()=>{const ta=el('textarea',{id:'sameB',maxlength:'300',placeholder:'Tavo atsakymas','aria-label':'Tavo atsakymas'});let btn;
       btn=el('button',{class:'btn primary',type:'button',onclick:()=>{const v=ta.value.trim();if(!v)return toast('Parašyk atsakymą.');btn.disabled=true;patch(pid,{sameB:v.slice(0,300)},'Atsakymai atsivėrė!').then(()=>{hearts();notify(o,'Atsakymai atsivėrė 🤝',`${nameOf(S.me)} atsakė į „${ps.same.q}“`)}).catch(()=>btn.disabled=false)}},'Atsakyti ir atverti');
       return el('div',{class:'game'},el('p',{class:'qt'},'„'+ps.same.q+'“'),el('p',{class:'state'},`${nameOf(o)} jau atsakė. Atsakymą pamatysi, kai atsakysi pats(-i).`),ta,btn)})}
+  if(kind==='draw'){if(!ps.draw)return null;if(ps.drawGuess&&ps.drawGuess.ok!=null)return drawResult(ps,o);
+    return widget('dg'+pid,()=>{let tries=0;const inp=el('input',{id:'drawGuess',maxlength:'40',placeholder:'Kas nupiešta?','aria-label':'Spėjimas',autocomplete:'off'}),info=el('p',{class:'state'},'Turi 3 bandymus.');let btn;
+      const go=()=>{const g=inp.value.trim();if(!g)return;tries++;const ok=guessOk(g,ps.draw.w);
+        if(ok||tries>=3){btn.disabled=true;patch(pid,{drawGuess:{ok,tries,last:g.slice(0,40)}},ok?'Atspėjai! 🎉':`Buvo „${ps.draw.w}“`).then(()=>{if(ok)hearts();notify(o,ok?`${nameOf(S.me)} atspėjo tavo piešinį 🎨`:`${nameOf(S.me)} neatspėjo piešinio 🙈`,ok?`Iš ${tries} karto: „${ps.draw.w}“`:`Spėjo „${g.slice(0,40)}“`)}).catch(()=>{btn.disabled=false})}
+        else{info.textContent=`Ne „${g}“. Liko bandymų: ${3-tries}.`;inp.value='';inp.focus()}};
+      btn=el('button',{class:'btn primary',type:'submit'},'Spėti');
+      return el('div',{class:'game'},el('img',{class:'drawn',alt:'Piešinys',src:String(ps.draw.img||'')}),el('form',{class:'row',onsubmit:e=>{e.preventDefault();go()}},inp,btn),info)})}
   if(kind==='map'){if(!ps.map)return null;if(ps.mapB)return mapResult(ps,o);
     return el('div',{class:'game'},mapResult(ps,o),el('div',{class:'row'},el('button',{class:'btn primary',type:'button',onclick:()=>playMap(ps.map.p,d=>{const t=d.reduce((x,y)=>x+y,0);patch(pid,{mapB:{d,t}},`Iš viso ${t} km`).then(()=>{if(t<ps.map.t)hearts();notify(o,t<ps.map.t?`${nameOf(S.me)} buvo tikslesnis(-ė) 🗺️`:`${nameOf(S.me)} tavęs neaplenkė 🗺️`,`${t} km prieš tavo ${ps.map.t} km.`)}).catch(()=>{})})},'Žaisti tas pačias vietas 🗺️')))}
   return null}
@@ -377,6 +420,7 @@ function allTasks(){const out=[];for(const c of CATS)(BANK[c.k]||[]).forEach((t,
 function pick(extra){const t=today(),from=shift(t,-6),used=new Set(extra);let live=0;
   for(const id in S.spins){const s=S.spins[id];if(String(s.taskId).startsWith('n_'))used.add(s.taskId);
     if(s.day>=from){used.add(s.taskId);(s.skipped||[]).forEach(k=>used.add(k));if(s.cat==='gyvai')live++}}
+  const ms=milestone(t);if(ms&&!used.has('sk_'+t)){const k=pickN(ANNIV.length,1,t)[0];return{id:'sk_'+t,cat:'pris',text:'Sukakties užduotis: '+ANNIV[k],special:ms}}
   const news=allNews().filter(n=>n.date>=shift(t,-2)&&n.date<=t&&!used.has('n_'+n.id));
   if(news.length&&Math.random()<.5){const n=news[0];return{id:'n_'+n.id,cat:'akt',text:n.task.slice(0,220),url:n.url,title:String(n.title||'').slice(0,120)}}
   const all=allTasks().filter(x=>x.cat!=='gyvai'||live<LIVE_PER_WEEK),ok=all.filter(x=>!used.has(x.id)),base=ok.length?ok:all,pool=base.flatMap(x=>GAMES[x.id]?[x,x,x]:[x]);return pool[Math.random()*pool.length|0]}
@@ -390,6 +434,14 @@ function streaks(){const t=today(),frozen=new Set(),days=Object.values(S.spins).
     best=Math.max(best,cur)}
   return{cur,best,frozen}}
 const other=()=>S.me==='a'?'b':'a';
+const dayDiff=(a,b)=>Math.round((new Date(b+'T12:00:00Z')-new Date(a+'T12:00:00Z'))/864e5);
+const dien=n=>{const t=n%10,h=n%100;return t===0||(h>10&&h<20)?'dienų':t===1?'diena':'dienos'};
+const MONTHS_LT=['mėnuo','mėnesiai','mėnesių'];const men=n=>{const t=n%10,h=n%100;return t===0||(h>10&&h<20)?'mėnesių':t===1?'mėnuo':'mėnesiai'};
+function milestone(d){const n=dayDiff(START,d);if(n<=0)return null;
+  if([100,200,300,500,1000].includes(n))return`${n} dienų kartu`;
+  const [y0,m0,d0]=START.split('-').map(Number),[y,m,dd]=d.split('-').map(Number);if(dd===d0){const mm=(y-y0)*12+(m-m0);if(mm>0)return mm%12===0?`${mm/12} ${mm/12===1?'metai':'metų'} kartu`:`${mm} ${men(mm)} kartu`}
+  return null}
+function nextMilestone(d){for(let i=1;i<400;i++){const x=shift(d,i),m=milestone(x);if(m)return{in:i,label:m}}return null}
 const nameOf=s=>(S.players[s]&&String(S.players[s].name||'').slice(0,20))||'';
 
 async function spin(reroll){
@@ -397,7 +449,7 @@ async function spin(reroll){
   if(cur&&(!reroll||cur.rerolled||cur.status==='done'))return;
   busy=true;render();const t=pick(cur?[cur.taskId]:[]);
   await animateTo(CATS.findIndex(c=>c.k===t.cat));
-  const doc={day:today(),slot:S.me,taskId:t.id,cat:t.cat,text:t.text,status:'open',ts:Date.now(),rerolled:!!reroll,skipped:cur?[cur.taskId]:[],...(t.url?{url:t.url,title:t.title}:{})};
+  const doc={day:today(),slot:S.me,taskId:t.id,cat:t.cat,text:t.text,status:'open',ts:Date.now(),rerolled:!!reroll,skipped:cur?[cur.taskId]:[],...(t.url?{url:t.url,title:t.title}:{}),...(t.special?{special:t.special}:{})};
   try{await store.putSpin(id,doc);S.spins={...S.spins,[id]:doc};fresh=true;showReveal(t);const cc=CATS.find(c=>c.k===t.cat)||CATS[0];notify(other(),`${nameOf(S.me)} išsuko ratą 🎡`,`${cc.e} ${cc.n}`+(reroll?' (pakeista užduotis)':''))}catch(e){toast('Nepavyko išsaugoti. Pabandyk dar kartą.')}
   busy=false;render();fresh=false}
 async function patch(id,p,msg){try{await store.patchSpin(id,p);S.spins={...S.spins,[id]:{...S.spins[id],...p}};if(msg)toast(msg);render()}catch(e){toast('Nepavyko išsaugoti.');throw e}}
@@ -446,11 +498,23 @@ function renderPush(){const c=$('pushCard');c.replaceChildren();
   else if(!pushSupported())c.append(el('p',{class:'hint'},'Ši naršyklė pranešimų nepalaiko. Atidaryk ratą Chrome (Android) arba iš pradžios ekrano (iPhone).'));
   else c.append(el('p',{class:'hint'},'Sužinosi, kai antra pusė išsuks ratą, atliks užduotį ar įrašys tau slaptą užduotį. 19:00 priminsim, jei dar nesukai.'),el('div',{class:'row'},el('button',{class:'btn primary',type:'button',onclick:enablePush},'Įjungti pranešimus')))}
 
+/* ---------- photo collage (stored privately in the room) ---------- */
+const POL=[{l:-2,t:6,r:-9},{l:22,t:30,r:5},{l:48,t:2,r:-4},{l:71,t:24,r:8},{l:10,t:-30,r:4},{l:60,t:-34,r:-6}];
+let photoKey='';
+function renderPhotos(){const list=Object.entries(S.photos||{}).filter(([,v])=>v&&typeof v.data==='string'&&/^data:image\/(jpeg|png|webp);base64,/.test(v.data)).sort((a,b)=>(a[1].order||0)-(b[1].order||0)).slice(0,6),key=list.map(([k])=>k).join();
+  if(key===photoKey)return;photoKey=key;const h=$('hero');h.replaceChildren();
+  list.forEach(([k,v],i)=>{const p=POL[i%POL.length],img=el('img',{alt:'',src:v.data,loading:'lazy',decoding:'async'}),d=el('div',{class:'pol',style:`left:${p.l}%;top:${p.t}px;transform:rotate(${p.r}deg)`},img);
+    img.onload=()=>d.classList.add('on');h.append(d)})}
+
 /* ---------- render ---------- */
 function render(){
   const t=today(),me=S.me,ready=S.mode!=='load'&&S.mode!=='room'&&S.pl,mine=me&&S.spins[t+'_'+me];
   if(me&&ready&&!nameOf(me)){S.me=null;ls.set('mr_me',null);return render()}
   if(ready&&!S.placed){S.placed=true;if(mine){rot=360-(Math.max(0,CATS.findIndex(c=>c.k===mine.cat))+.5)*SEG;setRot(rot,false)}}
+  {const n=dayDiff(START,t),nx=nextMilestone(t),ms=milestone(t);
+   $('days').replaceChildren(el('b',null,`${n} ${dien(n)}`),' kartu'+(nx?` · ${nx.label.replace(' kartu','')} po ${nx.in} d.`:''));
+   const an=$('anniv');an.hidden=!ms;if(ms)an.replaceChildren(`🎉 Šiandien ${ms}!`,el('small',null,'Rate jūsų laukia ypatinga sukakties užduotis.'))}
+  renderPhotos();
   const note=$('note'),msgs={local:'Bendra saugykla šiame lange nepasiekiama, todėl progresas saugomas tik šiame įrenginyje.',slow:'Bendri duomenys dar nepasiekiami. Tai, ką matai, gali būti pasenę.',err:'Nepavyko prisijungti prie bendrų duomenų.'};
   const key=S.note||(S.mode==='local'?'local':'');note.hidden=!key;note.textContent=msgs[key]||'';
   // setup: room code (Firebase version) or player pick
@@ -480,7 +544,7 @@ function render(){
   const m=$('mine');m.replaceChildren(el('h2',null,'Tavo užduotis šiandien'));
   if(!mine)m.append(el('p',{class:'state'},me?'Dar nesukai. Spausk rato vidurį.':'Pirma pasirink, kas tu, tada suk ratą.'));
   else{const c=CATS.find(c=>c.k===mine.cat)||CATS[0],txt=el('p',{class:'task'+(fresh?' pop':'')},mine.text),id=t+'_'+me,game=GAMES[mine.taskId];
-    m.append(el('span',{class:'cat'},c.e+' '+c.n),txt);
+    m.append(el('span',{class:'cat'+(mine.special?' gold':'')},catLabel(mine)),txt);
     if(mine.status==='done'){
       {const gv=game&&game!=='reakcija'?gameMineDone(game,mine):null;if(gv)m.append(gv)}
       if(mine.score)m.append(el('p',{class:'state'},`Tavo vidurkis: ${mine.score} ms.`+(mine.rival?` ${nameOf(other())||'Antra pusė'}: ${mine.rival} ms. ${mine.rival<mine.score?'Šįkart tave pralenkė.':'Likai greitesnis rezultatas.'}`:'')));
@@ -499,7 +563,7 @@ function render(){
   th.replaceChildren(el('h2',null,(pn||'Antra pusė')+' šiandien'));
   if(!pn)th.append(el('p',{class:'state'},'Antra pusė dar neprisijungė. Nusiųsk jai šio puslapio nuorodą.'));
   else if(!ps)th.append(el('p',{class:'state'},'Dar nesuko. Pastūmėk žinute.'));
-  else{const c=CATS.find(c=>c.k===ps.cat)||CATS[0],pid=t+'_'+o;th.append(el('span',{class:'cat'},c.e+' '+c.n),el('p',{class:'task'},String(ps.text||'')));
+  else{const c=CATS.find(c=>c.k===ps.cat)||CATS[0],pid=t+'_'+o;th.append(el('span',{class:'cat'+(ps.special?' gold':'')},catLabel(ps)),el('p',{class:'task'},String(ps.text||'')));
     const l=srcLink(ps);if(l)th.append(el('div',{class:'row'},l));
     if(ps.status!=='done')th.append(el('p',{class:'state'},'Dar vykdo.'));
     else{const pg=GAMES[ps.taskId];if(pg&&pg!=='reakcija'){const gw=gameTheirs(pg,pid,ps,o);if(gw)th.append(gw)}
@@ -530,6 +594,7 @@ function dbStore(db){
   db.doc('game/players').onSnapshot(s=>{ok(s);S.pl=true;S.players=s.exists?s.data():{};render()},fail);
   db.collection('spins').orderBy('day','desc').limit(400).onSnapshot(s=>{ok(s);if(!busy)S.spins=map(s);render()},fail);
   db.collection('tasks').onSnapshot(s=>{ok(s);S.custom=map(s);render()},fail);
+  db.collection('photos').onSnapshot(s=>{S.photos=map(s);render()},()=>{});
   db.collection('news').onSnapshot(s=>{const o=map(s);S.newsDb=Object.keys(o).map(id=>({...o[id],id}))},()=>{});
   return{setDoc:(p,d)=>db.doc(p).set(d),putPlayers:p=>db.doc('game/players').set(p),putSpin:(id,d)=>db.doc('spins/'+id).set(d),patchSpin:(id,p)=>db.doc('spins/'+id).update(p),
     addTask:async d=>(await db.collection('tasks').add(d)).id,delTask:id=>db.doc('tasks/'+id).delete()}}
