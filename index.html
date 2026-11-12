@@ -33,8 +33,8 @@ body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body);
 h2,.task,.num{font-family:var(--display)}
 h1{font-family:var(--title);font-size:clamp(2.6rem,12vw,3.4rem);font-weight:700;letter-spacing:.01em;margin:0;line-height:1;white-space:nowrap;text-align:center;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.6)}
 h2{font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0}
-.top{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding-top:150px;margin-top:-20px}
-.hero{position:absolute;left:50%;top:0;width:min(560px,calc(100% + 32px));height:230px;transform:translateX(-50%);overflow:hidden;pointer-events:none;
+.top{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding-top:215px;margin-top:-20px}
+.hero{position:absolute;left:50%;top:0;width:min(560px,calc(100% + 32px));height:300px;transform:translateX(-50%);overflow:hidden;pointer-events:none;
   -webkit-mask-image:linear-gradient(#000 55%,transparent);mask-image:linear-gradient(#000 55%,transparent)}
 .pol{position:absolute;width:31%;background:#efe6dc;padding:5px 5px 18px;border-radius:3px;box-shadow:0 8px 20px rgba(0,0,0,.5);opacity:0;transition:opacity .8s}
 .pol.on{opacity:.92}
@@ -109,7 +109,8 @@ input{flex:1 1 160px}
 .hub::before{content:'♥';color:var(--love);font-size:.85em}
 .hub:disabled{cursor:default;font-size:.78rem;letter-spacing:0}
 .hub:not(:disabled):active{transform:translate(-50%,-50%) scale(.95)}
-#confetti{position:absolute;inset:-20%;width:140%;height:140%;pointer-events:none}
+#confetti{position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:7}
+html,body{overflow-x:hidden;overflow-x:clip}
 /* task cards */
 .cat{font-size:.8rem;font-weight:700;color:var(--sea)}
 .task{font-size:1.3rem;font-weight:800;line-height:1.25;margin:0;text-wrap:balance;overflow-wrap:anywhere}
@@ -311,9 +312,9 @@ function animateTo(i){return new Promise(res=>{
   (function f(now){const k=Math.min(1,(now-t0)/D),e=1-Math.pow(1-k,4),a=start+(target-start)*e;setRot(a);
     const sg=Math.floor(underPointer(a)/SEG);if(sg!==last){last=sg;pointerTick()}
     if(k<1)requestAnimationFrame(f);else{st.classList.remove('spinning');st.classList.add('won');chime();try{navigator.vibrate&&navigator.vibrate([20,40,30])}catch(e){}setTimeout(res,350)}})(t0)})}
-function burst(kind){if(reduced)return;const c=$('confetti'),r=c.getBoundingClientRect(),x=c.getContext('2d');c.width=r.width;c.height=r.height;
+function burst(kind){if(reduced)return;const c=$('confetti'),r=c.getBoundingClientRect(),x=c.getContext('2d'),sr=$('stage').getBoundingClientRect(),cx=sr.left+sr.width/2,cy=sr.top+sr.height/2;c.width=r.width;c.height=r.height;
   const cs=getComputedStyle(document.documentElement),cols=['--love','--sea','--sun','--plum'].map(v=>cs.getPropertyValue(v).trim()),love=cs.getPropertyValue('--love').trim();
-  const ps=Array.from({length:kind==='hearts'?36:90},()=>{const a=Math.random()*Math.PI*2,v=3+Math.random()*7;return{x:r.width/2,y:r.height/2,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3,s:kind==='hearts'?9+Math.random()*8:4+Math.random()*5,c:kind==='hearts'?love:cols[Math.random()*4|0],r:Math.random()*6}});
+  const ps=Array.from({length:kind==='hearts'?36:90},()=>{const a=Math.random()*Math.PI*2,v=3+Math.random()*7;return{x:cx,y:cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3,s:kind==='hearts'?9+Math.random()*8:4+Math.random()*5,c:kind==='hearts'?love:cols[Math.random()*4|0],r:Math.random()*6}});
   const heart=(s)=>{x.beginPath();x.moveTo(0,s*.3);x.bezierCurveTo(-s*.9,-s*.3,-s*.4,-s*.9,0,-s*.35);x.bezierCurveTo(s*.4,-s*.9,s*.9,-s*.3,0,s*.3);x.fill()};
   let f=0;(function step(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=kind==='hearts'?.12:.22;p.r+=kind==='hearts'?.03:.2;x.save();x.translate(p.x,p.y);x.rotate(kind==='hearts'?Math.sin(p.r)*.4:p.r);x.globalAlpha=Math.max(0,1-f/80);x.fillStyle=p.c;if(kind==='hearts')heart(p.s);else x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});
     if(++f<80)requestAnimationFrame(step);else x.clearRect(0,0,c.width,c.height)})()}
@@ -499,7 +500,7 @@ function renderPush(){const c=$('pushCard');c.replaceChildren();
   else c.append(el('p',{class:'hint'},'Sužinosi, kai antra pusė išsuks ratą, atliks užduotį ar įrašys tau slaptą užduotį. 19:00 priminsim, jei dar nesukai.'),el('div',{class:'row'},el('button',{class:'btn primary',type:'button',onclick:enablePush},'Įjungti pranešimus')))}
 
 /* ---------- photo collage (stored privately in the room) ---------- */
-const POL=[{l:-2,t:6,r:-9},{l:22,t:30,r:5},{l:48,t:2,r:-4},{l:71,t:24,r:8},{l:10,t:-30,r:4},{l:60,t:-34,r:-6}];
+const POL=[{l:-2,t:78,r:-9},{l:22,t:100,r:5},{l:48,t:74,r:-4},{l:71,t:96,r:8},{l:7,t:14,r:4},{l:61,t:10,r:-6}];
 let photoKey='';
 function renderPhotos(){const list=Object.entries(S.photos||{}).filter(([,v])=>v&&typeof v.data==='string'&&/^data:image\/(jpeg|png|webp);base64,/.test(v.data)).sort((a,b)=>(a[1].order||0)-(b[1].order||0)).slice(0,6),key=list.map(([k])=>k).join();
   if(key===photoKey)return;photoKey=key;const h=$('hero');h.replaceChildren();
