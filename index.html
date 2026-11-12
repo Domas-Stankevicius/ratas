@@ -329,12 +329,13 @@ function mapResult(d,author){const pl=(d.map&&d.map.p)||[],da=(d.map&&d.map.d)||
   return el('div',{class:'game'},el('ul',{class:'res'},el('li',null,el('span',null,'Vieta'),el('b',null,`${nameOf(author)||'?'} / ${nameOf(o)||'?'}`)),
     ...pl.map((pi,n)=>el('li',null,el('span',null,(PLACES[pi]||{}).n||'?'),el('b',null,`${da[n]??'–'} / ${db[n]??'–'} km`))),
     el('li',null,el('span',null,'Iš viso'),el('b',null,`${d.map?d.map.t:'–'} / ${d.mapB?d.mapB.t:'–'} km`))))}
-let LP=null,MAP=null;
+let LP=null,MAP=null,MSESS=0;
 function leaflet(){return LP||(LP=new Promise((ok,no)=>{const l=document.createElement('link');l.rel='stylesheet';l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.append(l);
   const sc=document.createElement('script');sc.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';sc.onload=ok;sc.onerror=()=>{LP=null;no()};document.head.append(sc)}))}
 const LT=[[53.85,20.9],[56.45,26.85]];
-async function playMap(pl,done){const ov=$('mapOv');ov.hidden=false;$('mapInfo').textContent='Kraunamas žemėlapis…';$('mapNext').hidden=true;
+async function playMap(pl,done){const me_=++MSESS,ov=$('mapOv');$('mapNext').onclick=null;$('mapClose').onclick=()=>{ov.hidden=true};if(MAP)MAP.off('click');ov.hidden=false;$('mapInfo').textContent='Kraunamas žemėlapis…';$('mapNext').hidden=true;
   try{await leaflet()}catch(e){ov.hidden=true;return toast('Nepavyko užkrauti žemėlapio. Patikrink internetą.')}
+  if(me_!==MSESS||ov.hidden)return;
   if(!MAP){MAP=L.map('map',{maxBounds:[[53.2,19.8],[57.1,27.9]],minZoom:6,maxZoom:10}).fitBounds(LT);
     const ll=r=>r.map(([x,y])=>[y,x]);MAP.attributionControl.addAttribution('Sienos: Natural Earth');
     NBGEO.forEach(r=>L.polygon(ll(r),{color:'#b9c7c3',weight:1,fillColor:'#e4ebe9',fillOpacity:1,interactive:false}).addTo(MAP));
@@ -342,12 +343,12 @@ async function playMap(pl,done){const ov=$('mapOv');ov.hidden=false;$('mapInfo')
   else{MAP.invalidateSize();MAP.fitBounds(LT)}
   const layer=L.layerGroup().addTo(MAP),d=[];let n=0,locked=false;
   const ask=()=>{layer.clearLayers();MAP.fitBounds(LT);locked=false;$('mapInfo').textContent=`${n+1}/${pl.length} · Kur yra ${PLACES[pl[n]].n}?`;$('mapNext').hidden=true};
-  const close=()=>{ov.hidden=true;MAP.off('click');layer.remove()};
-  MAP.off('click');MAP.on('click',e=>{if(locked)return;locked=true;const P=PLACES[pl[n]],km=Math.round(hav(e.latlng.lat,e.latlng.lng,P.la,P.lo));d.push(km);
+  let fin=false;const close=()=>{if(fin)return;fin=true;ov.hidden=true;MAP.off('click');layer.remove()};
+  MAP.off('click');MAP.on('click',e=>{if(locked||fin||me_!==MSESS)return;locked=true;const P=PLACES[pl[n]],km=Math.round(hav(e.latlng.lat,e.latlng.lng,P.la,P.lo));d.push(km);
     L.circleMarker(e.latlng,{radius:8,color:'#E23E63',fillColor:'#E23E63',fillOpacity:1}).addTo(layer);L.circleMarker([P.la,P.lo],{radius:8,color:'#147D85',fillColor:'#147D85',fillOpacity:1}).addTo(layer);
     L.polyline([e.latlng,[P.la,P.lo]],{color:'#5A4BC4',dashArray:'5 7'}).addTo(layer);MAP.fitBounds(L.latLngBounds([e.latlng,[P.la,P.lo]]).pad(.6),{maxZoom:9});
     $('mapInfo').textContent=`${P.n}: ${km} km nuo tikrosios vietos`+(km<=10?' 🎯':'');tickSound();const nb=$('mapNext');nb.hidden=false;nb.textContent=n<pl.length-1?'Kita vieta':'Baigti'});
-  $('mapNext').onclick=()=>{n++;if(n<pl.length)ask();else{close();done(d)}};
+  $('mapNext').onclick=()=>{if(fin||me_!==MSESS||!locked)return;n++;if(n<pl.length)ask();else{close();done(d)}};
   $('mapClose').onclick=close;setTimeout(()=>MAP.invalidateSize(),50);ask()}
 // mine: the game the spinner plays first
 function gameMine(kind,id,doc){
