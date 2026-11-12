@@ -95,6 +95,8 @@ details summary{cursor:pointer;font-weight:600}
 .own{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;font-size:.9rem;border-top:1px solid var(--line);padding-top:8px}
 .own span{min-width:0;overflow-wrap:anywhere}
 .x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0 4px}
+.hint{font-size:.85rem;color:var(--muted);margin:0}
+.secret{font-size:.85rem;color:var(--plum);font-weight:600}
 .foot{text-align:center;font-size:.8rem;color:var(--muted)}
 .foot button{font:inherit;color:inherit;background:none;border:0;text-decoration:underline;cursor:pointer}
 #toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:.9rem;max-width:calc(100% - 32px);z-index:5}
@@ -110,6 +112,7 @@ details summary{cursor:pointer;font-weight:600}
   </div>
   <div class="note" id="note" hidden></div>
   <div class="card" id="setup" hidden></div>
+  <div class="card" id="pushCard" hidden></div>
 
   <div class="card">
     <h2>Ši savaitė</h2>
@@ -143,6 +146,7 @@ details summary{cursor:pointer;font-weight:600}
   <details class="card" id="customBox">
     <summary id="customSum">Savos užduotys</summary>
     <form class="row" id="customForm">
+      <select id="customFor" aria-label="Kam"><option value="other">Antrai pusei (slapta)</option><option value="both">Abiem</option></select>
       <select id="customCat" aria-label="Kategorija"></select>
       <input id="customText" maxlength="140" placeholder="Pvz.: atsiųsk savo rytinės kavos nuotrauką" aria-label="Užduoties tekstas">
       <button class="btn" type="submit">Pridėti</button>
@@ -160,6 +164,7 @@ const CATS=[
  {k:'spo',e:'🏐',n:'Sportas'},{k:'zaid',e:'🎲',n:'Mini žaidimas'},{k:'pris',e:'💌',n:'Šiltas žodis'},{k:'drasa',e:'⚡',n:'Iššūkis'},{k:'gyvai',e:'🤝',n:'Gyvai'},{k:'akt',e:'🌍',n:'Aktualijos'}];
 const SEG=360/CATS.length, LIVE_PER_WEEK=2, ROOM_RE=/^[A-Za-z0-9-]{12,40}$/, GAMES={zaid8:'reakcija'};
 // Firebase projekto „mudvieju-ratas“ web konfigūracija (vieša, apsaugą daro Firestore taisyklės ir kambario kodas).
+const PUSH='https://ratas-push.domjyjy360.workers.dev';let ROOM=null,VKEY=null,SWREG=null;
 const FIREBASE={apiKey:"AIzaSyB-6u2upI9AeED4Xqa0oGJxYvm0QVPPr34",authDomain:"mudvieju-ratas.firebaseapp.com",projectId:"mudvieju-ratas",storageBucket:"mudvieju-ratas.firebasestorage.app",messagingSenderId:"402604471259",appId:"1:402604471259:web:56c33de0a305a55e462dfe"};
 // Užduočių bankas. Naujas užduotis rašyk TIK į sąrašo galą, o išmestas keisk į null: id = kategorija + eilės numeris, jis turi nesikeisti.
 const BANK={
@@ -212,7 +217,7 @@ function burst(){if(reduced)return;const c=$('confetti'),r=c.getBoundingClientRe
 /* ---------- game logic ---------- */
 function allNews(){return[...S.newsFile,...S.newsDb].filter(n=>n&&typeof n.id==='string'&&typeof n.task==='string'&&/^\d{4}-\d\d-\d\d$/.test(n.date||'')&&/^https:\/\//.test(n.url||''))}
 function allTasks(){const out=[];for(const c of CATS)(BANK[c.k]||[]).forEach((t,i)=>{if(t)out.push({id:c.k+(i+1),cat:c.k,text:t})});
-  for(const id in S.custom){const t=S.custom[id];if(t&&BANK[t.cat]&&typeof t.text==='string')out.push({id:'c_'+id,cat:t.cat,text:t.text.slice(0,140)})}return out}
+  for(const id in S.custom){const t=S.custom[id];if(t&&t.for&&t.for!=='both'&&t.for!==S.me)continue;if(t&&BANK[t.cat]&&typeof t.text==='string')out.push({id:'c_'+id,cat:t.cat,text:t.text.slice(0,140)})}return out}
 function pick(extra){const t=today(),from=shift(t,-6),used=new Set(extra);let live=0;
   for(const id in S.spins){const s=S.spins[id];if(String(s.taskId).startsWith('n_'))used.add(s.taskId);
     if(s.day>=from){used.add(s.taskId);(s.skipped||[]).forEach(k=>used.add(k));if(s.cat==='gyvai')live++}}
@@ -237,9 +242,9 @@ async function spin(reroll){
   busy=true;render();const t=pick(cur?[cur.taskId]:[]);
   await animateTo(CATS.findIndex(c=>c.k===t.cat));
   const doc={day:today(),slot:S.me,taskId:t.id,cat:t.cat,text:t.text,status:'open',ts:Date.now(),rerolled:!!reroll,skipped:cur?[cur.taskId]:[],...(t.url?{url:t.url,title:t.title}:{})};
-  try{await store.putSpin(id,doc);S.spins={...S.spins,[id]:doc};fresh=true;burst()}catch(e){toast('Nepavyko išsaugoti. Pabandyk dar kartą.')}
+  try{await store.putSpin(id,doc);S.spins={...S.spins,[id]:doc};fresh=true;burst();const cc=CATS.find(c=>c.k===t.cat)||CATS[0];notify(other(),`${nameOf(S.me)} išsuko ratą 🎡`,`${cc.e} ${cc.n}`+(reroll?' (pakeista užduotis)':''))}catch(e){toast('Nepavyko išsaugoti. Pabandyk dar kartą.')}
   busy=false;render();fresh=false}
-async function patch(id,p,msg){try{await store.patchSpin(id,p);S.spins={...S.spins,[id]:{...S.spins[id],...p}};if(msg)toast(msg);render()}catch(e){toast('Nepavyko išsaugoti.')}}
+async function patch(id,p,msg){try{await store.patchSpin(id,p);S.spins={...S.spins,[id]:{...S.spins[id],...p}};if(msg)toast(msg);render()}catch(e){toast('Nepavyko išsaugoti.');throw e}}
 async function claim(slot,name){name=name.trim().slice(0,20);if(!name)return toast('Įrašyk savo vardą.');
   const next={...S.players,[slot]:{name}};try{await store.putPlayers(next);S.players=next;S.me=slot;ls.set('mr_me',slot);render()}catch(e){toast('Nepavyko išsaugoti vardo.')}}
 function copyTask(s,node){const c=CATS.find(c=>c.k===s.cat),txt=`🎡 Mudviejų ratas · ${c.n}\n${s.text}`+(s.url?'\n'+s.url:'');
@@ -259,6 +264,32 @@ function pad(key,onDone){if(pads[key])return pads[key];
       else{ph='end';const avg=Math.round(tries.reduce((a,c)=>a+c)/3);b.disabled=true;b.textContent='Vidurkis '+avg+' ms';onDone(avg)}}});
   return pads[key]=b}
 
+/* ---------- push notifications (hosted Firebase version only) ---------- */
+const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent),standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const pushSupported=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+function notify(to,title,body){if(!ROOM||!PUSH||!to)return;try{fetch(PUSH+'/notify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({room:ROOM,to,title:String(title).slice(0,80),body:String(body).slice(0,160)}),keepalive:true}).catch(()=>{})}catch(e){}}
+let cfgSaved='';async function saveCfg(){if(!ROOM||!S.me||!('caches' in window)||cfgSaved===ROOM+S.me)return;cfgSaved=ROOM+S.me;try{const c=await caches.open('ratas-cfg');await c.put(new URL('cfg',location.href),new Response(JSON.stringify({room:ROOM,me:S.me})))}catch(e){}}
+function u8(b64){const p='='.repeat((4-b64.length%4)%4),s=atob((b64+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(s,c=>c.charCodeAt(0))}
+async function prepPush(){if(!ROOM||!pushSupported())return;try{SWREG=await navigator.serviceWorker.register('sw.js');VKEY=(await fetch(PUSH+'/vapid').then(r=>r.json())).key;render()}catch(e){}}
+async function enablePush(){
+  if(!S.me)return;
+  let perm;try{perm=await Notification.requestPermission()}catch(e){perm='denied'}
+  if(perm!=='granted')return toast('Pranešimai neleisti. Įjunk juos telefono nustatymuose.');
+  try{
+    const reg=SWREG||await navigator.serviceWorker.register('sw.js');const key=VKEY||(await fetch(PUSH+'/vapid').then(r=>r.json())).key;
+    let sub=await reg.pushManager.getSubscription();if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(key)});
+    await store.setDoc('push/'+S.me,{endpoint:sub.endpoint,ts:Date.now()});await saveCfg();
+    await fetch(PUSH+'/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({room:ROOM})});
+    ls.set('mr_push_'+S.me,'1');toast('Pranešimai įjungti 🔔');render()
+  }catch(e){toast('Nepavyko įjungti pranešimų. Bandyk dar kartą.')}}
+function renderPush(){const c=$('pushCard');c.replaceChildren();
+  const on=pushSupported()&&Notification.permission==='granted'&&ls.get('mr_push_'+S.me)==='1';
+  c.hidden=!ROOM||!S.me||S.mode!=='db'||on;if(c.hidden)return;
+  c.append(el('h2',null,'🔔 Pranešimai'));
+  if(isIOS&&!standalone)c.append(el('p',{class:'hint'},'iPhone: Safari apačioje spausk „Bendrinti“ → „Į pradžios ekraną“. Tada atidaryk ratą iš pradžios ekrano ir čia įjunk pranešimus.'));
+  else if(!pushSupported())c.append(el('p',{class:'hint'},'Ši naršyklė pranešimų nepalaiko. Atidaryk ratą Chrome (Android) arba iš pradžios ekrano (iPhone).'));
+  else c.append(el('p',{class:'hint'},'Sužinosi, kai antra pusė išsuks ratą, atliks užduotį ar įrašys tau slaptą užduotį. 19:00 priminsim, jei dar nesukai.'),el('div',{class:'row'},el('button',{class:'btn primary',type:'button',onclick:enablePush},'Įjungti pranešimus')))}
+
 /* ---------- render ---------- */
 function render(){
   const t=today(),me=S.me,ready=S.mode!=='load'&&S.mode!=='room'&&S.pl,mine=me&&S.spins[t+'_'+me];
@@ -277,6 +308,7 @@ function render(){
     const free=['a','b'].find(s=>!nameOf(s));
     if(free){const inp=el('input',{id:'nameInput',maxlength:'20',placeholder:'Tavo vardas','aria-label':'Tavo vardas'});
       su.append(el('form',{class:'row',onsubmit:e=>{e.preventDefault();claim(free,inp.value)}},inp,el('button',{class:'btn primary',type:'submit'},'Prisijungti')))}}
+  renderPush();if(S.me&&ROOM)saveCfg();
   const hub=$('hub');hub.disabled=busy||!me||!!mine||!ready;
   hub.textContent=busy?'…':S.mode==='room'?'Kodas?':!ready?'Kraunama':!me?'Kas tu?':mine?(mine.status==='done'?'Iki rytojaus':'Užduotis žemiau'):'SUK';
   hub.setAttribute('aria-label',mine?'Šiandien jau sukta':'Sukti ratą');
@@ -294,9 +326,9 @@ function render(){
       if(mine.score)m.append(el('p',{class:'state'},`Tavo vidurkis: ${mine.score} ms.`+(mine.rival?` ${nameOf(other())||'Antra pusė'}: ${mine.rival} ms. ${mine.rival<mine.score?'Šįkart tave pralenkė.':'Likai greitesnis rezultatas.'}`:'')));
       m.append(el('p',{class:'state ok'},mine.heart?`Atlikta. ${nameOf(other())||'Antra pusė'} patvirtino ❤️`:'Atlikta. Lauk patvirtinimo iš antros pusės.'));
       const l=srcLink(mine);if(l)m.append(el('div',{class:'row'},l))}
-    else{if(game)m.append(pad('m'+id,ms=>patch(id,{status:'done',doneAt:Date.now(),score:ms},'Užskaityta!')));
+    else{if(game)m.append(pad('m'+id,ms=>patch(id,{status:'done',doneAt:Date.now(),score:ms},'Užskaityta!').then(()=>notify(other(),`${nameOf(S.me)} sužaidė reakcijos dvikovą ⚡`,`Vidurkis ${ms} ms. Pabandyk pralenkti!`))));
       m.append(el('div',{class:'row'},
-      !game&&el('button',{class:'btn primary',type:'button',onclick:()=>patch(id,{status:'done',doneAt:Date.now()},'Užskaityta!')},'Atlikau'),
+      !game&&el('button',{class:'btn primary',type:'button',onclick:()=>patch(id,{status:'done',doneAt:Date.now()},'Užskaityta!').then(()=>notify(other(),`${nameOf(S.me)} atliko užduotį ✅`,'Užeik ir patvirtink ❤️'))},'Atlikau'),
       srcLink(mine),
       el('button',{class:'btn',type:'button',onclick:()=>copyTask(mine,txt)},'Kopijuoti'),
       el('a',{class:'btn',href:'https://www.instagram.com/direct/inbox/',target:'_blank',rel:'noopener'},'Atverti Instagram'),
@@ -310,29 +342,29 @@ function render(){
     const l=srcLink(ps);if(l)th.append(el('div',{class:'row'},l));
     if(ps.status!=='done')th.append(el('p',{class:'state'},'Dar vykdo.'));
     else{if(ps.score){th.append(el('p',{class:'state'},`${pn} vidurkis: ${Number(ps.score)} ms.`+(ps.rival?` Tavo: ${Number(ps.rival)} ms. ${ps.rival<ps.score?'Pralenkei!':'Šįkart nepavyko.'}`:' Pabandyk pralenkti.')));
-        if(!ps.rival)th.append(pad('r'+pid,ms=>patch(pid,{rival:ms})))}
+        if(!ps.rival)th.append(pad('r'+pid,ms=>patch(pid,{rival:ms}).then(()=>notify(o,ms<ps.score?`${nameOf(S.me)} tave pralenkė ⚡`:`${nameOf(S.me)} tavęs nepralenkė 😎`,`${ms} ms prieš tavo ${ps.score} ms.`))))}
       if(ps.heart)th.append(el('p',{class:'state ok'},'Atlikta ir tavo patvirtinta ❤️'));
-      else th.append(el('div',{class:'row'},el('span',{class:'state ok'},'Sako, kad atliko.'),el('button',{class:'btn primary',type:'button',onclick:()=>patch(pid,{heart:true})},'❤️ Patvirtinu')))}}
+      else th.append(el('div',{class:'row'},el('span',{class:'state ok'},'Sako, kad atliko.'),el('button',{class:'btn primary',type:'button',onclick:()=>patch(pid,{heart:true}).then(()=>notify(o,`${nameOf(S.me)} patvirtino ❤️`,'Šiandienos užduotis užskaityta.'))},'❤️ Patvirtinu')))}}
   // stats
   const done=Object.values(S.spins).filter(s=>s.status==='done').length;
   $('streakNum').textContent=st.cur;$('sCur').textContent=st.cur;$('sBest').textContent=st.best;$('sDone').textContent=done;
   $('miles').replaceChildren(...MILES.map(n=>el('span',{class:'mile'+(st.best>=n?' got':'')},(st.best>=n?'★ ':'')+n+' d.')));
   // custom tasks
-  const ids=Object.keys(S.custom);$('customSum').textContent=`Savos užduotys (${ids.length})`;
+  const all=Object.keys(S.custom),hidden=all.filter(id=>S.custom[id].for===S.me&&S.custom[id].by!==S.me),ids=all.filter(id=>!hidden.includes(id));$('customSum').textContent=`Savos užduotys (${ids.length})`+(hidden.length?` · ${hidden.length} 🤫 tau`:'');
   $('customList').replaceChildren(...ids.map(id=>{const c=CATS.find(c=>c.k===S.custom[id].cat)||CATS[0];
-    return el('div',{class:'own'},el('span',null,c.e+' '+String(S.custom[id].text||'')),el('button',{class:'x',type:'button','aria-label':'Ištrinti užduotį',onclick:()=>store.delTask(id).then(()=>{const n={...S.custom};delete n[id];S.custom=n;render()},()=>toast('Nepavyko ištrinti.'))},'✕'))}));
+    const tt=S.custom[id],tag=tt.for&&tt.for!=='both'?' 🤫 '+(nameOf(tt.for)||'antrai pusei'):'';return el('div',{class:'own'},el('span',null,c.e+' '+String(tt.text||''),tag&&el('span',{class:'secret'},tag)),el('button',{class:'x',type:'button','aria-label':'Ištrinti užduotį',onclick:()=>store.delTask(id).then(()=>{const n={...S.custom};delete n[id];S.custom=n;render()},()=>toast('Nepavyko ištrinti.'))},'✕'))}));
   const ft=$('foot');ft.replaceChildren();if(me&&ready)ft.append('Žaidi kaip '+nameOf(me)+'. ',el('button',{type:'button',onclick:()=>{S.me=null;ls.set('mr_me',null);render()}},'Tai ne aš'));
 }
 $('hub').addEventListener('click',()=>spin(false));
 $('customForm').addEventListener('submit',e=>{e.preventDefault();const inp=$('customText'),text=inp.value.trim();if(!text||!store)return;
-  const doc={cat:$('customCat').value,text:text.slice(0,140),by:S.me||'',ts:Date.now()};
-  store.addTask(doc).then(id=>{S.custom={...S.custom,[id]:doc};inp.value='';render();toast('Užduotis pridėta į ratą.')},()=>toast('Nepavyko pridėti.'))});
+  const fo=$('customFor').value,doc={cat:$('customCat').value,text:text.slice(0,140),by:S.me||'',for:fo==='other'&&S.me?other():'both',ts:Date.now()};
+  store.addTask(doc).then(id=>{S.custom={...S.custom,[id]:doc};inp.value='';render();if(doc.for!=='both'){notify(doc.for,`${nameOf(S.me)} įrašė tau slaptą užduotį 🤫`,'Ji kada nors iškris rate.');toast('Slapta užduotis įrašyta 🤫')}else toast('Užduotis pridėta į ratą.')},()=>toast('Nepavyko pridėti.'))});
 
 /* ---------- storage: Claude db in the artifact, Firebase on the hosted site, this device otherwise ---------- */
 function localStore(){
   try{const d=JSON.parse(ls.get('mr_local')||'{}');S.players=d.players||{};S.spins=d.spins||{};S.custom=d.custom||{}}catch(e){}
   const save=()=>ls.set('mr_local',JSON.stringify({players:S.players,spins:S.spins,custom:S.custom}));
-  return{async putPlayers(p){S.players=p;save()},async putSpin(id,d){S.spins={...S.spins,[id]:d};save()},async patchSpin(id,p){S.spins={...S.spins,[id]:{...S.spins[id],...p}};save()},
+  return{async setDoc(){},async putPlayers(p){S.players=p;save()},async putSpin(id,d){S.spins={...S.spins,[id]:d};save()},async patchSpin(id,p){S.spins={...S.spins,[id]:{...S.spins[id],...p}};save()},
     async addTask(d){const id='l'+Date.now();S.custom={...S.custom,[id]:d};save();return id},async delTask(id){const n={...S.custom};delete n[id];S.custom=n;save()}}}
 // `db` is either the artifact's store or a Firestore wrapper: both give doc(path) / collection(path) with the same calls.
 function dbStore(db){
@@ -344,13 +376,13 @@ function dbStore(db){
   db.collection('spins').orderBy('day','desc').limit(400).onSnapshot(s=>{ok(s);if(!busy)S.spins=map(s);render()},fail);
   db.collection('tasks').onSnapshot(s=>{ok(s);S.custom=map(s);render()},fail);
   db.collection('news').onSnapshot(s=>{const o=map(s);S.newsDb=Object.keys(o).map(id=>({...o[id],id}))},()=>{});
-  return{putPlayers:p=>db.doc('game/players').set(p),putSpin:(id,d)=>db.doc('spins/'+id).set(d),patchSpin:(id,p)=>db.doc('spins/'+id).update(p),
+  return{setDoc:(p,d)=>db.doc(p).set(d),putPlayers:p=>db.doc('game/players').set(p),putSpin:(id,d)=>db.doc('spins/'+id).set(d),patchSpin:(id,p)=>db.doc('spins/'+id).update(p),
     addTask:async d=>(await db.collection('tasks').add(d)).id,delTask:id=>db.doc('tasks/'+id).delete()}}
 const addScript=src=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.append(s)});
 async function startFirebase(code){
   try{S.mode='load';render();
     if(!window.firebase){const v='https://www.gstatic.com/firebasejs/10.12.2/';await addScript(v+'firebase-app-compat.js');await addScript(v+'firebase-firestore-compat.js');firebase.initializeApp(FIREBASE)}
-    const fs=firebase.firestore(),R='rooms/'+code+'/';store=dbStore({doc:p=>fs.doc(R+p),collection:p=>fs.collection(R+p)})}
+    const fs=firebase.firestore(),R='rooms/'+code+'/';store=dbStore({doc:p=>fs.doc(R+p),collection:p=>fs.collection(R+p)});ROOM=code;prepPush()}
   catch(e){store=localStore();S.pl=true;S.mode='local';render()}}
 (async function boot(){
   S.me=ls.get('mr_me');if(S.me!=='a'&&S.me!=='b')S.me=null;render();
